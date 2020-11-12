@@ -2,10 +2,10 @@
     <section id="container">
         <div>
             <div>
-                <top-bar/>
                 <nav-bar/>
+                <top-bar/>
                 <RouterView :key="$route.fullPath" />
-                <bottom-bar/>
+                <!-- <bottom-bar/> -->
             </div>
         </div>
     </section>

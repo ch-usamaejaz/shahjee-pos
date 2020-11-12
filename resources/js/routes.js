@@ -5,18 +5,21 @@ Vue.use(VueRouter);
 import ExampleComponent from "./components/ExampleComponent";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Dashboard from './pages/Dashboard';
+import Orders from './pages/Orders';
+import Inventory from './pages/Inventory';
 
 const routes = [
-    {
-        name: 'example',
-        path: '/',
-        component: ExampleComponent,
-        meta:{
-        }
-    },
+    // {
+    //     name: 'example',
+    //     path: '/',
+    //     component: ExampleComponent,
+    //     meta:{
+    //     }
+    // },
     {
         name: 'login',
-        path: '/login',
+        path: '/',
         component: Login,
         meta:{    
         }
@@ -24,7 +27,34 @@ const routes = [
     {
         name: 'signup',
         path: '/signup',
-        component: SignUp
+        component: SignUp,
+        meta:{
+
+        }
+    },
+    {
+        name: 'dashboard',
+        path: '/dashboard',
+        component: Dashboard,
+        meta: {
+            layout: ''
+        }
+    },
+    {
+        name: 'orders',
+        path: '/orders',
+        component: Orders,
+        meta:{
+            layout: ''
+        }
+    },
+    {
+        name: 'inventory',
+        path: '/inventory',
+        component: Inventory,
+        meta: {
+            layout: ''
+        }
     }
 ];
 
