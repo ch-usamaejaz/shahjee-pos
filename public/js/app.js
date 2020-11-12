@@ -2109,23 +2109,14 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_bottomBar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/bottomBar */ "./resources/js/layouts/components/bottomBar.vue");
-/* harmony import */ var _components_topBar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/topBar */ "./resources/js/layouts/components/topBar.vue");
 //
 //
 //
 //
 //
 //
-//
-
-
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "defaultLayout",
-  components: {
-    bottomBar: _components_bottomBar__WEBPACK_IMPORTED_MODULE_0__["default"],
-    topBar: _components_topBar__WEBPACK_IMPORTED_MODULE_1__["default"]
-  }
+  name: "defaultLayout"
 });
 
 /***/ }),
@@ -2357,12 +2348,16 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     signUp: function signUp() {
       var formData = new FormData();
-      formData.append("email", this.email);
-      formData.append("password", this.password);
-      formData.append("companyName", this.companyName);
+      var data = {
+        "email": this.email,
+        "password": this.password,
+        "companyName": this.companyName
+      };
       var url = '/signup';
-      this.axios.post(url, formData).then(function (response) {
+      this.axios.post(url, data).then(function (response) {
         console.log(response);
+      })["catch"](function (err) {
+        console.log(err.message);
       });
     }
   }
@@ -38354,15 +38349,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("router-view", { key: _vm.$route.fullPath }),
-      _vm._v(" "),
-      _c("bottom-bar")
-    ],
-    1
-  )
+  return _c("div", [_c("router-view", { key: _vm.$route.fullPath })], 1)
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -55101,8 +55088,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -17,7 +17,7 @@
           <div class="form-group">
             <input v-model="companyName" type="password" class="form-control" placeholder="Enter your Company Name">
           </div><!-- form-group -->
-          
+
           <div class="form-group tx-12">By clicking the Sign Up button below, you agreed to our privacy policy and terms of use of our website.</div>
           <button type="submit" class="btn btn-info btn-block">Sign Up</button>
 
@@ -43,16 +43,15 @@ export default {
   methods: {
     signUp(){
       let formData = new FormData();
-        formData.append("email" ,this.email);
-        formData.append("password",this.password);
-        formData.append("companyName", this.companyName)
-
+        let data = {"email" : this.email, "password" : this.password, "companyName" : this.companyName};
         let url = '/signup';
-        this.axios.post(url, formData).then(function(response){
+        this.axios.post(url, data).then( response => {
           console.log(response)
-        })
+        }).catch(err => {
+                console.log(err.message);
+            })
     }
-  }  
+  }
 }
 </script>
 
