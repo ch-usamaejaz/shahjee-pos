@@ -27,6 +27,7 @@
         "es6-promise": "^4.2.8",
         "vue-axios": "^2.1.5",
         "vue-router": "^3.4.3",
+        "vuetify": "^2.3.17",
         "vuex": "^3.5.1"
     }
 }

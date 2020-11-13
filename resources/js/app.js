@@ -4,6 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -13,6 +14,12 @@ import App from '../js/pages/App';
 import VueAxios from 'vue-axios';
 import axios from 'axios';
 
+import Vuetify from "vuetify";
+import 'vuetify/dist/vuetify.min.css'
+
+Vue.use(Vuetify);
+
+
 Vue.use(VueAxios, axios.create({
     baseURL: 'http://127.0.0.1:8000'
 }));
@@ -20,6 +27,7 @@ Vue.use(VueAxios, axios.create({
 
 const app = new Vue({
     el: '#app',
+    vuetify: new Vuetify(),
     router: Routes,
     render: h => h(App),
 });

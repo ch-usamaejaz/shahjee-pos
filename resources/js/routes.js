@@ -10,18 +10,18 @@ import Orders from './pages/Orders';
 import Inventory from './pages/Inventory';
 
 const routes = [
-    // {
-    //     name: 'example',
-    //     path: '/',
-    //     component: ExampleComponent,
-    //     meta:{
-    //     }
-    // },
+    {
+        name: 'example',
+        path: '/example',
+        component: ExampleComponent,
+        meta:{
+        }
+    },
     {
         name: 'login',
         path: '/',
         component: Login,
-        meta:{    
+        meta:{
         }
     },
     {
