@@ -13,13 +13,13 @@
         </router-link><!-- br-menu-link -->
         <router-link to="/orders" class="br-menu-link">
           <div class="br-menu-item">
-            <i class="menu-item-icon icon ion-ios-home-outline tx-22"></i>
+            <i class="menu-item-icon icon ion-ios-paper-outline tx-22"></i>
             <span class="menu-item-label">Orders</span>
           </div><!-- menu-item -->
         </router-link><!-- br-menu-link -->
         <router-link to="/inventory" class="br-menu-link">
           <div class="br-menu-item">
-            <i class="menu-item-icon icon ion-ios-home-outline tx-22"></i>
+            <i class="menu-item-icon icon ion-ios-bookmarks-outline tx-22"></i>
             <span class="menu-item-label">Inventory</span>
           </div><!-- menu-item -->
         </router-link><!-- br-menu-link -->

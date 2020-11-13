@@ -2047,6 +2047,38 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/components/salesLineChart.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/layouts/components/salesLineChart.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'sales-line-chart'
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/components/topBar.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/layouts/components/topBar.vue?vue&type=script&lang=js& ***!
@@ -2165,6 +2197,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _layouts_components_bottomBar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../layouts/components/bottomBar */ "./resources/js/layouts/components/bottomBar.vue");
+/* harmony import */ var _layouts_components_salesLineChart__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../layouts/components/salesLineChart */ "./resources/js/layouts/components/salesLineChart.vue");
+//
 //
 //
 //
@@ -2179,10 +2213,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'dashboard',
   components: {
-    bottomBar: _layouts_components_bottomBar__WEBPACK_IMPORTED_MODULE_0__["default"]
+    bottomBar: _layouts_components_bottomBar__WEBPACK_IMPORTED_MODULE_0__["default"],
+    salesLineChart: _layouts_components_salesLineChart__WEBPACK_IMPORTED_MODULE_1__["default"]
   }
 });
 
@@ -38160,7 +38196,7 @@ var render = function() {
             [
               _c("div", { staticClass: "br-menu-item" }, [
                 _c("i", {
-                  staticClass: "menu-item-icon icon ion-ios-home-outline tx-22"
+                  staticClass: "menu-item-icon icon ion-ios-paper-outline tx-22"
                 }),
                 _vm._v(" "),
                 _c("span", { staticClass: "menu-item-label" }, [
@@ -38176,7 +38212,8 @@ var render = function() {
             [
               _c("div", { staticClass: "br-menu-item" }, [
                 _c("i", {
-                  staticClass: "menu-item-icon icon ion-ios-home-outline tx-22"
+                  staticClass:
+                    "menu-item-icon icon ion-ios-bookmarks-outline tx-22"
                 }),
                 _vm._v(" "),
                 _c("span", { staticClass: "menu-item-label" }, [
@@ -38201,6 +38238,56 @@ var staticRenderFns = [
         _c("span", [_vm._v("[")]),
         _vm._v("ShahJee"),
         _c("span", [_vm._v("]")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/components/salesLineChart.vue?vue&type=template&id=11a2bcba&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/layouts/components/salesLineChart.vue?vue&type=template&id=11a2bcba&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "br-pagebody" }, [
+      _c("div", { staticClass: "br-section-wrapper" }, [
+        _c(
+          "h6",
+          { staticClass: "tx-grey-800 tx-uppercase tx-bold tx-14 mg-b-10" },
+          [_vm._v("Your Sales Chart")]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-xl-12" }, [
+            _c("div", { staticClass: "bd pd-20" }, [
+              _c("div", {
+                staticClass: "br-chartist ht-200 ht-sm-300",
+                attrs: { id: "chartLine1" }
+              })
+            ])
+          ])
+        ])
       ])
     ])
   }
@@ -38397,16 +38484,12 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "br-mainpanel" }, [
-        _c("div", { staticClass: "pd-30" }, [
+  return _c("div", [
+    _c("div", { staticClass: "br-mainpanel" }, [
+      _c(
+        "div",
+        { staticClass: "pd-30" },
+        [
           _c("h4", { staticClass: "tx-gray-800 mg-b-5" }, [
             _vm._v("Dashboard")
           ]),
@@ -38415,12 +38498,16 @@ var staticRenderFns = [
             _vm._v(
               "Do big things with Bracket, the responsive bootstrap 4 admin template."
             )
-          ])
-        ])
-      ])
+          ]),
+          _vm._v(" "),
+          _c("salesLineChart")
+        ],
+        1
+      )
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -54444,6 +54531,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/layouts/components/salesLineChart.vue":
+/*!************************************************************!*\
+  !*** ./resources/js/layouts/components/salesLineChart.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _salesLineChart_vue_vue_type_template_id_11a2bcba_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./salesLineChart.vue?vue&type=template&id=11a2bcba&scoped=true& */ "./resources/js/layouts/components/salesLineChart.vue?vue&type=template&id=11a2bcba&scoped=true&");
+/* harmony import */ var _salesLineChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./salesLineChart.vue?vue&type=script&lang=js& */ "./resources/js/layouts/components/salesLineChart.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _salesLineChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _salesLineChart_vue_vue_type_template_id_11a2bcba_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _salesLineChart_vue_vue_type_template_id_11a2bcba_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "11a2bcba",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/layouts/components/salesLineChart.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/layouts/components/salesLineChart.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/layouts/components/salesLineChart.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_salesLineChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./salesLineChart.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/components/salesLineChart.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_salesLineChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/layouts/components/salesLineChart.vue?vue&type=template&id=11a2bcba&scoped=true&":
+/*!*******************************************************************************************************!*\
+  !*** ./resources/js/layouts/components/salesLineChart.vue?vue&type=template&id=11a2bcba&scoped=true& ***!
+  \*******************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_salesLineChart_vue_vue_type_template_id_11a2bcba_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./salesLineChart.vue?vue&type=template&id=11a2bcba&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/components/salesLineChart.vue?vue&type=template&id=11a2bcba&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_salesLineChart_vue_vue_type_template_id_11a2bcba_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_salesLineChart_vue_vue_type_template_id_11a2bcba_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/layouts/components/topBar.vue":
 /*!****************************************************!*\
   !*** ./resources/js/layouts/components/topBar.vue ***!
@@ -55088,8 +55244,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

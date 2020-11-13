@@ -11,6 +11,7 @@
 
     <link href="{{asset('css/main.css')}}" rel="stylesheet"/>
 
+    <link href="{{asset('css/lib/chartist.css')}}" rel="stylesheet"/>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -20,7 +21,17 @@
 
 <script src="{{asset('js/lib/jquery/jquery.js')}}"></script>
 
+<script src="{{asset('js/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js')}}"></script>
+
+<script src="{{asset('js/lib/moment/moment.js')}}"></script>
+
+<script src="{{asset('js/lib/chartist/chartist.js')}}"></script>
+
 <script src="{{asset('js/main.js')}}" type="text/javascript"></script>
+
+<script src="{{asset('js/ResizeSensor.js')}}"></script>
+
+<script src="{{asset('js/chart.chartist.js')}}"></script>
 
 <script src="{{mix('js/app.js')}}" type="text/javascript"></script>
 
