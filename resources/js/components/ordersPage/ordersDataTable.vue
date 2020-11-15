@@ -89,6 +89,21 @@
                                                   </v-select>
                                                 </v-col>
                                             </v-row>
+                                            <div class="text-center">
+                                                <v-btn
+                                                  class="mx-2"
+                                                  fab
+                                                  dark
+                                                  color="indigo"
+                                                  v-bind="rowArray"
+                                                  @click="addNewRow"
+                                                >
+                                                <v-icon dark>
+                                                  mdi-plus
+                                                </v-icon>
+                                              </v-btn>
+                                            </div>
+
                                         </v-container>
                                     </v-card-text>
 
@@ -160,6 +175,7 @@ export default {
     
     data () {
       return {
+        rowArray: [],
         status: ['Paid', 'Unpaid'],
         newItems: ['Karahi', 'Coke', 'Naan'],
         dialog: false,
@@ -308,6 +324,10 @@ export default {
                     this.desserts.push(this.editedItem)
                 }
                 this.close()
+            },
+            addNewRow (){
+              console.log(this.rowArray);
+              // let rowHtml = (<h2>Hello</h2>)
             },
       getDesserts () {
         return [

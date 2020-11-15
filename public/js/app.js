@@ -2168,10 +2168,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'ordersDataTable',
   data: function data() {
     return {
+      rowArray: [],
       status: ['Paid', 'Unpaid'],
       newItems: ['Karahi', 'Coke', 'Naan'],
       dialog: false,
@@ -2336,6 +2352,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       this.close();
+    },
+    addNewRow: function addNewRow() {
+      console.log(this.rowArray); // let rowHtml = (<h2>Hello</h2>)
     },
     getDesserts: function getDesserts() {
       return [{
@@ -39487,6 +39506,43 @@ var render = function() {
                                                     "editedItem.status"
                                                 }
                                               })
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        { staticClass: "text-center" },
+                                        [
+                                          _c(
+                                            "v-btn",
+                                            _vm._b(
+                                              {
+                                                staticClass: "mx-2",
+                                                attrs: {
+                                                  fab: "",
+                                                  dark: "",
+                                                  color: "indigo"
+                                                },
+                                                on: { click: _vm.addNewRow }
+                                              },
+                                              "v-btn",
+                                              _vm.rowArray,
+                                              false
+                                            ),
+                                            [
+                                              _c(
+                                                "v-icon",
+                                                { attrs: { dark: "" } },
+                                                [
+                                                  _vm._v(
+                                                    "\n                                              mdi-plus\n                                            "
+                                                  )
+                                                ]
+                                              )
                                             ],
                                             1
                                           )
