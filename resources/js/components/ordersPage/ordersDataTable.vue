@@ -175,7 +175,10 @@ export default {
     
     data () {
       return {
-        rowArray: [],
+        rowArray: [{
+          menuItem: '',
+          quantity
+        }],
         status: ['Paid', 'Unpaid'],
         newItems: ['Karahi', 'Coke', 'Naan'],
         dialog: false,
