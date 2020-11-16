@@ -2006,155 +2006,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2169,45 +2020,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'ordersDataTable',
   data: function data() {
     return {
-      status: ['Paid', 'Unpaid'],
-      newItems: ['Karahi', 'Coke', 'Naan'],
-      dialog: false,
-      dialogDelete: false,
-      totalDesserts: 0,
-      desserts: [],
+      totalOrders: 0,
+      orders: [],
       loading: true,
       options: {},
       headers: [{
         text: 'Order#',
         align: 'start',
-        value: 'number'
+        value: 'id'
       }, {
-        text: 'Status',
-        value: 'status'
-      }, {
-        text: 'Total (Rs)',
-        value: 'price'
-      }, {
-        text: 'Actions',
-        value: 'actions',
+        text: 'Order Value ',
+        value: 'order_total',
         sortable: false
-      }],
-      editedIndex: -1,
-      editedItem: {
-        number: 0,
-        name: '',
-        price: 0,
-        status: ''
-      },
-      defaultItem: {
-        number: 0,
-        name: '',
-        price: 0,
-        status: ''
-      }
+      }, {
+        text: 'Order Status',
+        value: 'order_status',
+        sortable: false
+      }]
     };
   },
   watch: {
@@ -2218,197 +2049,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       deep: true
     }
   },
-  computed: {
-    formTitle: function formTitle() {
-      return this.editedIndex === -1 ? 'New Order' : 'Edit Order';
-    }
-  },
-  mounted: function mounted() {
-    this.getDataFromApi();
-    this.getRealData();
-  },
   methods: {
-    getRealData: function getRealData() {
+    getDataFromApi: function getDataFromApi() {
+      this.loading = true;
+      this.options['user_id'] = 1;
+      var items = this.getOrders(this.options);
+    },
+    getOrders: function getOrders(order_data) {
       var _this = this;
 
-      var url = 'https://jsonplaceholder.typicode.com/posts';
-      this.axios.get(url).then(function (response) {
-        response.data = _this.desserts[_objectSpread({}, response.data)];
-        console.log(response);
-      }, function (error) {
-        console.log(error);
+      this.axios.post('/get_user_orders', order_data).then(function (response) {
+        _this.orders = response.data.orders;
+        _this.totalOrders = response.data.orders.length;
+        _this.loading = false;
+      })["catch"](function (error) {
+        console.log(error.message);
       });
-    },
-    getDataFromApi: function getDataFromApi() {
-      var _this2 = this;
-
-      this.loading = true;
-      this.fakeApiCall().then(function (data) {
-        _this2.desserts = data.items;
-        _this2.totalDesserts = data.total;
-        _this2.loading = false;
-      });
-    },
-
-    /**
-     * In a real application this would be a call to fetch() or axios.get()
-     */
-    fakeApiCall: function fakeApiCall() {
-      var _this3 = this;
-
-      return new Promise(function (resolve, reject) {
-        var _this3$options = _this3.options,
-            sortBy = _this3$options.sortBy,
-            sortDesc = _this3$options.sortDesc,
-            page = _this3$options.page,
-            itemsPerPage = _this3$options.itemsPerPage;
-
-        var items = _this3.getDesserts();
-
-        var total = items.length;
-
-        if (sortBy.length === 1 && sortDesc.length === 1) {
-          items = items.sort(function (a, b) {
-            var sortA = a[sortBy[0]];
-            var sortB = b[sortBy[0]];
-
-            if (sortDesc[0]) {
-              if (sortA < sortB) return 1;
-              if (sortA > sortB) return -1;
-              return 0;
-            } else {
-              if (sortA < sortB) return -1;
-              if (sortA > sortB) return 1;
-              return 0;
-            }
-          });
-        }
-
-        if (itemsPerPage > 0) {
-          items = items.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-        }
-
-        setTimeout(function () {
-          resolve({
-            items: items,
-            total: total
-          });
-        }, 1000);
-      });
-    },
-    editItem: function editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
-    deleteItem: function deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogDelete = true;
-    },
-    deleteItemConfirm: function deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
-      this.closeDelete();
-    },
-    close: function close() {
-      var _this4 = this;
-
-      this.dialog = false;
-      this.$nextTick(function () {
-        _this4.editedItem = Object.assign({}, _this4.defaultItem);
-        _this4.editedIndex = -1;
-      });
-    },
-    closeDelete: function closeDelete() {
-      var _this5 = this;
-
-      this.dialogDelete = false;
-      this.$nextTick(function () {
-        _this5.editedItem = Object.assign({}, _this5.defaultItem);
-        _this5.editedIndex = -1;
-      });
-    },
-    save: function save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
-      }
-
-      this.close();
-    },
-    getDesserts: function getDesserts() {
-      return [{
-        name: 'Frozen Yogurt',
-        calories: 159,
-        fat: 6.0,
-        carbs: 24,
-        protein: 4.0,
-        iron: '1%'
-      }, {
-        name: 'Ice cream sandwich',
-        calories: 237,
-        fat: 9.0,
-        carbs: 37,
-        protein: 4.3,
-        iron: '1%'
-      }, {
-        name: 'Eclair',
-        calories: 262,
-        fat: 16.0,
-        carbs: 23,
-        protein: 6.0,
-        iron: '7%'
-      }, {
-        name: 'Cupcake',
-        calories: 305,
-        fat: 3.7,
-        carbs: 67,
-        protein: 4.3,
-        iron: '8%'
-      }, {
-        name: 'Gingerbread',
-        calories: 356,
-        fat: 16.0,
-        carbs: 49,
-        protein: 3.9,
-        iron: '16%'
-      }, {
-        name: 'Jelly bean',
-        calories: 375,
-        fat: 0.0,
-        carbs: 94,
-        protein: 0.0,
-        iron: '0%'
-      }, {
-        name: 'Lollipop',
-        calories: 392,
-        fat: 0.2,
-        carbs: 98,
-        protein: 0,
-        iron: '2%'
-      }, {
-        name: 'Honeycomb',
-        calories: 408,
-        fat: 3.2,
-        carbs: 87,
-        protein: 6.5,
-        iron: '45%'
-      }, {
-        name: 'Donut',
-        calories: 452,
-        fat: 25.0,
-        carbs: 51,
-        protein: 4.9,
-        iron: '22%'
-      }, {
-        name: 'KitKat',
-        calories: 518,
-        fat: 26.0,
-        carbs: 65,
-        protein: 7,
-        iron: '6%'
-      }];
     }
   }
 });
@@ -39254,10 +38910,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22&scoped=true&":
-/*!*****************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22&scoped=true& ***!
-  \*****************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -39269,416 +38925,27 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { staticClass: "mg-t-5" },
-      [
-        _c("v-data-table", {
-          staticClass: "elevation-1",
-          attrs: {
-            headers: _vm.headers,
-            items: _vm.desserts,
-            options: _vm.options,
-            "server-items-length": _vm.totalDesserts,
-            loading: _vm.loading
-          },
-          on: {
-            "update:options": function($event) {
-              _vm.options = $event
-            }
-          },
-          scopedSlots: _vm._u([
-            {
-              key: "top",
-              fn: function() {
-                return [
-                  _c(
-                    "v-toolbar",
-                    { attrs: { flat: "" } },
-                    [
-                      _c("v-toolbar-title", [_vm._v("All Orders")]),
-                      _vm._v(" "),
-                      _c("v-divider", {
-                        staticClass: "mx-4",
-                        attrs: { inset: "", vertical: "" }
-                      }),
-                      _vm._v(" "),
-                      _c("v-spacer"),
-                      _vm._v(" "),
-                      _c(
-                        "v-dialog",
-                        {
-                          attrs: { "max-width": "500px" },
-                          scopedSlots: _vm._u([
-                            {
-                              key: "activator",
-                              fn: function(ref) {
-                                var on = ref.on
-                                var attrs = ref.attrs
-                                return [
-                                  _c(
-                                    "v-btn",
-                                    _vm._g(
-                                      _vm._b(
-                                        {
-                                          staticClass: "mb-2",
-                                          attrs: { color: "primary", dark: "" }
-                                        },
-                                        "v-btn",
-                                        attrs,
-                                        false
-                                      ),
-                                      on
-                                    ),
-                                    [
-                                      _vm._v(
-                                        "\n                    New Order\n                    "
-                                      )
-                                    ]
-                                  )
-                                ]
-                              }
-                            }
-                          ]),
-                          model: {
-                            value: _vm.dialog,
-                            callback: function($$v) {
-                              _vm.dialog = $$v
-                            },
-                            expression: "dialog"
-                          }
-                        },
-                        [
-                          _vm._v(" "),
-                          _c(
-                            "v-card",
-                            [
-                              _c("v-card-title", [
-                                _c("span", { staticClass: "headline" }, [
-                                  _vm._v(_vm._s(_vm.formTitle))
-                                ])
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "v-card-text",
-                                [
-                                  _c(
-                                    "v-container",
-                                    [
-                                      _c(
-                                        "v-row",
-                                        [
-                                          _c(
-                                            "v-col",
-                                            {
-                                              attrs: {
-                                                cols: "12",
-                                                sm: "6",
-                                                md: "4"
-                                              }
-                                            },
-                                            [
-                                              _c("v-select", {
-                                                attrs: {
-                                                  items: _vm.newItems,
-                                                  label: "Menu Item",
-                                                  outlined: ""
-                                                },
-                                                model: {
-                                                  value: _vm.editedItem.name,
-                                                  callback: function($$v) {
-                                                    _vm.$set(
-                                                      _vm.editedItem,
-                                                      "name",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression: "editedItem.name"
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-col",
-                                            {
-                                              attrs: {
-                                                cols: "12",
-                                                sm: "6",
-                                                md: "2"
-                                              }
-                                            },
-                                            [
-                                              _c("v-text-field", {
-                                                attrs: { label: "Quantity" },
-                                                model: {
-                                                  value: _vm.editedItem.number,
-                                                  callback: function($$v) {
-                                                    _vm.$set(
-                                                      _vm.editedItem,
-                                                      "number",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression:
-                                                    "editedItem.number"
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-col",
-                                            {
-                                              attrs: {
-                                                cols: "12",
-                                                sm: "6",
-                                                md: "2"
-                                              }
-                                            },
-                                            [
-                                              _c("v-text-field", {
-                                                attrs: { label: "Total Price" },
-                                                model: {
-                                                  value: _vm.editedItem.price,
-                                                  callback: function($$v) {
-                                                    _vm.$set(
-                                                      _vm.editedItem,
-                                                      "price",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression: "editedItem.price"
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-col",
-                                            {
-                                              attrs: {
-                                                cols: "12",
-                                                sm: "6",
-                                                md: "4"
-                                              }
-                                            },
-                                            [
-                                              _c("v-select", {
-                                                attrs: {
-                                                  label: "Status",
-                                                  items: _vm.status,
-                                                  outlined: ""
-                                                },
-                                                model: {
-                                                  value: _vm.editedItem.status,
-                                                  callback: function($$v) {
-                                                    _vm.$set(
-                                                      _vm.editedItem,
-                                                      "status",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression:
-                                                    "editedItem.status"
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          )
-                                        ],
-                                        1
-                                      )
-                                    ],
-                                    1
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "v-card-actions",
-                                [
-                                  _c("v-spacer"),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-btn",
-                                    {
-                                      attrs: {
-                                        color: "blue darken-1",
-                                        text: ""
-                                      },
-                                      on: { click: _vm.close }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                                        Cancel\n                                    "
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-btn",
-                                    {
-                                      attrs: {
-                                        color: "blue darken-1",
-                                        text: ""
-                                      },
-                                      on: { click: _vm.save }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                                        Save\n                                    "
-                                      )
-                                    ]
-                                  )
-                                ],
-                                1
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-dialog",
-                        {
-                          attrs: { "max-width": "500px" },
-                          model: {
-                            value: _vm.dialogDelete,
-                            callback: function($$v) {
-                              _vm.dialogDelete = $$v
-                            },
-                            expression: "dialogDelete"
-                          }
-                        },
-                        [
-                          _c(
-                            "v-card",
-                            [
-                              _c("v-card-title", { staticClass: "headline" }, [
-                                _vm._v(
-                                  "Are you sure you want to delete this item?"
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "v-card-actions",
-                                [
-                                  _c("v-spacer"),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-btn",
-                                    {
-                                      attrs: {
-                                        color: "blue darken-1",
-                                        text: ""
-                                      },
-                                      on: { click: _vm.closeDelete }
-                                    },
-                                    [_vm._v("Cancel")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-btn",
-                                    {
-                                      attrs: {
-                                        color: "blue darken-1",
-                                        text: ""
-                                      },
-                                      on: { click: _vm.deleteItemConfirm }
-                                    },
-                                    [_vm._v("OK")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("v-spacer")
-                                ],
-                                1
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                ]
-              },
-              proxy: true
-            },
-            {
-              key: "item.actions",
-              fn: function(ref) {
-                var item = ref.item
-                return [
-                  _c(
-                    "v-icon",
-                    {
-                      staticClass: "mr-2",
-                      attrs: { color: "primary", small: "" },
-                      on: {
-                        click: function($event) {
-                          return _vm.editItem(item)
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        mdi-pencil\n                    "
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-icon",
-                    {
-                      attrs: { color: "red", small: "" },
-                      on: {
-                        click: function($event) {
-                          return _vm.deleteItem(item)
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        mdi-delete\n                    "
-                      )
-                    ]
-                  )
-                ]
-              }
-            },
-            {
-              key: "no-data",
-              fn: function() {
-                return [
-                  _c(
-                    "v-btn",
-                    { attrs: { color: "primary" }, on: { click: _vm.getData } },
-                    [
-                      _vm._v(
-                        "\n                        Reset\n                    "
-                      )
-                    ]
-                  )
-                ]
-              },
-              proxy: true
-            }
-          ])
-        })
-      ],
-      1
-    )
-  ])
+  return _c(
+    "div",
+    [
+      _c("v-data-table", {
+        staticClass: "elevation-1",
+        attrs: {
+          headers: _vm.headers,
+          items: _vm.orders,
+          options: _vm.options,
+          "server-items-length": _vm.totalOrders,
+          loading: _vm.loading
+        },
+        on: {
+          "update:options": function($event) {
+            _vm.options = $event
+          }
+        }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -40357,7 +39624,7 @@ var render = function() {
             _vm._v("Orders Page")
           ]),
           _vm._v(" "),
-          _c("ordersDataTable")
+          _c("orders-data-table")
         ],
         1
       )
@@ -99877,7 +99144,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ordersDataTable_vue_vue_type_template_id_2a35bf22_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ordersDataTable.vue?vue&type=template&id=2a35bf22&scoped=true& */ "./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22&scoped=true&");
+/* harmony import */ var _ordersDataTable_vue_vue_type_template_id_2a35bf22___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ordersDataTable.vue?vue&type=template&id=2a35bf22& */ "./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22&");
 /* harmony import */ var _ordersDataTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ordersDataTable.vue?vue&type=script&lang=js& */ "./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
@@ -99889,11 +99156,11 @@ __webpack_require__.r(__webpack_exports__);
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
   _ordersDataTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _ordersDataTable_vue_vue_type_template_id_2a35bf22_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _ordersDataTable_vue_vue_type_template_id_2a35bf22_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _ordersDataTable_vue_vue_type_template_id_2a35bf22___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ordersDataTable_vue_vue_type_template_id_2a35bf22___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  "2a35bf22",
+  null,
   null
   
 )
@@ -99919,19 +99186,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22&scoped=true&":
-/*!***********************************************************************************************************!*\
-  !*** ./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22&scoped=true& ***!
-  \***********************************************************************************************************/
+/***/ "./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22& ***!
+  \***********************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ordersDataTable_vue_vue_type_template_id_2a35bf22_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ordersDataTable.vue?vue&type=template&id=2a35bf22&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ordersDataTable_vue_vue_type_template_id_2a35bf22_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ordersDataTable_vue_vue_type_template_id_2a35bf22___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ordersDataTable.vue?vue&type=template&id=2a35bf22& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ordersDataTable_vue_vue_type_template_id_2a35bf22___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ordersDataTable_vue_vue_type_template_id_2a35bf22_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ordersDataTable_vue_vue_type_template_id_2a35bf22___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -100786,8 +100053,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

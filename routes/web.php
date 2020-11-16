@@ -13,5 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/get_user_orders', 'OrdersController@get_user_orders');
+
 Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');
 
