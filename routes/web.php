@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/get_user_orders', 'OrdersController@get_user_orders');
+Route::post('/create_new_order', 'OrdersController@create_new_order');
 
 Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');
 
