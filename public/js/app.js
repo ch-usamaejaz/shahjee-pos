@@ -2019,26 +2019,205 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      dialog: false,
+      dialogDelete: false,
       totalOrders: 0,
+      rowId: 0,
       orders: [],
       loading: true,
       options: {},
+      dropdown_edit: [{
+        text: 'Chicken'
+      }, {
+        text: 'Coke'
+      }, {
+        text: 'Naan'
+      }],
+      dropdown_edit_status: [{
+        text: 'Paid'
+      }, {
+        text: 'Unpaid'
+      }],
       headers: [{
         text: 'Order#',
         align: 'start',
         value: 'id'
       }, {
-        text: 'Order Value ',
-        value: 'order_total',
-        sortable: false
-      }, {
         text: 'Order Status',
         value: 'order_status',
         sortable: false
-      }]
+      }, {
+        text: 'Discount',
+        value: 'order_discount',
+        sortable: false
+      }, {
+        text: 'Order Total ',
+        value: 'order_total',
+        sortable: false
+      }, {
+        text: 'Actions',
+        value: 'actions',
+        sortable: false
+      }],
+      editedIndex: 0,
+      editedItem: {
+        order_total: 0,
+        quantity: 10,
+        price: 2,
+        order_status: '',
+        order_discount: 0
+      }
     };
   },
   watch: {
@@ -2049,6 +2228,12 @@ __webpack_require__.r(__webpack_exports__);
       deep: true
     }
   },
+  computed: {
+    formTitle: function formTitle() {
+      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
+    }
+  },
+  mounted: function mounted() {},
   methods: {
     getDataFromApi: function getDataFromApi() {
       this.loading = true;
@@ -2062,9 +2247,57 @@ __webpack_require__.r(__webpack_exports__);
         _this.orders = response.data.orders;
         _this.totalOrders = response.data.orders.length;
         _this.loading = false;
+        console.log(response.data.orders);
       })["catch"](function (error) {
         console.log(error.message);
       });
+    },
+    getItems: function getItems() {
+      console.log("here" + this.orders[1].item_name);
+    },
+    editItem: function editItem(item) {
+      this.editedIndex = this.orders.item;
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+    },
+    deleteItem: function deleteItem(item) {
+      // let id = item;
+      // this.dialogDelete = true
+      // for(var i =0; i <this.orders.length; i++){
+      //   if(this.orders[i].id == id){
+      //     this.orders.splice(i, 1);
+      //     break;
+      //   }
+      // }
+      this.editedIndex = this.orders.indexOf(item);
+      console.log(this.editedIndex);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+      console.log(this.editedIndex);
+    },
+    closeDelete: function closeDelete() {
+      console.log(this.editedIndex);
+      this.orders.splice(this.editedIndex, 1);
+      this.dialogDelete = false;
+    },
+    deleteItemConfirm: function deleteItemConfirm() {
+      this.deleteItem();
+      this.closeDelete();
+    },
+    close: function close() {
+      this.dialog = false;
+    },
+    addOrder: function addOrder() {
+      this.axios.post('');
+    },
+    save: function save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.orders[this.editedIndex], this.editedItem);
+      } else {
+        this.orders.push(this.editedItem);
+      }
+
+      this.close();
     }
   }
 });
@@ -38941,7 +39174,353 @@ var render = function() {
           "update:options": function($event) {
             _vm.options = $event
           }
-        }
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "top",
+            fn: function() {
+              return [
+                _c(
+                  "v-toolbar",
+                  { attrs: { flat: "" } },
+                  [
+                    _c(
+                      "v-dialog",
+                      {
+                        attrs: { "max-width": "1000px" },
+                        scopedSlots: _vm._u([
+                          {
+                            key: "activator",
+                            fn: function(ref) {
+                              var on = ref.on
+                              var attrs = ref.attrs
+                              return [
+                                _c(
+                                  "v-btn",
+                                  _vm._g(
+                                    _vm._b(
+                                      {
+                                        staticClass: "mb-2",
+                                        attrs: { color: "primary", dark: "" }
+                                      },
+                                      "v-btn",
+                                      attrs,
+                                      false
+                                    ),
+                                    on
+                                  ),
+                                  [_vm._v("\n          New Order\n        ")]
+                                )
+                              ]
+                            }
+                          }
+                        ]),
+                        model: {
+                          value: _vm.dialog,
+                          callback: function($$v) {
+                            _vm.dialog = $$v
+                          },
+                          expression: "dialog"
+                        }
+                      },
+                      [
+                        _vm._v(" "),
+                        _c(
+                          "v-card",
+                          [
+                            _c("v-card-title", [
+                              _c("span", { staticClass: "headline" }, [
+                                _vm._v(_vm._s(_vm.formTitle))
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "v-card-text",
+                              [
+                                _c(
+                                  "v-container",
+                                  [
+                                    _c(
+                                      "v-row",
+                                      [
+                                        _c(
+                                          "v-col",
+                                          {
+                                            attrs: {
+                                              cols: "12",
+                                              sm: "6",
+                                              md: "4"
+                                            }
+                                          },
+                                          [
+                                            _c("v-overflow-btn", {
+                                              staticClass: "my-2",
+                                              attrs: {
+                                                items: _vm.dropdown_edit,
+                                                label: "Items",
+                                                editable: "",
+                                                "item-value": "text"
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "v-col",
+                                          {
+                                            attrs: {
+                                              cols: "12",
+                                              sm: "6",
+                                              md: "2"
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "v-text-field",
+                                              {
+                                                attrs: {
+                                                  label: "Quantity",
+                                                  type: "number",
+                                                  min: "1"
+                                                },
+                                                model: {
+                                                  value:
+                                                    _vm.editedItem.quantity,
+                                                  callback: function($$v) {
+                                                    _vm.$set(
+                                                      _vm.editedItem,
+                                                      "quantity",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression:
+                                                    "editedItem.quantity"
+                                                }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    _vm.editedItem.quantity
+                                                  )
+                                                )
+                                              ]
+                                            )
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "v-col",
+                                          {
+                                            attrs: {
+                                              cols: "12",
+                                              sm: "6",
+                                              md: "2"
+                                            }
+                                          },
+                                          [
+                                            _c("v-text-field", {
+                                              attrs: {
+                                                label: "Price (Rs)",
+                                                type: "number",
+                                                value:
+                                                  _vm.editedItem.quantity *
+                                                  _vm.editedItem.price,
+                                                readonly: ""
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "v-col",
+                                          {
+                                            attrs: {
+                                              cols: "12",
+                                              sm: "6",
+                                              md: "3"
+                                            }
+                                          },
+                                          [
+                                            _c("v-select", {
+                                              attrs: {
+                                                items: _vm.dropdown_edit_status,
+                                                label: "Status",
+                                                outlined: ""
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        )
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-row",
+                                      [
+                                        _c(
+                                          "v-col",
+                                          {
+                                            attrs: {
+                                              cols: "12",
+                                              sm: "6",
+                                              md: "3"
+                                            }
+                                          },
+                                          [
+                                            _c("v-text-field", {
+                                              attrs: {
+                                                label: "Total",
+                                                outlined: "",
+                                                value: _vm.editedItem.price,
+                                                readonly: ""
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        )
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-card-actions",
+                              [
+                                _c("v-spacer"),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: { color: "blue darken-1", text: "" },
+                                    on: { click: _vm.close }
+                                  },
+                                  [_vm._v("\n            Cancel\n          ")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: { color: "blue darken-1", text: "" },
+                                    on: { click: _vm.save }
+                                  },
+                                  [_vm._v("\n            Save\n          ")]
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "v-dialog",
+                      {
+                        attrs: { "max-width": "500px" },
+                        model: {
+                          value: _vm.dialogDelete,
+                          callback: function($$v) {
+                            _vm.dialogDelete = $$v
+                          },
+                          expression: "dialogDelete"
+                        }
+                      },
+                      [
+                        _c(
+                          "v-card",
+                          [
+                            _c("v-card-title", { staticClass: "headline" }, [
+                              _vm._v(
+                                "Are you sure you want to delete this item?"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "v-card-actions",
+                              [
+                                _c("v-spacer"),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: { color: "blue darken-1", text: "" },
+                                    on: { click: _vm.closeDelete }
+                                  },
+                                  [_vm._v("Cancel")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: { color: "blue darken-1", text: "" },
+                                    on: { click: _vm.deleteItemConfirm }
+                                  },
+                                  [_vm._v("OK")]
+                                ),
+                                _vm._v(" "),
+                                _c("v-spacer")
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "item.actions",
+            fn: function(ref) {
+              var item = ref.item
+              return [
+                _c(
+                  "v-icon",
+                  {
+                    staticClass: "mr-2",
+                    attrs: { color: "primary", small: "" },
+                    on: {
+                      click: function($event) {
+                        return _vm.editItem(item.id)
+                      }
+                    }
+                  },
+                  [_vm._v("\n          mdi-pencil\n        ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "v-icon",
+                  {
+                    attrs: { color: "red", small: "" },
+                    on: {
+                      click: function($event) {
+                        return _vm.deleteItem(item)
+                      }
+                    }
+                  },
+                  [_vm._v("\n          mdi-delete\n        ")]
+                )
+              ]
+            }
+          }
+        ])
       })
     ],
     1
@@ -100053,8 +100632,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
