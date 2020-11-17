@@ -13,30 +13,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr v-for="numberOfItems in 10" :key="numberOfItems">
                         <td class="quantity">{{itemQuantity}}</td>
                         <td class="description">{{itemName}}</td>
                         <td class="price">Rs{{itemPrice}}</td>
                     </tr>
                     <tr>
-                        <td class="quantity">2.00</td>
-                        <td class="description">JAVASCRIPT BOOK</td>
-                        <td class="price">$10.00</td>
-                    </tr>
-                    <tr>
-                        <td class="quantity">1.00</td>
-                        <td class="description">STICKER PACK</td>
-                        <td class="price">$10.00</td>
-                    </tr>
-                    <tr>
                         <td class="quantity"></td>
                         <td class="description">TOTAL</td>
-                        <td class="price">$55.00</td>
+                        <td class="price">Rs{{totalPrice}}</td>
                     </tr>
                 </tbody>
             </table>
-            <p class="centered">Thanks for your purchase!
-                <br>ShahJee Restuerent</p>
+            <p class="centered">Thanks for your purchase!<br>ShahJee Restuerent</p>
         </div>
         <button id="btnPrint" class="hidden-print" @click="printTicket()">Print</button>
     </div>
@@ -44,13 +33,14 @@
 
 <script>
 export default {
-    name: 'printButton',
+    name: 'printTicket',
     data(){
         return{
-            itemQuantity: 0,
-            itemName: '',
-            itemPrice: 0,
-            totalPrice: 0
+            numberOfItems: 0,
+            itemQuantity: 2,
+            itemName: 'Chicken Karahi',
+            itemPrice: 200,
+            totalPrice: 400
         }
     },
     methods: {
@@ -88,6 +78,7 @@ export default {
     * {
     font-size: 12px;
     font-family: 'Times New Roman';
+    font-weight: bolder;
 }
 
 td,
@@ -96,8 +87,8 @@ tr,
 table {
     border-top: 1px solid black;
     border-collapse: collapse;
-    align-items: center;
-    margin-left: 160px;
+    align-items: center !important;
+    margin-left: 60px;
 }
 
 td.description,
