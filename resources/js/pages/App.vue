@@ -1,5 +1,9 @@
 <template>
-    <component v-bind:is="layout"></component>
+    <v-app>
+        <v-main>
+            <component v-bind:is="layout"></component>
+        </v-main>
+    </v-app>
 </template>
 
 <script>
