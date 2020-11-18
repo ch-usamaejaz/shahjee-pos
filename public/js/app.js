@@ -2167,16 +2167,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       dialog: false,
       dialogDelete: false,
       totalOrders: 0,
-      rowId: 0,
       orders: [],
       loading: true,
       options: {},
+      selectedStatus: "",
+      selectedItem: "",
       dropdown_edit: [{
         text: 'Chicken'
       }, {
@@ -2212,11 +2248,11 @@ __webpack_require__.r(__webpack_exports__);
       }],
       editedIndex: 0,
       editedItem: {
-        order_total: 0,
         quantity: 10,
         price: 2,
         order_status: '',
-        order_discount: 0
+        order_discount: 0,
+        order_total: 0
       }
     };
   },
@@ -2251,6 +2287,10 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error.message);
       });
+    },
+    addRow: function addRow() {
+      this.rows++;
+      console.log(this.rows);
     },
     getItems: function getItems() {
       console.log("here" + this.orders[1].item_name);
@@ -2297,7 +2337,28 @@ __webpack_require__.r(__webpack_exports__);
         this.orders.push(this.editedItem);
       }
 
+      this.postData();
       this.close();
+      console.log(this.editedItem.price);
+    },
+    postData: function postData() {
+      var formData = new FormData();
+      var newOrder = {
+        "order_total": this.editedItem.order_total,
+        "order_status": this.selectedStatus,
+        "user_id": 1,
+        "items": [{
+          "item_id": 5,
+          "quantity": this.editedItem.quantity
+        }]
+      };
+      var url = "/create_new_order";
+      this.axios.post(url, newOrder).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+      console.log(newOrder);
     }
   }
 });
@@ -39240,123 +39301,152 @@ var render = function() {
                                 _c(
                                   "v-container",
                                   [
-                                    _c(
-                                      "v-row",
-                                      [
-                                        _c(
-                                          "v-col",
-                                          {
-                                            attrs: {
-                                              cols: "12",
-                                              sm: "6",
-                                              md: "4"
-                                            }
-                                          },
-                                          [
-                                            _c("v-overflow-btn", {
-                                              staticClass: "my-2",
+                                    _vm._l(_vm.rows, function(row) {
+                                      return _c(
+                                        "v-row",
+                                        { key: row },
+                                        [
+                                          _c(
+                                            "v-col",
+                                            {
                                               attrs: {
-                                                items: _vm.dropdown_edit,
-                                                label: "Items",
-                                                editable: "",
-                                                "item-value": "text"
+                                                cols: "12",
+                                                sm: "6",
+                                                md: "4"
                                               }
-                                            })
-                                          ],
-                                          1
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "v-col",
-                                          {
-                                            attrs: {
-                                              cols: "12",
-                                              sm: "6",
-                                              md: "2"
-                                            }
-                                          },
-                                          [
-                                            _c(
-                                              "v-text-field",
-                                              {
+                                            },
+                                            [
+                                              _c("v-overflow-btn", {
+                                                staticClass: "my-2",
                                                 attrs: {
-                                                  label: "Quantity",
-                                                  type: "number",
-                                                  min: "1"
+                                                  items: _vm.dropdown_edit,
+                                                  label: "Items",
+                                                  editable: "",
+                                                  "item-value": "text"
                                                 },
                                                 model: {
-                                                  value:
-                                                    _vm.editedItem.quantity,
+                                                  value: _vm.selectedItem,
                                                   callback: function($$v) {
-                                                    _vm.$set(
-                                                      _vm.editedItem,
-                                                      "quantity",
-                                                      $$v
-                                                    )
+                                                    _vm.selectedItem = $$v
                                                   },
-                                                  expression:
-                                                    "editedItem.quantity"
+                                                  expression: "selectedItem"
                                                 }
-                                              },
-                                              [
-                                                _vm._v(
-                                                  _vm._s(
-                                                    _vm.editedItem.quantity
+                                              })
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-col",
+                                            {
+                                              attrs: {
+                                                cols: "12",
+                                                sm: "6",
+                                                md: "2"
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "v-text-field",
+                                                {
+                                                  attrs: {
+                                                    label: "Quantity",
+                                                    type: "number",
+                                                    min: "1"
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.editedItem.quantity,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.editedItem,
+                                                        "quantity",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "editedItem.quantity"
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    _vm._s(
+                                                      _vm.editedItem.quantity
+                                                    )
                                                   )
-                                                )
-                                              ]
-                                            )
-                                          ],
-                                          1
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "v-col",
-                                          {
-                                            attrs: {
-                                              cols: "12",
-                                              sm: "6",
-                                              md: "2"
-                                            }
-                                          },
-                                          [
-                                            _c("v-text-field", {
+                                                ]
+                                              )
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-col",
+                                            {
                                               attrs: {
-                                                label: "Price (Rs)",
-                                                type: "number",
-                                                value:
-                                                  _vm.editedItem.quantity *
-                                                  _vm.editedItem.price,
-                                                readonly: ""
+                                                cols: "12",
+                                                sm: "6",
+                                                md: "2"
                                               }
-                                            })
-                                          ],
-                                          1
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "v-col",
-                                          {
-                                            attrs: {
-                                              cols: "12",
-                                              sm: "6",
-                                              md: "3"
-                                            }
-                                          },
-                                          [
-                                            _c("v-select", {
+                                            },
+                                            [
+                                              _c(
+                                                "v-text-field",
+                                                {
+                                                  attrs: {
+                                                    label: "Price (Rs)",
+                                                    type: "number",
+                                                    value:
+                                                      _vm.editedItem.quantity *
+                                                      _vm.editedItem.price,
+                                                    readonly: ""
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    _vm._s(
+                                                      _vm.editedItem.quantity *
+                                                        _vm.editedItem.price
+                                                    )
+                                                  )
+                                                ]
+                                              )
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-col",
+                                            {
                                               attrs: {
-                                                items: _vm.dropdown_edit_status,
-                                                label: "Status",
-                                                outlined: ""
+                                                cols: "12",
+                                                sm: "6",
+                                                md: "3"
                                               }
-                                            })
-                                          ],
-                                          1
-                                        )
-                                      ],
-                                      1
-                                    ),
+                                            },
+                                            [
+                                              _c("v-select", {
+                                                attrs: {
+                                                  items:
+                                                    _vm.dropdown_edit_status,
+                                                  label: "Status",
+                                                  outlined: ""
+                                                },
+                                                model: {
+                                                  value: _vm.selectedStatus,
+                                                  callback: function($$v) {
+                                                    _vm.selectedStatus = $$v
+                                                  },
+                                                  expression: "selectedStatus"
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    }),
                                     _vm._v(" "),
                                     _c(
                                       "v-row",
@@ -39374,11 +39464,87 @@ var render = function() {
                                             _c("v-text-field", {
                                               attrs: {
                                                 label: "Total",
+                                                type: "number",
                                                 outlined: "",
-                                                value: _vm.editedItem.price,
-                                                readonly: ""
+                                                value:
+                                                  _vm.editedItem.price *
+                                                  _vm.editedItem.quantity,
+                                                readonly: "",
+                                                bind: _vm.editedItem.order_total
                                               }
                                             })
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "v-col",
+                                          {
+                                            attrs: {
+                                              cols: "12",
+                                              sm: "6",
+                                              md: "3"
+                                            }
+                                          },
+                                          [
+                                            _c("v-text-field", {
+                                              attrs: {
+                                                label: "Discount",
+                                                type: "number",
+                                                outlined: ""
+                                              },
+                                              model: {
+                                                value:
+                                                  _vm.editedItem.order_discount,
+                                                callback: function($$v) {
+                                                  _vm.$set(
+                                                    _vm.editedItem,
+                                                    "order_discount",
+                                                    $$v
+                                                  )
+                                                },
+                                                expression:
+                                                  "editedItem.order_discount"
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "v-col",
+                                          {
+                                            attrs: {
+                                              cols: "12",
+                                              sm: "6",
+                                              md: "6"
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "v-btn",
+                                              {
+                                                staticClass: "mx-2",
+                                                attrs: {
+                                                  fab: "",
+                                                  dark: "",
+                                                  color: "indigo"
+                                                },
+                                                on: { click: _vm.addRow }
+                                              },
+                                              [
+                                                _c(
+                                                  "v-icon",
+                                                  { attrs: { dark: "" } },
+                                                  [
+                                                    _vm._v(
+                                                      "\n                    mdi-plus\n                  "
+                                                    )
+                                                  ]
+                                                )
+                                              ],
+                                              1
+                                            )
                                           ],
                                           1
                                         )
@@ -39386,7 +39552,7 @@ var render = function() {
                                       1
                                     )
                                   ],
-                                  1
+                                  2
                                 )
                               ],
                               1
@@ -39516,6 +39682,19 @@ var render = function() {
                     }
                   },
                   [_vm._v("\n          mdi-delete\n        ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "v-icon",
+                  {
+                    attrs: { color: "green", large: "" },
+                    on: {
+                      click: function($event) {
+                        return _vm.deleteItem(item)
+                      }
+                    }
+                  },
+                  [_vm._v("\n          mdi-printer\n        ")]
                 )
               ]
             }

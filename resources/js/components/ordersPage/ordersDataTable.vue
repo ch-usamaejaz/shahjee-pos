@@ -34,7 +34,7 @@
 
             <v-card-text>
               <v-container>
-                <v-row>
+                <v-row v-for="row in rows" :key="row">
                   <v-col
                     cols="12"
                     sm="6"
@@ -43,14 +43,11 @@
                   <v-overflow-btn
                     class="my-2"
                     :items="dropdown_edit"
+                    v-model="selectedItem"
                     label="Items"
                     editable
                     item-value="text"
                   ></v-overflow-btn>
-                    <!-- <v-text-field
-                      v-model="editedItem.name"
-                      label="Items"
-                    ></v-text-field> -->
                   </v-col>
                   <v-col
                     cols="12"
@@ -74,7 +71,7 @@
                       type="number"
                       :value="editedItem.quantity * editedItem.price"
                       readonly
-                    ></v-text-field>
+                    >{{editedItem.quantity * editedItem.price}}</v-text-field>
                   </v-col>
                   <v-col
                     cols="12"
@@ -83,6 +80,7 @@
                   >
                   <v-select
                     :items="dropdown_edit_status"
+                    v-model="selectedStatus"
                     label="Status"
                     outlined
                   ></v-select>
@@ -96,13 +94,43 @@
                   >
                     <v-text-field
                       label="Total"
+                      type="number"
                       outlined
-                      :value="editedItem.price"
+                      :value="editedItem.price * editedItem.quantity"
                       readonly
+                      :bind="editedItem.order_total"
                   ></v-text-field>
                   </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="3"
+                  >
+                    <v-text-field
+                      label="Discount"
+                      type="number"
+                      outlined
+                      v-model="editedItem.order_discount"
+                  ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-btn
+                      class="mx-2"
+                      fab
+                      dark
+                      color="indigo"
+                      @click="addRow"
+                    >
+                      <v-icon dark>
+                        mdi-plus
+                      </v-icon>
+                    </v-btn>
+                  </v-col>
                 </v-row>
-
               </v-container>
             </v-card-text>
 
@@ -154,6 +182,13 @@
             >
               mdi-delete
             </v-icon>
+            <v-icon
+              color="green"
+              large
+              @click="deleteItem(item)"
+            >
+              mdi-printer
+            </v-icon>
           </template>
         </v-data-table>
     </div>
@@ -166,10 +201,11 @@
                 dialog: false,
                 dialogDelete: false,
                 totalOrders: 0,
-                rowId: 0,
                 orders: [],
                 loading: true,
                 options: {},
+                selectedStatus: "",
+                selectedItem: "",
                 dropdown_edit: [
                   { text: 'Chicken' },
                   { text: 'Coke' },
@@ -188,11 +224,11 @@
                 ],
                 editedIndex: 0,
                 editedItem: {
-                  order_total: 0,
                   quantity: 10,
                   price: 2,
                   order_status: '',
                   order_discount: 0,
+                  order_total: 0,
                 },
             }
         },
@@ -228,6 +264,10 @@
                     }).catch (error => {
                         console.log(error.message)
                 })
+            },
+            addRow () {
+              this.rows++;
+              console.log(this.rows)
             },
             getItems () {
               console.log("here" + this.orders[1].item_name)
@@ -275,8 +315,31 @@
               } else {
                 this.orders.push(this.editedItem)
               }
+              this.postData();
               this.close()
+              console.log(this.editedItem.price)
             },
-        },
+          postData(){
+          let formData = new FormData();
+          let newOrder = {
+            "order_total": this.editedItem.order_total,
+            "order_status": this.selectedStatus,
+            "user_id": 1,
+            "items": [
+              {
+                "item_id": 5,
+                "quantity": this.editedItem.quantity
+              }
+            ]
+          };
+          let url = "/create_new_order"
+          this.axios.post(url,newOrder).then(response =>{
+            console.log(response)
+          }).catch(error =>{
+            console.log(error);
+          })
+          console.log(newOrder);
+        }
+      }
     }
 </script>
