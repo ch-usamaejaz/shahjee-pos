@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://shahjeerestaurants'),
+    'url' => env('APP_URL', 'http://shahjeerestaurants.com'),
 
     'asset_url' => env('ASSET_URL', null),
 
