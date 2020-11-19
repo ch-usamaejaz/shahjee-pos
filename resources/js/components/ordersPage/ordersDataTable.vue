@@ -90,7 +90,9 @@
                     sm="6"
                     md="1"
                   >
-                  <v-icon color="red">
+                  <v-icon
+                    color="red"
+                    @click="removeRow(row.id)">
                     mdi-close-circle
                   </v-icon>
                   </v-col>
@@ -203,6 +205,7 @@
 </template>
 
 <script>
+  import printTicket from './printTicket'; 
     export default {
         data () {
             return {
@@ -317,6 +320,15 @@
               this.postData();
               this.close()
               console.log(this.editedItem.price)
+            },
+            removeRow (row){
+                for(var i =0; i <this.newOrderRow.length; i++){
+                if(this.newOrderRow[i].id == row){
+                  this.newOrderRow.splice(i, 1);
+                  break;
+                }
+              }
+              console.log(row);
             },
           postData(){
           let formData = new FormData();
