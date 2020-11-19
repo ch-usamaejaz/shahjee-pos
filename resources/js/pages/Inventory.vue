@@ -10,7 +10,9 @@
 
 <script>
 export default {
-    name: 'inventory'
+    name: 'inventory',
+    components: {
+    }
 }
 </script>
 
