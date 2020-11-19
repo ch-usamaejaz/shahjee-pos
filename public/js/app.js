@@ -2201,6 +2201,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2321,6 +2330,7 @@ __webpack_require__.r(__webpack_exports__);
       this.dialogDelete = true;
     },
     close: function close() {
+      this.newOrderRow = new Array();
       this.dialog = false;
     },
     save: function save() {
@@ -39416,6 +39426,29 @@ var render = function() {
                                                   expression: "selectedStatus"
                                                 }
                                               })
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-col",
+                                            {
+                                              attrs: {
+                                                cols: "12",
+                                                sm: "6",
+                                                md: "1"
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "v-icon",
+                                                { attrs: { color: "red" } },
+                                                [
+                                                  _vm._v(
+                                                    "\n                mdi-close-circle\n              "
+                                                  )
+                                                ]
+                                              )
                                             ],
                                             1
                                           )

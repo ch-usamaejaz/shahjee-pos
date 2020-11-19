@@ -85,6 +85,15 @@
                     outlined
                   ></v-select>
                   </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="1"
+                  >
+                  <v-icon color="red">
+                    mdi-close-circle
+                  </v-icon>
+                  </v-col>
                 </v-row>
                 <v-row>
                   <v-col
@@ -106,7 +115,7 @@
                     sm="6"
                     md="3"
                   >
-                    <v-text-field
+                  <v-text-field
                       label="Discount"
                       type="number"
                       outlined
@@ -296,6 +305,7 @@
               this.dialogDelete = true
             },
             close () {
+              this.newOrderRow = new Array;
               this.dialog = false
           },
             save () {
