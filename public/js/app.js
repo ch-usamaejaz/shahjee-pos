@@ -2201,7 +2201,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2211,7 +2210,9 @@ __webpack_require__.r(__webpack_exports__);
       orders: [],
       loading: true,
       options: {},
+      newOrderRow: [],
       selectedStatus: "",
+      currentRowId: 0,
       selectedItem: "",
       dropdown_edit: [{
         text: 'Chicken'
@@ -2246,7 +2247,7 @@ __webpack_require__.r(__webpack_exports__);
         value: 'actions',
         sortable: false
       }],
-      editedIndex: 0,
+      editedIndex: -1,
       editedItem: {
         quantity: 10,
         price: 2,
@@ -2266,7 +2267,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     formTitle: function formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
+      return this.currentRowId === 0 ? 'New Order' : 'Edit Order';
     }
   },
   mounted: function mounted() {},
@@ -2288,47 +2289,39 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error.message);
       });
     },
-    addRow: function addRow() {
-      this.rows++;
-      console.log(this.rows);
-    },
     getItems: function getItems() {
       console.log("here" + this.orders[1].item_name);
     },
+    addNewRow: function addNewRow() {
+      this.newOrderRow.push({});
+    },
     editItem: function editItem(item) {
-      this.editedIndex = this.orders.item;
+      this.currentRowId = item; // this.editedIndex = this.orders.item
+
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-    deleteItem: function deleteItem(item) {
-      // let id = item;
-      // this.dialogDelete = true
-      // for(var i =0; i <this.orders.length; i++){
-      //   if(this.orders[i].id == id){
-      //     this.orders.splice(i, 1);
-      //     break;
-      //   }
-      // }
-      this.editedIndex = this.orders.indexOf(item);
-      console.log(this.editedIndex);
-      this.editedItem = Object.assign({}, item);
-      this.dialogDelete = true;
-      console.log(this.editedIndex);
+    deleteItem: function deleteItem() {
+      var id = this.currentRowId;
+
+      for (var i = 0; i < this.orders.length; i++) {
+        if (this.orders[i].id == id) {
+          this.orders.splice(i, 1);
+          break;
+        }
+      }
+
+      this.closeDelete();
     },
     closeDelete: function closeDelete() {
-      console.log(this.editedIndex);
-      this.orders.splice(this.editedIndex, 1);
       this.dialogDelete = false;
     },
-    deleteItemConfirm: function deleteItemConfirm() {
-      this.deleteItem();
-      this.closeDelete();
+    deleteItemConfirm: function deleteItemConfirm(item) {
+      this.currentRowId = item;
+      this.dialogDelete = true;
     },
     close: function close() {
       this.dialog = false;
-    },
-    addOrder: function addOrder() {
-      this.axios.post('');
     },
     save: function save() {
       if (this.editedIndex > -1) {
@@ -39301,10 +39294,10 @@ var render = function() {
                                 _c(
                                   "v-container",
                                   [
-                                    _vm._l(_vm.rows, function(row) {
+                                    _vm._l(_vm.newOrderRow, function(row) {
                                       return _c(
                                         "v-row",
-                                        { key: row },
+                                        { key: row.id },
                                         [
                                           _c(
                                             "v-col",
@@ -39325,11 +39318,15 @@ var render = function() {
                                                   "item-value": "text"
                                                 },
                                                 model: {
-                                                  value: _vm.selectedItem,
+                                                  value: row.selectedItem,
                                                   callback: function($$v) {
-                                                    _vm.selectedItem = $$v
+                                                    _vm.$set(
+                                                      row,
+                                                      "selectedItem",
+                                                      $$v
+                                                    )
                                                   },
-                                                  expression: "selectedItem"
+                                                  expression: "row.selectedItem"
                                                 }
                                               })
                                             ],
@@ -39346,36 +39343,26 @@ var render = function() {
                                               }
                                             },
                                             [
-                                              _c(
-                                                "v-text-field",
-                                                {
-                                                  attrs: {
-                                                    label: "Quantity",
-                                                    type: "number",
-                                                    min: "1"
-                                                  },
-                                                  model: {
-                                                    value:
-                                                      _vm.editedItem.quantity,
-                                                    callback: function($$v) {
-                                                      _vm.$set(
-                                                        _vm.editedItem,
-                                                        "quantity",
-                                                        $$v
-                                                      )
-                                                    },
-                                                    expression:
-                                                      "editedItem.quantity"
-                                                  }
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  label: "Quantity",
+                                                  type: "number",
+                                                  min: "1"
                                                 },
-                                                [
-                                                  _vm._v(
-                                                    _vm._s(
-                                                      _vm.editedItem.quantity
+                                                model: {
+                                                  value:
+                                                    _vm.editedItem.quantity,
+                                                  callback: function($$v) {
+                                                    _vm.$set(
+                                                      _vm.editedItem,
+                                                      "quantity",
+                                                      $$v
                                                     )
-                                                  )
-                                                ]
-                                              )
+                                                  },
+                                                  expression:
+                                                    "editedItem.quantity"
+                                                }
+                                              })
                                             ],
                                             1
                                           ),
@@ -39390,27 +39377,16 @@ var render = function() {
                                               }
                                             },
                                             [
-                                              _c(
-                                                "v-text-field",
-                                                {
-                                                  attrs: {
-                                                    label: "Price (Rs)",
-                                                    type: "number",
-                                                    value:
-                                                      _vm.editedItem.quantity *
-                                                      _vm.editedItem.price,
-                                                    readonly: ""
-                                                  }
-                                                },
-                                                [
-                                                  _vm._v(
-                                                    _vm._s(
-                                                      _vm.editedItem.quantity *
-                                                        _vm.editedItem.price
-                                                    )
-                                                  )
-                                                ]
-                                              )
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  label: "Price (Rs)",
+                                                  type: "number",
+                                                  value:
+                                                    _vm.editedItem.quantity *
+                                                    _vm.editedItem.price,
+                                                  readonly: ""
+                                                }
+                                              })
                                             ],
                                             1
                                           ),
@@ -39530,7 +39506,7 @@ var render = function() {
                                                   dark: "",
                                                   color: "indigo"
                                                 },
-                                                on: { click: _vm.addRow }
+                                                on: { click: _vm.addNewRow }
                                               },
                                               [
                                                 _c(
@@ -39630,7 +39606,7 @@ var render = function() {
                                   "v-btn",
                                   {
                                     attrs: { color: "blue darken-1", text: "" },
-                                    on: { click: _vm.deleteItemConfirm }
+                                    on: { click: _vm.deleteItem }
                                   },
                                   [_vm._v("OK")]
                                 ),
@@ -39677,25 +39653,16 @@ var render = function() {
                     attrs: { color: "red", small: "" },
                     on: {
                       click: function($event) {
-                        return _vm.deleteItem(item)
+                        return _vm.deleteItemConfirm(item.id)
                       }
                     }
                   },
                   [_vm._v("\n          mdi-delete\n        ")]
                 ),
                 _vm._v(" "),
-                _c(
-                  "v-icon",
-                  {
-                    attrs: { color: "green", large: "" },
-                    on: {
-                      click: function($event) {
-                        return _vm.deleteItem(item)
-                      }
-                    }
-                  },
-                  [_vm._v("\n          mdi-printer\n        ")]
-                )
+                _c("v-icon", { attrs: { color: "green", large: "" } }, [
+                  _vm._v("\n          mdi-printer\n        ")
+                ])
               ]
             }
           }

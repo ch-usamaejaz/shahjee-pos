@@ -34,7 +34,7 @@
 
             <v-card-text>
               <v-container>
-                <v-row v-for="row in rows" :key="row">
+                <v-row v-for="row in newOrderRow" :key="row.id">
                   <v-col
                     cols="12"
                     sm="6"
@@ -43,7 +43,7 @@
                   <v-overflow-btn
                     class="my-2"
                     :items="dropdown_edit"
-                    v-model="selectedItem"
+                    v-model="row.selectedItem"
                     label="Items"
                     editable
                     item-value="text"
@@ -59,7 +59,7 @@
                       label="Quantity"
                       type="number"
                       min="1"
-                    >{{editedItem.quantity}}</v-text-field>
+                    ></v-text-field>
                   </v-col>
                   <v-col
                     cols="12"
@@ -71,7 +71,7 @@
                       type="number"
                       :value="editedItem.quantity * editedItem.price"
                       readonly
-                    >{{editedItem.quantity * editedItem.price}}</v-text-field>
+                    ></v-text-field>
                   </v-col>
                   <v-col
                     cols="12"
@@ -123,7 +123,7 @@
                       fab
                       dark
                       color="indigo"
-                      @click="addRow"
+                      @click="addNewRow"
                     >
                       <v-icon dark>
                         mdi-plus
@@ -159,7 +159,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="blue darken-1" text @click="deleteItem">OK</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -178,14 +178,13 @@
             <v-icon
               color="red"
               small
-              @click="deleteItem(item)"
+              @click="deleteItemConfirm(item.id)"
             >
               mdi-delete
             </v-icon>
             <v-icon
               color="green"
               large
-              @click="deleteItem(item)"
             >
               mdi-printer
             </v-icon>
@@ -204,7 +203,9 @@
                 orders: [],
                 loading: true,
                 options: {},
+                newOrderRow: [],
                 selectedStatus: "",
+                currentRowId: 0,
                 selectedItem: "",
                 dropdown_edit: [
                   { text: 'Chicken' },
@@ -222,7 +223,7 @@
                     { text: 'Order Total ', value: 'order_total', sortable: false },
                     { text: 'Actions', value: 'actions', sortable: false }
                 ],
-                editedIndex: 0,
+                editedIndex: -1,
                 editedItem: {
                   quantity: 10,
                   price: 2,
@@ -242,7 +243,7 @@
         },
         computed: {
           formTitle () {
-          return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+          return this.currentRowId === 0 ? 'New Order' : 'Edit Order'
         },
       },
         mounted(){
@@ -265,50 +266,38 @@
                         console.log(error.message)
                 })
             },
-            addRow () {
-              this.rows++;
-              console.log(this.rows)
-            },
             getItems () {
               console.log("here" + this.orders[1].item_name)
             },
+            addNewRow () {
+              this.newOrderRow.push({});
+            },
             editItem (item) {
-              this.editedIndex = this.orders.item
+              this.currentRowId = item;
+              // this.editedIndex = this.orders.item
               this.editedItem = Object.assign({}, item)
               this.dialog = true
             },
-            deleteItem (item) {
-              // let id = item;
-              // this.dialogDelete = true
-              // for(var i =0; i <this.orders.length; i++){
-              //   if(this.orders[i].id == id){
-              //     this.orders.splice(i, 1);
-              //     break;
-              //   }
-              // }
-              this.editedIndex = this.orders.indexOf(item)
-              console.log(this.editedIndex)
-              this.editedItem = Object.assign({}, item)
-              this.dialogDelete = true
-              console.log(this.editedIndex)
+            deleteItem () {
+              let id = this.currentRowId;
+              for(var i =0; i <this.orders.length; i++){
+                if(this.orders[i].id == id){
+                  this.orders.splice(i, 1);
+                  break;
+                }
+              }
+              this.closeDelete();
             },
             closeDelete () {
-              console.log(this.editedIndex)
-              this.orders.splice(this.editedIndex, 1)
-
               this.dialogDelete = false
             },
-            deleteItemConfirm () {
-              this.deleteItem()
-              this.closeDelete()
+            deleteItemConfirm (item) {
+              this.currentRowId = item
+              this.dialogDelete = true
             },
             close () {
               this.dialog = false
           },
-            addOrder (){
-
-              this.axios.post('')
-            },
             save () {
               if (this.editedIndex > -1) {
                 Object.assign(this.orders[this.editedIndex], this.editedItem)
