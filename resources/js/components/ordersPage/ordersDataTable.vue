@@ -361,6 +361,7 @@
           let Data = {
             "order_total": this.editedItem.order_total,
             "order_status": this.selectedStatus,
+            "order_discount": this.editedItem.order_discount,
             "user_id": 1,
             "items": [
               {

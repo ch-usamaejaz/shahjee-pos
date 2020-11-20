@@ -2489,6 +2489,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var Data = {
         "order_total": this.editedItem.order_total,
         "order_status": this.selectedStatus,
+        "order_discount": this.editedItem.order_discount,
         "user_id": 1,
         "items": [{
           "item_id": this.newOrderRow[rowIndex].id,
