@@ -11,6 +11,7 @@
         <template v-slot:top>
           <v-toolbar
             flat
+            v-model="rowIndex"
           >
           <v-dialog
             v-model="dialog"
@@ -23,6 +24,7 @@
               class="mb-2"
               v-bind="attrs"
               v-on="on"
+              @click="changeFormTitle()"
             >
               New Order
             </v-btn>
@@ -34,7 +36,8 @@
 
             <v-card-text>
               <v-container>
-                <v-row v-for="row in newOrderRow" :key="row.id">
+                <form action="submit">
+                <v-row v-for="(row, index) in newOrderRow" :key="index">
                   <v-col
                     cols="12"
                     sm="6"
@@ -43,10 +46,11 @@
                   <v-overflow-btn
                     class="my-2"
                     :items="dropdown_edit"
-                    v-model="row.selectedItem"
+                    v-model="newOrderRow[index].newItem"
                     label="Items"
                     editable
                     item-value="text"
+                    
                   ></v-overflow-btn>
                   </v-col>
                   <v-col
@@ -55,10 +59,11 @@
                     md="2"
                   >
                     <v-text-field
-                      v-model="editedItem.quantity"
+                      v-model="newOrderRow[index].quantity"
                       label="Quantity"
                       type="number"
                       min="1"
+                      @input="addPrice(index)"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -69,7 +74,7 @@
                     <v-text-field
                       label="Price (Rs)"
                       type="number"
-                      :value="editedItem.quantity * editedItem.price"
+                      v-model="newOrderRow[index].price"
                       readonly
                     ></v-text-field>
                   </v-col>
@@ -78,21 +83,9 @@
                     sm="6"
                     md="3"
                   >
-                  <v-select
-                    :items="dropdown_edit_status"
-                    v-model="selectedStatus"
-                    label="Status"
-                    outlined
-                  ></v-select>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="1"
-                  >
                   <v-icon
                     color="red"
-                    @click="removeRow(row.id)">
+                    @click="removeRow(index)">
                     mdi-close-circle
                   </v-icon>
                   </v-col>
@@ -104,12 +97,12 @@
                     md="3"
                   >
                     <v-text-field
-                      label="Total"
+                      label="Discount"
                       type="number"
+                      min="0"
                       outlined
-                      :value="editedItem.price * editedItem.quantity"
-                      readonly
-                      :bind="editedItem.order_total"
+                      @keydown.enter.once="addDiscount"
+                      v-model="editedItem.order_discount"
                   ></v-text-field>
                   </v-col>
                   <v-col
@@ -117,17 +110,30 @@
                     sm="6"
                     md="3"
                   >
-                  <v-text-field
-                      label="Discount"
+                    <v-text-field
+                      label="Total"
                       type="number"
                       outlined
-                      v-model="editedItem.order_discount"
+                      readonly
+                      v-model="editedItem.order_total"
                   ></v-text-field>
                   </v-col>
                   <v-col
                     cols="12"
                     sm="6"
-                    md="6"
+                    md="3"
+                  >
+                    <v-select
+                    :items="dropdown_edit_status"
+                    v-model="selectedStatus"
+                    label="Status"
+                    outlined
+                  ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="3"
                   >
                     <v-btn
                       class="mx-2"
@@ -142,6 +148,8 @@
                     </v-btn>
                   </v-col>
                 </v-row>
+              </form>
+
               </v-container>
             </v-card-text>
 
@@ -157,7 +165,7 @@
               <v-btn
                 color="blue darken-1"
                 text
-                @click="save"
+                @click="save(rowIndex)"
               >
                 Save
               </v-btn>
@@ -182,7 +190,7 @@
               color="primary"
               small
               class="mr-2"
-              @click="editItem(item.id)"
+              @click="editItem(item)"
             >
               mdi-pencil
             </v-icon>
@@ -207,27 +215,27 @@
 <script>
   import printTicket from './printTicket'; 
     export default {
+      components: {
+        printTicket
+      },
         data () {
             return {
                 dialog: false,
                 dialogDelete: false,
                 totalOrders: 0,
+                rowIndex: 0,
                 orders: [],
                 loading: true,
                 options: {},
-                newOrderRow: [],
+                itemsTable: [],
+                newOrderRow: [{}],
                 selectedStatus: "",
+                formTitle: '',
+                formTitle: '',
                 currentRowId: 0,
-                selectedItem: "",
-                dropdown_edit: [
-                  { text: 'Chicken' },
-                  { text: 'Coke' },
-                  { text: 'Naan' }
-                ],
-                dropdown_edit_status: [
-                  { text: 'Paid' },
-                  { text: 'Unpaid' }
-                ],
+                
+                dropdown_edit: [],
+                dropdown_edit_status: ['Paid', 'Unpaid'],
                 headers: [
                     { text: 'Order#', align: 'start', value: 'id'},
                     { text: 'Order Status', value: 'order_status', sortable: false},
@@ -237,8 +245,9 @@
                 ],
                 editedIndex: -1,
                 editedItem: {
-                  quantity: 10,
-                  price: 2,
+                  selectedItem: "",
+                  quantity: 0,
+                  price: 0,
                   order_status: '',
                   order_discount: 0,
                   order_total: 0,
@@ -253,13 +262,8 @@
                 deep: true,
             },
         },
-        computed: {
-          formTitle () {
-          return this.currentRowId === 0 ? 'New Order' : 'Edit Order'
-        },
-      },
         mounted(){
-
+          this.getItemTable();
         },
         methods: {
             getDataFromApi () {
@@ -278,17 +282,40 @@
                         console.log(error.message)
                 })
             },
-            getItems () {
-              console.log("here" + this.orders[1].item_name)
+            getItemTable () {
+              this.axios.get('get_all_items').then(response =>{
+                this.itemsTable = response.data.data;
+                let self = this;
+                this.itemsTable.forEach(function (item, index) {
+                self.dropdown_edit.push(item['item_name'])
+                })
+              })
             },
-            addNewRow () {
-              this.newOrderRow.push({});
+            addPrice (index) {
+              for(var i = 0; i<=this.itemsTable.length;i++){
+                if(this.newOrderRow[index].newItem === this.itemsTable[i].item_name){
+                  this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
+
+                  this.editedItem.order_total = this.newOrderRow.reduce(function(a,b){
+                    return a+b.price
+                  },0)
+                  break
+                }
+              }
+            },
+            addDiscount () {
+              this.editedItem.order_total = (this.editedItem.order_total - this.editedItem.order_discount);
+            },
+            addNewRow () { 
+              this.newOrderRow.push({price: 0, quantity: 0, newItem: ''});
             },
             editItem (item) {
-              this.currentRowId = item;
-              // this.editedIndex = this.orders.item
-              this.editedItem = Object.assign({}, item)
+              this.formTitle = "Edit Order"
+              this.currentRowId = this.orders.indexOf(item)
+              this.selectedStatus = item.order_status;
+              this.editedItem.order_total = item.order_total
               this.dialog = true
+              console.log(item)
             },
             deleteItem () {
               let id = this.currentRowId;
@@ -303,6 +330,9 @@
             closeDelete () {
               this.dialogDelete = false
             },
+            changeFormTitle () {
+              this.formTitle = "New Order"
+            },
             deleteItemConfirm (item) {
               this.currentRowId = item
               this.dialogDelete = true
@@ -310,46 +340,36 @@
             close () {
               this.newOrderRow = new Array;
               this.dialog = false
+              this.order_total = null;
+              this.editedItem = new Object;
+              this.currentRowId = 0;
           },
-            save () {
-              if (this.editedIndex > -1) {
-                Object.assign(this.orders[this.editedIndex], this.editedItem)
-              } else {
-                this.orders.push(this.editedItem)
-              }
-              this.postData();
+            save (rowIndex) {
+              this.postData(rowIndex);
               this.close()
-              console.log(this.editedItem.price)
             },
-            removeRow (row){
-                for(var i =0; i <this.newOrderRow.length; i++){
-                if(this.newOrderRow[i].id == row){
-                  this.newOrderRow.splice(i, 1);
-                  break;
-                }
-              }
-              console.log(row);
+            removeRow (index){
+              this.newOrderRow.splice(index, 1)
             },
-          postData(){
-          let formData = new FormData();
-          let newOrder = {
+          postData(rowIndex){
+          let Data = {
             "order_total": this.editedItem.order_total,
             "order_status": this.selectedStatus,
             "user_id": 1,
             "items": [
               {
-                "item_id": 5,
-                "quantity": this.editedItem.quantity
+                "item_id": this.newOrderRow[rowIndex].id,
+                "quantity": this.newOrderRow[rowIndex].quantity
               }
             ]
           };
+          console.log(rowIndex)
           let url = "/create_new_order"
-          this.axios.post(url,newOrder).then(response =>{
+          this.axios.post(url,Data).then(response =>{
             console.log(response)
           }).catch(error =>{
             console.log(error);
           })
-          console.log(newOrder);
         }
       }
     }

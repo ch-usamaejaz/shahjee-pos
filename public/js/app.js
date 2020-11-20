@@ -2108,6 +2108,16 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _printTicket__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./printTicket */ "./resources/js/components/ordersPage/printTicket.vue");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2316,60 +2326,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    printTicket: _printTicket__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
-    return {
+    var _ref;
+
+    return _ref = {
       dialog: false,
       dialogDelete: false,
       totalOrders: 0,
+      rowIndex: 0,
       orders: [],
       loading: true,
       options: {},
-      newOrderRow: [],
+      itemsTable: [],
+      newOrderRow: [{}],
       selectedStatus: "",
-      currentRowId: 0,
+      formTitle: ''
+    }, _defineProperty(_ref, "formTitle", ''), _defineProperty(_ref, "currentRowId", 0), _defineProperty(_ref, "dropdown_edit", []), _defineProperty(_ref, "dropdown_edit_status", ['Paid', 'Unpaid']), _defineProperty(_ref, "headers", [{
+      text: 'Order#',
+      align: 'start',
+      value: 'id'
+    }, {
+      text: 'Order Status',
+      value: 'order_status',
+      sortable: false
+    }, {
+      text: 'Discount',
+      value: 'order_discount',
+      sortable: false
+    }, {
+      text: 'Order Total ',
+      value: 'order_total',
+      sortable: false
+    }, {
+      text: 'Actions',
+      value: 'actions',
+      sortable: false
+    }]), _defineProperty(_ref, "editedIndex", -1), _defineProperty(_ref, "editedItem", {
       selectedItem: "",
-      dropdown_edit: [{
-        text: 'Chicken'
-      }, {
-        text: 'Coke'
-      }, {
-        text: 'Naan'
-      }],
-      dropdown_edit_status: [{
-        text: 'Paid'
-      }, {
-        text: 'Unpaid'
-      }],
-      headers: [{
-        text: 'Order#',
-        align: 'start',
-        value: 'id'
-      }, {
-        text: 'Order Status',
-        value: 'order_status',
-        sortable: false
-      }, {
-        text: 'Discount',
-        value: 'order_discount',
-        sortable: false
-      }, {
-        text: 'Order Total ',
-        value: 'order_total',
-        sortable: false
-      }, {
-        text: 'Actions',
-        value: 'actions',
-        sortable: false
-      }],
-      editedIndex: -1,
-      editedItem: {
-        quantity: 10,
-        price: 2,
-        order_status: '',
-        order_discount: 0,
-        order_total: 0
-      }
-    };
+      quantity: 0,
+      price: 0,
+      order_status: '',
+      order_discount: 0,
+      order_total: 0
+    }), _ref;
   },
   watch: {
     options: {
@@ -2379,12 +2381,9 @@ __webpack_require__.r(__webpack_exports__);
       deep: true
     }
   },
-  computed: {
-    formTitle: function formTitle() {
-      return this.currentRowId === 0 ? 'New Order' : 'Edit Order';
-    }
+  mounted: function mounted() {
+    this.getItemTable();
   },
-  mounted: function mounted() {},
   methods: {
     getDataFromApi: function getDataFromApi() {
       this.loading = true;
@@ -2403,17 +2402,46 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error.message);
       });
     },
-    getItems: function getItems() {
-      console.log("here" + this.orders[1].item_name);
+    getItemTable: function getItemTable() {
+      var _this2 = this;
+
+      this.axios.get('get_all_items').then(function (response) {
+        _this2.itemsTable = response.data.data;
+        var self = _this2;
+
+        _this2.itemsTable.forEach(function (item, index) {
+          self.dropdown_edit.push(item['item_name']);
+        });
+      });
+    },
+    addPrice: function addPrice(index) {
+      for (var i = 0; i <= this.itemsTable.length; i++) {
+        if (this.newOrderRow[index].newItem === this.itemsTable[i].item_name) {
+          this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
+          this.editedItem.order_total = this.newOrderRow.reduce(function (a, b) {
+            return a + b.price;
+          }, 0);
+          break;
+        }
+      }
+    },
+    addDiscount: function addDiscount() {
+      this.editedItem.order_total = this.editedItem.order_total - this.editedItem.order_discount;
     },
     addNewRow: function addNewRow() {
-      this.newOrderRow.push({});
+      this.newOrderRow.push({
+        price: 0,
+        quantity: 0,
+        newItem: ''
+      });
     },
     editItem: function editItem(item) {
-      this.currentRowId = item; // this.editedIndex = this.orders.item
-
-      this.editedItem = Object.assign({}, item);
+      this.formTitle = "Edit Order";
+      this.currentRowId = this.orders.indexOf(item);
+      this.selectedStatus = item.order_status;
+      this.editedItem.order_total = item.order_total;
       this.dialog = true;
+      console.log(item);
     },
     deleteItem: function deleteItem() {
       var id = this.currentRowId;
@@ -2430,6 +2458,9 @@ __webpack_require__.r(__webpack_exports__);
     closeDelete: function closeDelete() {
       this.dialogDelete = false;
     },
+    changeFormTitle: function changeFormTitle() {
+      this.formTitle = "New Order";
+    },
     deleteItemConfirm: function deleteItemConfirm(item) {
       this.currentRowId = item;
       this.dialogDelete = true;
@@ -2437,46 +2468,34 @@ __webpack_require__.r(__webpack_exports__);
     close: function close() {
       this.newOrderRow = new Array();
       this.dialog = false;
+      this.order_total = null;
+      this.editedItem = new Object();
+      this.currentRowId = 0;
     },
-    save: function save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.orders[this.editedIndex], this.editedItem);
-      } else {
-        this.orders.push(this.editedItem);
-      }
-
-      this.postData();
+    save: function save(rowIndex) {
+      this.postData(rowIndex);
       this.close();
-      console.log(this.editedItem.price);
     },
-    removeRow: function removeRow(row) {
-      for (var i = 0; i < this.newOrderRow.length; i++) {
-        if (this.newOrderRow[i].id == row) {
-          this.newOrderRow.splice(i, 1);
-          break;
-        }
-      }
-
-      console.log(row);
+    removeRow: function removeRow(index) {
+      this.newOrderRow.splice(index, 1);
     },
-    postData: function postData() {
-      var formData = new FormData();
-      var newOrder = {
+    postData: function postData(rowIndex) {
+      var Data = {
         "order_total": this.editedItem.order_total,
         "order_status": this.selectedStatus,
         "user_id": 1,
         "items": [{
-          "item_id": 5,
-          "quantity": this.editedItem.quantity
+          "item_id": this.newOrderRow[rowIndex].id,
+          "quantity": this.newOrderRow[rowIndex].quantity
         }]
       };
+      console.log(rowIndex);
       var url = "/create_new_order";
-      this.axios.post(url, newOrder).then(function (response) {
+      this.axios.post(url, Data).then(function (response) {
         console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });
-      console.log(newOrder);
     }
   }
 });
@@ -39566,7 +39585,16 @@ var render = function() {
               return [
                 _c(
                   "v-toolbar",
-                  { attrs: { flat: "" } },
+                  {
+                    attrs: { flat: "" },
+                    model: {
+                      value: _vm.rowIndex,
+                      callback: function($$v) {
+                        _vm.rowIndex = $$v
+                      },
+                      expression: "rowIndex"
+                    }
+                  },
                   [
                     _c(
                       "v-dialog",
@@ -39585,7 +39613,12 @@ var render = function() {
                                     _vm._b(
                                       {
                                         staticClass: "mb-2",
-                                        attrs: { color: "primary", dark: "" }
+                                        attrs: { color: "primary", dark: "" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.changeFormTitle()
+                                          }
+                                        }
                                       },
                                       "v-btn",
                                       attrs,
@@ -39621,13 +39654,169 @@ var render = function() {
                             _c(
                               "v-card-text",
                               [
-                                _c(
-                                  "v-container",
-                                  [
-                                    _vm._l(_vm.newOrderRow, function(row) {
-                                      return _c(
+                                _c("v-container", [
+                                  _c(
+                                    "form",
+                                    { attrs: { action: "submit" } },
+                                    [
+                                      _vm._l(_vm.newOrderRow, function(
+                                        row,
+                                        index
+                                      ) {
+                                        return _c(
+                                          "v-row",
+                                          { key: index },
+                                          [
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "4"
+                                                }
+                                              },
+                                              [
+                                                _c("v-overflow-btn", {
+                                                  staticClass: "my-2",
+                                                  attrs: {
+                                                    items: _vm.dropdown_edit,
+                                                    label: "Items",
+                                                    editable: "",
+                                                    "item-value": "text"
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.newOrderRow[index]
+                                                        .newItem,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.newOrderRow[index],
+                                                        "newItem",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "newOrderRow[index].newItem"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "2"
+                                                }
+                                              },
+                                              [
+                                                _c("v-text-field", {
+                                                  attrs: {
+                                                    label: "Quantity",
+                                                    type: "number",
+                                                    min: "1"
+                                                  },
+                                                  on: {
+                                                    input: function($event) {
+                                                      return _vm.addPrice(index)
+                                                    }
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.newOrderRow[index]
+                                                        .quantity,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.newOrderRow[index],
+                                                        "quantity",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "newOrderRow[index].quantity"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "2"
+                                                }
+                                              },
+                                              [
+                                                _c("v-text-field", {
+                                                  attrs: {
+                                                    label: "Price (Rs)",
+                                                    type: "number",
+                                                    readonly: ""
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.newOrderRow[index]
+                                                        .price,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.newOrderRow[index],
+                                                        "price",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "newOrderRow[index].price"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "3"
+                                                }
+                                              },
+                                              [
+                                                _c(
+                                                  "v-icon",
+                                                  {
+                                                    attrs: { color: "red" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.removeRow(
+                                                          index
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n                mdi-close-circle\n              "
+                                                    )
+                                                  ]
+                                                )
+                                              ],
+                                              1
+                                            )
+                                          ],
+                                          1
+                                        )
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
                                         "v-row",
-                                        { key: row.id },
                                         [
                                           _c(
                                             "v-col",
@@ -39635,62 +39824,51 @@ var render = function() {
                                               attrs: {
                                                 cols: "12",
                                                 sm: "6",
-                                                md: "4"
-                                              }
-                                            },
-                                            [
-                                              _c("v-overflow-btn", {
-                                                staticClass: "my-2",
-                                                attrs: {
-                                                  items: _vm.dropdown_edit,
-                                                  label: "Items",
-                                                  editable: "",
-                                                  "item-value": "text"
-                                                },
-                                                model: {
-                                                  value: row.selectedItem,
-                                                  callback: function($$v) {
-                                                    _vm.$set(
-                                                      row,
-                                                      "selectedItem",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression: "row.selectedItem"
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-col",
-                                            {
-                                              attrs: {
-                                                cols: "12",
-                                                sm: "6",
-                                                md: "2"
+                                                md: "3"
                                               }
                                             },
                                             [
                                               _c("v-text-field", {
                                                 attrs: {
-                                                  label: "Quantity",
+                                                  label: "Discount",
                                                   type: "number",
-                                                  min: "1"
+                                                  min: "0",
+                                                  outlined: ""
+                                                },
+                                                on: {
+                                                  "~keydown": function($event) {
+                                                    if (
+                                                      !$event.type.indexOf(
+                                                        "key"
+                                                      ) &&
+                                                      _vm._k(
+                                                        $event.keyCode,
+                                                        "enter",
+                                                        13,
+                                                        $event.key,
+                                                        "Enter"
+                                                      )
+                                                    ) {
+                                                      return null
+                                                    }
+                                                    return _vm.addDiscount(
+                                                      $event
+                                                    )
+                                                  }
                                                 },
                                                 model: {
                                                   value:
-                                                    _vm.editedItem.quantity,
+                                                    _vm.editedItem
+                                                      .order_discount,
                                                   callback: function($$v) {
                                                     _vm.$set(
                                                       _vm.editedItem,
-                                                      "quantity",
+                                                      "order_discount",
                                                       $$v
                                                     )
                                                   },
                                                   expression:
-                                                    "editedItem.quantity"
+                                                    "editedItem.order_discount"
                                                 }
                                               })
                                             ],
@@ -39703,18 +39881,29 @@ var render = function() {
                                               attrs: {
                                                 cols: "12",
                                                 sm: "6",
-                                                md: "2"
+                                                md: "3"
                                               }
                                             },
                                             [
                                               _c("v-text-field", {
                                                 attrs: {
-                                                  label: "Price (Rs)",
+                                                  label: "Total",
                                                   type: "number",
-                                                  value:
-                                                    _vm.editedItem.quantity *
-                                                    _vm.editedItem.price,
+                                                  outlined: "",
                                                   readonly: ""
+                                                },
+                                                model: {
+                                                  value:
+                                                    _vm.editedItem.order_total,
+                                                  callback: function($$v) {
+                                                    _vm.$set(
+                                                      _vm.editedItem,
+                                                      "order_total",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression:
+                                                    "editedItem.order_total"
                                                 }
                                               })
                                             ],
@@ -39756,27 +39945,33 @@ var render = function() {
                                               attrs: {
                                                 cols: "12",
                                                 sm: "6",
-                                                md: "1"
+                                                md: "3"
                                               }
                                             },
                                             [
                                               _c(
-                                                "v-icon",
+                                                "v-btn",
                                                 {
-                                                  attrs: { color: "red" },
-                                                  on: {
-                                                    click: function($event) {
-                                                      return _vm.removeRow(
-                                                        row.id
-                                                      )
-                                                    }
-                                                  }
+                                                  staticClass: "mx-2",
+                                                  attrs: {
+                                                    fab: "",
+                                                    dark: "",
+                                                    color: "indigo"
+                                                  },
+                                                  on: { click: _vm.addNewRow }
                                                 },
                                                 [
-                                                  _vm._v(
-                                                    "\n                mdi-close-circle\n              "
+                                                  _c(
+                                                    "v-icon",
+                                                    { attrs: { dark: "" } },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                    mdi-plus\n                  "
+                                                      )
+                                                    ]
                                                   )
-                                                ]
+                                                ],
+                                                1
                                               )
                                             ],
                                             1
@@ -39784,114 +39979,10 @@ var render = function() {
                                         ],
                                         1
                                       )
-                                    }),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-row",
-                                      [
-                                        _c(
-                                          "v-col",
-                                          {
-                                            attrs: {
-                                              cols: "12",
-                                              sm: "6",
-                                              md: "3"
-                                            }
-                                          },
-                                          [
-                                            _c("v-text-field", {
-                                              attrs: {
-                                                label: "Total",
-                                                type: "number",
-                                                outlined: "",
-                                                value:
-                                                  _vm.editedItem.price *
-                                                  _vm.editedItem.quantity,
-                                                readonly: "",
-                                                bind: _vm.editedItem.order_total
-                                              }
-                                            })
-                                          ],
-                                          1
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "v-col",
-                                          {
-                                            attrs: {
-                                              cols: "12",
-                                              sm: "6",
-                                              md: "3"
-                                            }
-                                          },
-                                          [
-                                            _c("v-text-field", {
-                                              attrs: {
-                                                label: "Discount",
-                                                type: "number",
-                                                outlined: ""
-                                              },
-                                              model: {
-                                                value:
-                                                  _vm.editedItem.order_discount,
-                                                callback: function($$v) {
-                                                  _vm.$set(
-                                                    _vm.editedItem,
-                                                    "order_discount",
-                                                    $$v
-                                                  )
-                                                },
-                                                expression:
-                                                  "editedItem.order_discount"
-                                              }
-                                            })
-                                          ],
-                                          1
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "v-col",
-                                          {
-                                            attrs: {
-                                              cols: "12",
-                                              sm: "6",
-                                              md: "6"
-                                            }
-                                          },
-                                          [
-                                            _c(
-                                              "v-btn",
-                                              {
-                                                staticClass: "mx-2",
-                                                attrs: {
-                                                  fab: "",
-                                                  dark: "",
-                                                  color: "indigo"
-                                                },
-                                                on: { click: _vm.addNewRow }
-                                              },
-                                              [
-                                                _c(
-                                                  "v-icon",
-                                                  { attrs: { dark: "" } },
-                                                  [
-                                                    _vm._v(
-                                                      "\n                    mdi-plus\n                  "
-                                                    )
-                                                  ]
-                                                )
-                                              ],
-                                              1
-                                            )
-                                          ],
-                                          1
-                                        )
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  2
-                                )
+                                    ],
+                                    2
+                                  )
+                                ])
                               ],
                               1
                             ),
@@ -39914,7 +40005,11 @@ var render = function() {
                                   "v-btn",
                                   {
                                     attrs: { color: "blue darken-1", text: "" },
-                                    on: { click: _vm.save }
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.save(_vm.rowIndex)
+                                      }
+                                    }
                                   },
                                   [_vm._v("\n            Save\n          ")]
                                 )
@@ -40002,7 +40097,7 @@ var render = function() {
                     attrs: { color: "primary", small: "" },
                     on: {
                       click: function($event) {
-                        return _vm.editItem(item.id)
+                        return _vm.editItem(item)
                       }
                     }
                   },
