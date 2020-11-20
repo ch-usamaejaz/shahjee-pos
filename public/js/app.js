@@ -2428,8 +2428,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       for (var i = 0; i <= this.itemsTable.length; i++) {
         if (this.newOrderRow[index].newItem === this.itemsTable[i].item_name) {
           this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
-          this.newOrderRow[index].orderItem_id = this.itemsTable[i].item_id;
-          console.log(this.newOrderRow[index].newItem);
+          this.newOrderRow[index].orderItem_id = this.itemsTable[i].id;
+          console.log(this.newOrderRow[index].orderItem_id);
           this.editedItem.order_total = this.newOrderRow.reduce(function (a, b) {
             return a + b.price;
           }, 0);
@@ -2508,7 +2508,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         "order_discount": this.editedItem.order_discount,
         "user_id": 1,
         "items": [{
-          "item_id": this.newOrderRow[rowIndex].id,
+          "item_id": this.newOrderRow[rowIndex].orderItem_id,
           "quantity": this.newOrderRow[rowIndex].quantity
         }]
       };
