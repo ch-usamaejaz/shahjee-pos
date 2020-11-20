@@ -2324,6 +2324,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2397,7 +2400,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.orders = response.data.orders;
         _this.totalOrders = response.data.orders.length;
         _this.loading = false;
-        console.log(response.data.orders);
+        console.log(response.data.orders, "orders");
       })["catch"](function (error) {
         console.log(error.message);
       });
@@ -2471,6 +2474,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.order_total = null;
       this.editedItem = new Object();
       this.currentRowId = 0;
+    },
+    getBill: function getBill() {
+      console.log("hi");
     },
     save: function save(rowIndex) {
       this.postData(rowIndex);
@@ -40022,6 +40028,8 @@ var render = function() {
                       ],
                       1
                     ),
+                    _vm._v(" "),
+                    _c("v-dialog", [_c("printTicket")], 1),
                     _vm._v(" "),
                     _c(
                       "v-dialog",

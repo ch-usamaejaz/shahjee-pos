@@ -172,6 +172,9 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog>
+          <printTicket/>
+        </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
@@ -277,7 +280,7 @@
                         this.orders = response.data.orders;
                         this.totalOrders = response.data.orders.length;
                         this.loading = false
-                        console.log(response.data.orders)
+                        console.log(response.data.orders , "orders")
                     }).catch (error => {
                         console.log(error.message)
                 })
@@ -343,6 +346,9 @@
               this.order_total = null;
               this.editedItem = new Object;
               this.currentRowId = 0;
+          },
+          getBill () {
+            console.log("hi");
           },
             save (rowIndex) {
               this.postData(rowIndex);
