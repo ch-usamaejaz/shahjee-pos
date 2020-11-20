@@ -9,8 +9,6 @@ class OrdersController extends Controller
 {
     public function get_user_orders(Request $request)
     {
-
-        //        $orders_data = @Orders::with('items')->where('user_id',$request['user_id'])->get()->toArray();
         $orders = @Orders::select('id', 'order_status', 'order_total', 'order_discount')
             ->where('user_id', $request['user_id'])
             ->limit(@$request['itemsPerPage'])
@@ -28,14 +26,13 @@ class OrdersController extends Controller
     {
 
         $order = @Orders::create($request->all());
-        $response = ['error' => false,'message' => 'success'];
+        $response = ['error' => false, 'message' => 'success'];
 
         if (isset($request['items']) && sizeof(@$request['items']) > 0) {
             foreach ($request['items'] as $key => $item) {
                 try {
                     $order->items()->attach($item['item_id'], ['quantity' => $item['quantity']]);
-                }
-                catch (\Exception $exception) {
+                } catch (\Exception $exception) {
                     $response = ['error' => true, 'message' => $exception->getMessage()];
                     break;
                 }
@@ -50,14 +47,28 @@ class OrdersController extends Controller
         $id = @$request->order_id;
         $response = ['error' => false, 'message' => 'Order Deleted Successfully!'];
         try {
-            $order = @Orders::find($id);
-            if (empty($order)) throw new \Exception('No such order found');
-            $order->items()->delete();
-            $order->delete();
+            Orders::find($id)->delete();
         } catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];
         }
 
         return response()->json($response);
+    }
+
+    public function edit_order(Request $request)
+    {
+        $id = @$request->order_id;
+        $response = [];
+
+        try {
+            $orders_data = Orders::with('items')->where('id', $id)->get()->toArray();
+            if (empty($orders_data)) throw new \Exception('No Data found against order ID.');
+            $response = ['error' => false, 'data' => $orders_data];
+        } catch (\Exception $exception) {
+            $response = ['error' => true, 'message' => $exception->getMessage()];
+        }
+
+        return response()->json($response);
+
     }
 }
