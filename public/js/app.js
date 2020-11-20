@@ -2327,6 +2327,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2338,6 +2341,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return _ref = {
       dialog: false,
       dialogDelete: false,
+      valid: true,
       totalOrders: 0,
       rowIndex: 0,
       orders: [],
@@ -2374,7 +2378,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       order_status: '',
       order_discount: 0,
       order_total: 0
-    }), _ref;
+    }), _defineProperty(_ref, "itemSelectRules", [function (v) {
+      return !!v || 'Company Name is required';
+    }]), _ref;
   },
   watch: {
     options: {
@@ -2449,9 +2455,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     deleteItem: function deleteItem() {
       var id = this.currentRowId;
 
-      for (var i = 0; i < this.orders.length; i++) {
+      for (var i = 0; i <= this.orders.length; i++) {
         if (this.orders[i].id == id) {
           this.orders.splice(i, 1);
+          console.log(id);
           break;
         }
       }
@@ -2496,7 +2503,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           "quantity": this.newOrderRow[rowIndex].quantity
         }]
       };
-      console.log(rowIndex);
+      console.log(Data);
       var url = "/create_new_order";
       this.axios.post(url, Data).then(function (response) {
         console.log(response);
@@ -39721,88 +39728,271 @@ var render = function() {
             fn: function() {
               return [
                 _c(
-                  "v-toolbar",
+                  "v-form",
                   {
-                    attrs: { flat: "" },
+                    ref: "form",
+                    attrs: { "lazy-validation": "" },
                     model: {
-                      value: _vm.rowIndex,
+                      value: _vm.valid,
                       callback: function($$v) {
-                        _vm.rowIndex = $$v
+                        _vm.valid = $$v
                       },
-                      expression: "rowIndex"
+                      expression: "valid"
                     }
                   },
                   [
                     _c(
-                      "v-dialog",
+                      "v-toolbar",
                       {
-                        attrs: { "max-width": "1000px" },
-                        scopedSlots: _vm._u([
-                          {
-                            key: "activator",
-                            fn: function(ref) {
-                              var on = ref.on
-                              var attrs = ref.attrs
-                              return [
-                                _c(
-                                  "v-btn",
-                                  _vm._g(
-                                    _vm._b(
-                                      {
-                                        staticClass: "mb-2",
-                                        attrs: { color: "primary", dark: "" },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.changeFormTitle()
-                                          }
-                                        }
-                                      },
-                                      "v-btn",
-                                      attrs,
-                                      false
-                                    ),
-                                    on
-                                  ),
-                                  [_vm._v("\n          New Order\n        ")]
-                                )
-                              ]
-                            }
-                          }
-                        ]),
+                        attrs: { flat: "" },
                         model: {
-                          value: _vm.dialog,
+                          value: _vm.rowIndex,
                           callback: function($$v) {
-                            _vm.dialog = $$v
+                            _vm.rowIndex = $$v
                           },
-                          expression: "dialog"
+                          expression: "rowIndex"
                         }
                       },
                       [
-                        _vm._v(" "),
                         _c(
-                          "v-card",
-                          [
-                            _c("v-card-title", [
-                              _c("span", { staticClass: "headline" }, [
-                                _vm._v(_vm._s(_vm.formTitle))
-                              ])
+                          "v-dialog",
+                          {
+                            attrs: { "max-width": "1000px" },
+                            scopedSlots: _vm._u([
+                              {
+                                key: "activator",
+                                fn: function(ref) {
+                                  var on = ref.on
+                                  var attrs = ref.attrs
+                                  return [
+                                    _c(
+                                      "v-btn",
+                                      _vm._g(
+                                        _vm._b(
+                                          {
+                                            staticClass: "mb-2",
+                                            attrs: {
+                                              color: "primary",
+                                              dark: ""
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.changeFormTitle()
+                                              }
+                                            }
+                                          },
+                                          "v-btn",
+                                          attrs,
+                                          false
+                                        ),
+                                        on
+                                      ),
+                                      [
+                                        _vm._v(
+                                          "\n          New Order\n        "
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                }
+                              }
                             ]),
+                            model: {
+                              value: _vm.dialog,
+                              callback: function($$v) {
+                                _vm.dialog = $$v
+                              },
+                              expression: "dialog"
+                            }
+                          },
+                          [
                             _vm._v(" "),
                             _c(
-                              "v-card-text",
+                              "v-card",
                               [
-                                _c("v-container", [
-                                  _c(
-                                    "form",
-                                    { attrs: { action: "submit" } },
-                                    [
-                                      _vm._l(_vm.newOrderRow, function(
-                                        row,
-                                        index
-                                      ) {
-                                        return _c(
+                                _c("v-card-title", [
+                                  _c("span", { staticClass: "headline" }, [
+                                    _vm._v(_vm._s(_vm.formTitle))
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "v-card-text",
+                                  [
+                                    _c(
+                                      "v-container",
+                                      [
+                                        _vm._l(_vm.newOrderRow, function(
+                                          row,
+                                          index
+                                        ) {
+                                          return _c(
+                                            "v-row",
+                                            { key: index },
+                                            [
+                                              _c(
+                                                "v-col",
+                                                {
+                                                  attrs: {
+                                                    cols: "12",
+                                                    sm: "6",
+                                                    md: "4"
+                                                  }
+                                                },
+                                                [
+                                                  _c("v-overflow-btn", {
+                                                    staticClass: "my-2",
+                                                    attrs: {
+                                                      items: _vm.dropdown_edit,
+                                                      label: "Items",
+                                                      editable: "",
+                                                      "item-value": "text",
+                                                      rules:
+                                                        _vm.itemSelectRules,
+                                                      required: ""
+                                                    },
+                                                    model: {
+                                                      value:
+                                                        _vm.newOrderRow[index]
+                                                          .newItem,
+                                                      callback: function($$v) {
+                                                        _vm.$set(
+                                                          _vm.newOrderRow[
+                                                            index
+                                                          ],
+                                                          "newItem",
+                                                          $$v
+                                                        )
+                                                      },
+                                                      expression:
+                                                        "newOrderRow[index].newItem"
+                                                    }
+                                                  })
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-col",
+                                                {
+                                                  attrs: {
+                                                    cols: "12",
+                                                    sm: "6",
+                                                    md: "2"
+                                                  }
+                                                },
+                                                [
+                                                  _c("v-text-field", {
+                                                    attrs: {
+                                                      label: "Quantity",
+                                                      type: "number",
+                                                      min: "1"
+                                                    },
+                                                    on: {
+                                                      input: function($event) {
+                                                        return _vm.addPrice(
+                                                          index
+                                                        )
+                                                      }
+                                                    },
+                                                    model: {
+                                                      value:
+                                                        _vm.newOrderRow[index]
+                                                          .quantity,
+                                                      callback: function($$v) {
+                                                        _vm.$set(
+                                                          _vm.newOrderRow[
+                                                            index
+                                                          ],
+                                                          "quantity",
+                                                          $$v
+                                                        )
+                                                      },
+                                                      expression:
+                                                        "newOrderRow[index].quantity"
+                                                    }
+                                                  })
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-col",
+                                                {
+                                                  attrs: {
+                                                    cols: "12",
+                                                    sm: "6",
+                                                    md: "2"
+                                                  }
+                                                },
+                                                [
+                                                  _c("v-text-field", {
+                                                    attrs: {
+                                                      label: "Price (Rs)",
+                                                      type: "number",
+                                                      readonly: ""
+                                                    },
+                                                    model: {
+                                                      value:
+                                                        _vm.newOrderRow[index]
+                                                          .price,
+                                                      callback: function($$v) {
+                                                        _vm.$set(
+                                                          _vm.newOrderRow[
+                                                            index
+                                                          ],
+                                                          "price",
+                                                          $$v
+                                                        )
+                                                      },
+                                                      expression:
+                                                        "newOrderRow[index].price"
+                                                    }
+                                                  })
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-col",
+                                                {
+                                                  attrs: {
+                                                    cols: "12",
+                                                    sm: "6",
+                                                    md: "3"
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "v-icon",
+                                                    {
+                                                      attrs: { color: "red" },
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.removeRow(
+                                                            index
+                                                          )
+                                                        }
+                                                      }
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                mdi-close-circle\n              "
+                                                      )
+                                                    ]
+                                                  )
+                                                ],
+                                                1
+                                              )
+                                            ],
+                                            1
+                                          )
+                                        }),
+                                        _vm._v(" "),
+                                        _c(
                                           "v-row",
-                                          { key: index },
                                           [
                                             _c(
                                               "v-col",
@@ -39810,71 +40000,53 @@ var render = function() {
                                                 attrs: {
                                                   cols: "12",
                                                   sm: "6",
-                                                  md: "4"
-                                                }
-                                              },
-                                              [
-                                                _c("v-overflow-btn", {
-                                                  staticClass: "my-2",
-                                                  attrs: {
-                                                    items: _vm.dropdown_edit,
-                                                    label: "Items",
-                                                    editable: "",
-                                                    "item-value": "text"
-                                                  },
-                                                  model: {
-                                                    value:
-                                                      _vm.newOrderRow[index]
-                                                        .newItem,
-                                                    callback: function($$v) {
-                                                      _vm.$set(
-                                                        _vm.newOrderRow[index],
-                                                        "newItem",
-                                                        $$v
-                                                      )
-                                                    },
-                                                    expression:
-                                                      "newOrderRow[index].newItem"
-                                                  }
-                                                })
-                                              ],
-                                              1
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "v-col",
-                                              {
-                                                attrs: {
-                                                  cols: "12",
-                                                  sm: "6",
-                                                  md: "2"
+                                                  md: "3"
                                                 }
                                               },
                                               [
                                                 _c("v-text-field", {
                                                   attrs: {
-                                                    label: "Quantity",
+                                                    label: "Discount",
                                                     type: "number",
-                                                    min: "1"
+                                                    min: "0",
+                                                    outlined: ""
                                                   },
                                                   on: {
-                                                    input: function($event) {
-                                                      return _vm.addPrice(index)
+                                                    "~keydown": function(
+                                                      $event
+                                                    ) {
+                                                      if (
+                                                        !$event.type.indexOf(
+                                                          "key"
+                                                        ) &&
+                                                        _vm._k(
+                                                          $event.keyCode,
+                                                          "enter",
+                                                          13,
+                                                          $event.key,
+                                                          "Enter"
+                                                        )
+                                                      ) {
+                                                        return null
+                                                      }
+                                                      return _vm.addDiscount(
+                                                        $event
+                                                      )
                                                     }
                                                   },
                                                   model: {
                                                     value:
-                                                      _vm.newOrderRow[index]
-                                                        .quantity,
+                                                      _vm.editedItem
+                                                        .order_discount,
                                                     callback: function($$v) {
                                                       _vm.$set(
-                                                        _vm.newOrderRow[index],
-                                                        "quantity",
+                                                        _vm.editedItem,
+                                                        "order_discount",
                                                         $$v
                                                       )
                                                     },
                                                     expression:
-                                                      "newOrderRow[index].quantity"
+                                                      "editedItem.order_discount"
                                                   }
                                                 })
                                               ],
@@ -39887,29 +40059,59 @@ var render = function() {
                                                 attrs: {
                                                   cols: "12",
                                                   sm: "6",
-                                                  md: "2"
+                                                  md: "3"
                                                 }
                                               },
                                               [
                                                 _c("v-text-field", {
                                                   attrs: {
-                                                    label: "Price (Rs)",
+                                                    label: "Total",
                                                     type: "number",
+                                                    outlined: "",
                                                     readonly: ""
                                                   },
                                                   model: {
                                                     value:
-                                                      _vm.newOrderRow[index]
-                                                        .price,
+                                                      _vm.editedItem
+                                                        .order_total,
                                                     callback: function($$v) {
                                                       _vm.$set(
-                                                        _vm.newOrderRow[index],
-                                                        "price",
+                                                        _vm.editedItem,
+                                                        "order_total",
                                                         $$v
                                                       )
                                                     },
                                                     expression:
-                                                      "newOrderRow[index].price"
+                                                      "editedItem.order_total"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "3"
+                                                }
+                                              },
+                                              [
+                                                _c("v-select", {
+                                                  attrs: {
+                                                    items:
+                                                      _vm.dropdown_edit_status,
+                                                    label: "Status",
+                                                    outlined: ""
+                                                  },
+                                                  model: {
+                                                    value: _vm.selectedStatus,
+                                                    callback: function($$v) {
+                                                      _vm.selectedStatus = $$v
+                                                    },
+                                                    expression: "selectedStatus"
                                                   }
                                                 })
                                               ],
@@ -39927,22 +40129,28 @@ var render = function() {
                                               },
                                               [
                                                 _c(
-                                                  "v-icon",
+                                                  "v-btn",
                                                   {
-                                                    attrs: { color: "red" },
-                                                    on: {
-                                                      click: function($event) {
-                                                        return _vm.removeRow(
-                                                          index
-                                                        )
-                                                      }
-                                                    }
+                                                    staticClass: "mx-2",
+                                                    attrs: {
+                                                      fab: "",
+                                                      dark: "",
+                                                      color: "indigo"
+                                                    },
+                                                    on: { click: _vm.addNewRow }
                                                   },
                                                   [
-                                                    _vm._v(
-                                                      "\n                mdi-close-circle\n              "
+                                                    _c(
+                                                      "v-icon",
+                                                      { attrs: { dark: "" } },
+                                                      [
+                                                        _vm._v(
+                                                          "\n                    mdi-plus\n                  "
+                                                        )
+                                                      ]
                                                     )
-                                                  ]
+                                                  ],
+                                                  1
                                                 )
                                               ],
                                               1
@@ -39950,264 +40158,120 @@ var render = function() {
                                           ],
                                           1
                                         )
-                                      }),
-                                      _vm._v(" "),
-                                      _c(
-                                        "v-row",
-                                        [
-                                          _c(
-                                            "v-col",
-                                            {
-                                              attrs: {
-                                                cols: "12",
-                                                sm: "6",
-                                                md: "3"
-                                              }
-                                            },
-                                            [
-                                              _c("v-text-field", {
-                                                attrs: {
-                                                  label: "Discount",
-                                                  type: "number",
-                                                  min: "0",
-                                                  outlined: ""
-                                                },
-                                                on: {
-                                                  "~keydown": function($event) {
-                                                    if (
-                                                      !$event.type.indexOf(
-                                                        "key"
-                                                      ) &&
-                                                      _vm._k(
-                                                        $event.keyCode,
-                                                        "enter",
-                                                        13,
-                                                        $event.key,
-                                                        "Enter"
-                                                      )
-                                                    ) {
-                                                      return null
-                                                    }
-                                                    return _vm.addDiscount(
-                                                      $event
-                                                    )
-                                                  }
-                                                },
-                                                model: {
-                                                  value:
-                                                    _vm.editedItem
-                                                      .order_discount,
-                                                  callback: function($$v) {
-                                                    _vm.$set(
-                                                      _vm.editedItem,
-                                                      "order_discount",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression:
-                                                    "editedItem.order_discount"
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-col",
-                                            {
-                                              attrs: {
-                                                cols: "12",
-                                                sm: "6",
-                                                md: "3"
-                                              }
-                                            },
-                                            [
-                                              _c("v-text-field", {
-                                                attrs: {
-                                                  label: "Total",
-                                                  type: "number",
-                                                  outlined: "",
-                                                  readonly: ""
-                                                },
-                                                model: {
-                                                  value:
-                                                    _vm.editedItem.order_total,
-                                                  callback: function($$v) {
-                                                    _vm.$set(
-                                                      _vm.editedItem,
-                                                      "order_total",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression:
-                                                    "editedItem.order_total"
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-col",
-                                            {
-                                              attrs: {
-                                                cols: "12",
-                                                sm: "6",
-                                                md: "3"
-                                              }
-                                            },
-                                            [
-                                              _c("v-select", {
-                                                attrs: {
-                                                  items:
-                                                    _vm.dropdown_edit_status,
-                                                  label: "Status",
-                                                  outlined: ""
-                                                },
-                                                model: {
-                                                  value: _vm.selectedStatus,
-                                                  callback: function($$v) {
-                                                    _vm.selectedStatus = $$v
-                                                  },
-                                                  expression: "selectedStatus"
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-col",
-                                            {
-                                              attrs: {
-                                                cols: "12",
-                                                sm: "6",
-                                                md: "3"
-                                              }
-                                            },
-                                            [
-                                              _c(
-                                                "v-btn",
-                                                {
-                                                  staticClass: "mx-2",
-                                                  attrs: {
-                                                    fab: "",
-                                                    dark: "",
-                                                    color: "indigo"
-                                                  },
-                                                  on: { click: _vm.addNewRow }
-                                                },
-                                                [
-                                                  _c(
-                                                    "v-icon",
-                                                    { attrs: { dark: "" } },
-                                                    [
-                                                      _vm._v(
-                                                        "\n                    mdi-plus\n                  "
-                                                      )
-                                                    ]
-                                                  )
-                                                ],
-                                                1
-                                              )
-                                            ],
-                                            1
-                                          )
-                                        ],
-                                        1
-                                      )
-                                    ],
-                                    2
-                                  )
-                                ])
-                              ],
-                              1
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "v-card-actions",
-                              [
-                                _c("v-spacer"),
-                                _vm._v(" "),
-                                _c(
-                                  "v-btn",
-                                  {
-                                    attrs: { color: "blue darken-1", text: "" },
-                                    on: { click: _vm.close }
-                                  },
-                                  [_vm._v("\n            Cancel\n          ")]
+                                      ],
+                                      2
+                                    )
+                                  ],
+                                  1
                                 ),
                                 _vm._v(" "),
                                 _c(
-                                  "v-btn",
-                                  {
-                                    attrs: { color: "blue darken-1", text: "" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.save(_vm.rowIndex)
-                                      }
-                                    }
-                                  },
-                                  [_vm._v("\n            Save\n          ")]
+                                  "v-card-actions",
+                                  [
+                                    _c("v-spacer"),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: {
+                                          color: "blue darken-1",
+                                          text: ""
+                                        },
+                                        on: { click: _vm.close }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n            Cancel\n          "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: {
+                                          color: "blue darken-1",
+                                          text: ""
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.save(_vm.rowIndex)
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("\n            Save\n          ")]
+                                    )
+                                  ],
+                                  1
                                 )
                               ],
                               1
                             )
                           ],
                           1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c("v-dialog", [_c("printTicket")], 1),
-                    _vm._v(" "),
-                    _c(
-                      "v-dialog",
-                      {
-                        attrs: { "max-width": "500px" },
-                        model: {
-                          value: _vm.dialogDelete,
-                          callback: function($$v) {
-                            _vm.dialogDelete = $$v
-                          },
-                          expression: "dialogDelete"
-                        }
-                      },
-                      [
+                        ),
+                        _vm._v(" "),
+                        _c("v-dialog", [_c("printTicket")], 1),
+                        _vm._v(" "),
                         _c(
-                          "v-card",
+                          "v-dialog",
+                          {
+                            attrs: { "max-width": "500px" },
+                            model: {
+                              value: _vm.dialogDelete,
+                              callback: function($$v) {
+                                _vm.dialogDelete = $$v
+                              },
+                              expression: "dialogDelete"
+                            }
+                          },
                           [
-                            _c("v-card-title", { staticClass: "headline" }, [
-                              _vm._v(
-                                "Are you sure you want to delete this item?"
-                              )
-                            ]),
-                            _vm._v(" "),
                             _c(
-                              "v-card-actions",
+                              "v-card",
                               [
-                                _c("v-spacer"),
-                                _vm._v(" "),
                                 _c(
-                                  "v-btn",
-                                  {
-                                    attrs: { color: "blue darken-1", text: "" },
-                                    on: { click: _vm.closeDelete }
-                                  },
-                                  [_vm._v("Cancel")]
+                                  "v-card-title",
+                                  { staticClass: "headline" },
+                                  [
+                                    _vm._v(
+                                      "Are you sure you want to delete this item?"
+                                    )
+                                  ]
                                 ),
                                 _vm._v(" "),
                                 _c(
-                                  "v-btn",
-                                  {
-                                    attrs: { color: "blue darken-1", text: "" },
-                                    on: { click: _vm.deleteItem }
-                                  },
-                                  [_vm._v("OK")]
-                                ),
-                                _vm._v(" "),
-                                _c("v-spacer")
+                                  "v-card-actions",
+                                  [
+                                    _c("v-spacer"),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: {
+                                          color: "blue darken-1",
+                                          text: ""
+                                        },
+                                        on: { click: _vm.closeDelete }
+                                      },
+                                      [_vm._v("Cancel")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: {
+                                          color: "blue darken-1",
+                                          text: ""
+                                        },
+                                        on: { click: _vm.deleteItem }
+                                      },
+                                      [_vm._v("OK")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("v-spacer")
+                                  ],
+                                  1
+                                )
                               ],
                               1
                             )

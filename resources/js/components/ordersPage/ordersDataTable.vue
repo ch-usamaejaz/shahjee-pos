@@ -9,6 +9,7 @@
             class="elevation-1"
         >
         <template v-slot:top>
+          <v-form ref="form" v-model="valid" lazy-validation>
           <v-toolbar
             flat
             v-model="rowIndex"
@@ -36,7 +37,7 @@
 
             <v-card-text>
               <v-container>
-                <form action="submit">
+                
                 <v-row v-for="(row, index) in newOrderRow" :key="index">
                   <v-col
                     cols="12"
@@ -50,7 +51,8 @@
                     label="Items"
                     editable
                     item-value="text"
-                    
+                    :rules="itemSelectRules"
+                    required                    
                   ></v-overflow-btn>
                   </v-col>
                   <v-col
@@ -148,7 +150,7 @@
                     </v-btn>
                   </v-col>
                 </v-row>
-              </form>
+              
 
               </v-container>
             </v-card-text>
@@ -187,6 +189,7 @@
           </v-card>
         </v-dialog>
       </v-toolbar>
+      </v-form>
     </template>
           <template v-slot:item.actions="{ item }">
             <v-icon
@@ -225,6 +228,7 @@
             return {
                 dialog: false,
                 dialogDelete: false,
+                valid: true,
                 totalOrders: 0,
                 rowIndex: 0,
                 orders: [],
@@ -255,6 +259,9 @@
                   order_discount: 0,
                   order_total: 0,
                 },
+                itemSelectRules: [
+                  v => !!v || 'Company Name is required',
+                ],                  
             }
         },
         watch: {
@@ -322,9 +329,10 @@
             },
             deleteItem () {
               let id = this.currentRowId;
-              for(var i =0; i <this.orders.length; i++){
+              for(var i =0; i <=this.orders.length; i++){
                 if(this.orders[i].id == id){
                   this.orders.splice(i, 1);
+                  console.log(id)
                   break;
                 }
               }
@@ -370,7 +378,7 @@
               }
             ]
           };
-          console.log(rowIndex)
+          console.log(Data);
           let url = "/create_new_order"
           this.axios.post(url,Data).then(response =>{
             console.log(response)
