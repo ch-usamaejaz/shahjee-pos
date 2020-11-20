@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp";
 import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
 import Inventory from './pages/Inventory';
+import Profile from './pages/Profile';
 
 const routes = [
     {
@@ -52,6 +53,14 @@ const routes = [
         name: 'inventory',
         path: '/inventory',
         component: Inventory,
+        meta: {
+            layout: ''
+        }
+    },
+    {
+        name: 'profile',
+        path: '/profile',
+        component: Profile,
         meta: {
             layout: ''
         }
