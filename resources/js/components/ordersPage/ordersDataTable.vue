@@ -51,7 +51,7 @@
                     label="Items"
                     editable
                     item-value="text"
-                    :rules="itemSelectRules"
+                    :rules="[v => !!v || 'Item is required']"
                     required                    
                   ></v-overflow-btn>
                   </v-col>
@@ -260,7 +260,7 @@
                   order_total: 0,
                 },
                 itemSelectRules: [
-                  v => !!v || 'Company Name is required',
+                   v => v = !null || 'Company Name is required',
                 ],                  
             }
         },
@@ -294,6 +294,7 @@
             },
             getItemTable () {
               this.axios.get('get_all_items').then(response =>{
+                console.log(response.data.data)
                 this.itemsTable = response.data.data;
                 let self = this;
                 this.itemsTable.forEach(function (item, index) {
@@ -305,7 +306,8 @@
               for(var i = 0; i<=this.itemsTable.length;i++){
                 if(this.newOrderRow[index].newItem === this.itemsTable[i].item_name){
                   this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
-
+                  this.newOrderRow[index].orderItem_id = this.itemsTable[i].item_id;
+                  console.log(this.newOrderRow[index].newItem)
                   this.editedItem.order_total = this.newOrderRow.reduce(function(a,b){
                     return a+b.price
                   },0)
@@ -317,7 +319,7 @@
               this.editedItem.order_total = (this.editedItem.order_total - this.editedItem.order_discount);
             },
             addNewRow () { 
-              this.newOrderRow.push({price: 0, quantity: 0, newItem: ''});
+              this.newOrderRow.push({price: 0, quantity: 0, newItem: '',orderItem_id:0});
             },
             editItem (item) {
               this.formTitle = "Edit Order"
@@ -359,8 +361,14 @@
             console.log("hi");
           },
             save (rowIndex) {
-              this.postData(rowIndex);
+              if(this.newOrderRow[rowIndex].newItem = !null){
+              console.log(this.newOrderRow[rowIndex].quantity)
+              this.postData(rowIndex);    
               this.close()
+              }
+              else{
+                console.log('works')
+              }
             },
             removeRow (index){
               this.newOrderRow.splice(index, 1)

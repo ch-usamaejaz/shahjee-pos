@@ -2379,7 +2379,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       order_discount: 0,
       order_total: 0
     }), _defineProperty(_ref, "itemSelectRules", [function (v) {
-      return !!v || 'Company Name is required';
+      return v = !null || 'Company Name is required';
     }]), _ref;
   },
   watch: {
@@ -2415,6 +2415,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this2 = this;
 
       this.axios.get('get_all_items').then(function (response) {
+        console.log(response.data.data);
         _this2.itemsTable = response.data.data;
         var self = _this2;
 
@@ -2427,6 +2428,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       for (var i = 0; i <= this.itemsTable.length; i++) {
         if (this.newOrderRow[index].newItem === this.itemsTable[i].item_name) {
           this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
+          this.newOrderRow[index].orderItem_id = this.itemsTable[i].item_id;
+          console.log(this.newOrderRow[index].newItem);
           this.editedItem.order_total = this.newOrderRow.reduce(function (a, b) {
             return a + b.price;
           }, 0);
@@ -2441,7 +2444,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.newOrderRow.push({
         price: 0,
         quantity: 0,
-        newItem: ''
+        newItem: '',
+        orderItem_id: 0
       });
     },
     editItem: function editItem(item) {
@@ -2486,8 +2490,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       console.log("hi");
     },
     save: function save(rowIndex) {
-      this.postData(rowIndex);
-      this.close();
+      if (this.newOrderRow[rowIndex].newItem = !null) {
+        console.log(this.newOrderRow[rowIndex].quantity);
+        this.postData(rowIndex);
+        this.close();
+      } else {
+        console.log('works');
+      }
     },
     removeRow: function removeRow(index) {
       this.newOrderRow.splice(index, 1);
@@ -39847,8 +39856,14 @@ var render = function() {
                                                       label: "Items",
                                                       editable: "",
                                                       "item-value": "text",
-                                                      rules:
-                                                        _vm.itemSelectRules,
+                                                      rules: [
+                                                        function(v) {
+                                                          return (
+                                                            !!v ||
+                                                            "Item is required"
+                                                          )
+                                                        }
+                                                      ],
                                                       required: ""
                                                     },
                                                     model: {
@@ -101919,8 +101934,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
