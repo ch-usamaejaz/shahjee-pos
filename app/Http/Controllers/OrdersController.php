@@ -10,7 +10,7 @@ class OrdersController extends Controller
     public function get_user_orders (Request $request) {
 
         //        $orders_data = @Orders::with('items')->where('user_id',$request['user_id'])->get()->toArray();
-        $orders = @Orders::select('id', 'order_status', 'order_total')
+        $orders = @Orders::select('id', 'order_status', 'order_total', 'order_discount')
             ->where('user_id',$request['user_id'])
             ->limit(@$request['itemsPerPage'])
             ->offset(@$request['page'] - 1)
