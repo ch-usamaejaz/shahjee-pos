@@ -11,7 +11,7 @@ class ItemsController extends Controller
     {
         $response = [];
         try {
-            $items = Items::select('item_price', 'item_name')->get()->toArray();
+            $items = Items::select('id','item_price', 'item_name')->get()->toArray();
             $response = ['error' => false, 'data' => $items];
         } catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];
