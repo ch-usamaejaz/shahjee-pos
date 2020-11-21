@@ -65,6 +65,8 @@
                       label="Quantity"
                       type="number"
                       min="1"
+                      :rules="itemSelectRules"
+                      required
                       @input="addPrice(index)"
                     ></v-text-field>
                   </v-col>
@@ -235,7 +237,7 @@
                 loading: true,
                 options: {},
                 itemsTable: [],
-                newOrderRow: [{}],
+                newOrderRow: [],
                 selectedStatus: "",
                 formTitle: '',
                 formTitle: '',
@@ -260,7 +262,7 @@
                   order_total: 0,
                 },
                 itemSelectRules: [
-                   v => v = !null || 'Company Name is required',
+                   (v) => !!v || 'Company Name is required',
                 ],                  
             }
         },
@@ -305,21 +307,24 @@
             addPrice (index) {
               for(var i = 0; i<=this.itemsTable.length;i++){
                 if(this.newOrderRow[index].newItem === this.itemsTable[i].item_name){
+                  // this.newOrderRow[index].items[index].newItemId = this.itemsTable[i].item_name
                   this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
                   this.newOrderRow[index].orderItem_id = this.itemsTable[i].id;
-                  console.log(this.newOrderRow[index].orderItem_id)
+                   console.log(this.itemsTable[i].id, 'itemID')
+                   console.log(this.newOrderRow)
                   this.editedItem.order_total = this.newOrderRow.reduce(function(a,b){
                     return a+b.price
                   },0)
                   break
                 }
+                
               }
             },
             addDiscount () {
               this.editedItem.order_total = (this.editedItem.order_total - this.editedItem.order_discount);
             },
             addNewRow () { 
-              this.newOrderRow.push({price: 0, quantity: 0, newItem: '',orderItem_id:0});
+              this.newOrderRow.push({price: 0, quantity: 0, newItem: '',orderItem_id:0, items: [{newItemId: 0, itemQuantity: 0}]});
             },
             editItem (item) {
               this.formTitle = "Edit Order"
@@ -335,6 +340,11 @@
                 if(this.orders[i].id == id){
                   this.orders.splice(i, 1);
                   console.log(id)
+                  this.axios.post('/delete_order', {order_id: id}).then(response=>{
+                    console.log(response)
+                  }).catch(error=>{
+                    console.log(error)
+                  })
                   break;
                 }
               }
@@ -351,7 +361,7 @@
               this.dialogDelete = true
             },
             close () {
-              this.newOrderRow = new Array;
+              this.newOrderRow = [{}];
               this.dialog = false
               this.order_total = null;
               this.editedItem = new Object;
@@ -361,19 +371,15 @@
             console.log("hi");
           },
             save (rowIndex) {
-              if(this.newOrderRow[rowIndex].newItem = !null){
-              console.log(this.newOrderRow[rowIndex].quantity)
+              console.log(rowIndex, 'index')
               this.postData(rowIndex);    
               this.close()
-              }
-              else{
-                console.log('works')
-              }
             },
             removeRow (index){
               this.newOrderRow.splice(index, 1)
             },
           postData(rowIndex){
+            
           let Data = {
             "order_total": this.editedItem.order_total,
             "order_status": this.selectedStatus,

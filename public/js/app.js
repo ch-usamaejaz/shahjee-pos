@@ -2330,6 +2330,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2348,7 +2350,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       loading: true,
       options: {},
       itemsTable: [],
-      newOrderRow: [{}],
+      newOrderRow: [],
       selectedStatus: "",
       formTitle: ''
     }, _defineProperty(_ref, "formTitle", ''), _defineProperty(_ref, "currentRowId", 0), _defineProperty(_ref, "dropdown_edit", []), _defineProperty(_ref, "dropdown_edit_status", ['Paid', 'Unpaid']), _defineProperty(_ref, "headers", [{
@@ -2379,7 +2381,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       order_discount: 0,
       order_total: 0
     }), _defineProperty(_ref, "itemSelectRules", [function (v) {
-      return v = !null || 'Company Name is required';
+      return !!v || 'Company Name is required';
     }]), _ref;
   },
   watch: {
@@ -2427,9 +2429,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     addPrice: function addPrice(index) {
       for (var i = 0; i <= this.itemsTable.length; i++) {
         if (this.newOrderRow[index].newItem === this.itemsTable[i].item_name) {
+          // this.newOrderRow[index].items[index].newItemId = this.itemsTable[i].item_name
           this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
           this.newOrderRow[index].orderItem_id = this.itemsTable[i].id;
-          console.log(this.newOrderRow[index].orderItem_id);
+          console.log(this.itemsTable[i].id, 'itemID');
+          console.log(this.newOrderRow);
           this.editedItem.order_total = this.newOrderRow.reduce(function (a, b) {
             return a + b.price;
           }, 0);
@@ -2445,7 +2449,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         price: 0,
         quantity: 0,
         newItem: '',
-        orderItem_id: 0
+        orderItem_id: 0,
+        items: [{
+          newItemId: 0,
+          itemQuantity: 0
+        }]
       });
     },
     editItem: function editItem(item) {
@@ -2463,6 +2471,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         if (this.orders[i].id == id) {
           this.orders.splice(i, 1);
           console.log(id);
+          this.axios.post('/delete_order', {
+            order_id: id
+          }).then(function (response) {
+            console.log(response);
+          })["catch"](function (error) {
+            console.log(error);
+          });
           break;
         }
       }
@@ -2480,7 +2495,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.dialogDelete = true;
     },
     close: function close() {
-      this.newOrderRow = new Array();
+      this.newOrderRow = [{}];
       this.dialog = false;
       this.order_total = null;
       this.editedItem = new Object();
@@ -2490,13 +2505,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       console.log("hi");
     },
     save: function save(rowIndex) {
-      if (this.newOrderRow[rowIndex].newItem = !null) {
-        console.log(this.newOrderRow[rowIndex].quantity);
-        this.postData(rowIndex);
-        this.close();
-      } else {
-        console.log('works');
-      }
+      console.log(rowIndex, 'index');
+      this.postData(rowIndex);
+      this.close();
     },
     removeRow: function removeRow(index) {
       this.newOrderRow.splice(index, 1);
@@ -39901,7 +39912,10 @@ var render = function() {
                                                     attrs: {
                                                       label: "Quantity",
                                                       type: "number",
-                                                      min: "1"
+                                                      min: "1",
+                                                      rules:
+                                                        _vm.itemSelectRules,
+                                                      required: ""
                                                     },
                                                     on: {
                                                       input: function($event) {
