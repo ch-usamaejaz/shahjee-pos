@@ -9,17 +9,23 @@ class OrdersController extends Controller
 {
     public function get_user_orders(Request $request)
     {
-        $orders = @Orders::select('id', 'order_status', 'order_total', 'order_discount')
-            ->where('user_id', $request['user_id'])
-            ->limit(@$request['itemsPerPage'])
-            ->offset(@$request['page'] - 1)
-            ->orderBy('created_at', @$request['sortDesc'][0] ? 'DESC' : 'ASC')
-            ->get()->toArray();
+        $response = [];
 
-        $response = ['error' => false, 'orders' => empty($orders) ? [] : $orders];
+        try {
+            $query = @Orders::select('id', 'order_status', 'order_total', 'order_discount')
+                ->where('user_id', $request['user_id']);
+            if (@$request['itemsPerPage'] !== -1) {
+                $query->limit(@$request['itemsPerPage'])->offset(@$request['page'] - 1);
+            };
+            $orders = $query->orderBy('created_at', @$request['sortDesc'][0] ? 'DESC' : 'ASC')
+                ->get()->toArray();
+
+            $response = ['error' => false, 'orders' => empty($orders) ? [] : $orders];
+        } catch (\Exception $exception) {
+            $response = ['error' => true, 'message' => $exception->getMessage()];
+        }
 
         return response()->json($response);
-
     }
 
     public function create_new_order(Request $request)
@@ -69,6 +75,12 @@ class OrdersController extends Controller
         }
 
         return response()->json($response);
+
+    }
+
+    public function update_order(Request $request)
+    {
+        $order = @Orders::updateOrCreate(['id' => @$request->order_id, 'user_id' => @$request->user_id], $request->all());
 
     }
 }
