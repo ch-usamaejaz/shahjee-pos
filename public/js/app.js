@@ -40460,7 +40460,8 @@ var render = function() {
                   "router-link",
                   {
                     attrs: {
-                      to: { name: "print_order", params: { id: item.id } }
+                      to: { name: "print_order", params: { id: item.id } },
+                      target: "_blank"
                     }
                   },
                   [
@@ -40504,12 +40505,17 @@ var render = function() {
   return _vm.isDataLoaded
     ? _c("div", [
         _c("div", { staticClass: "ticket", attrs: { id: "print" } }, [
+          _c("img", {
+            staticClass: "img-fluid",
+            attrs: { src: __webpack_require__(/*! ../../../images/logo.png */ "./resources/images/logo.png"), alt: "Logo" }
+          }),
+          _vm._v(" "),
           _c("p", { staticClass: "centered" }, [
             _vm._v("Shahjee Restaurants\n            "),
             _c("br"),
             _vm._v("Adda Plot, Main Raiwind Road, Lahore\n            "),
             _c("br"),
-            _vm._v("Order ID : " + _vm._s(_vm.orderData.id))
+            _vm._v("Order# " + _vm._s(_vm.orderData.id))
           ]),
           _vm._v(" "),
           _c("table", [
@@ -40559,7 +40565,7 @@ var render = function() {
                       _c("td", { staticClass: "quantity" }),
                       _vm._v(" "),
                       _c("td", { staticClass: "description" }, [
-                        _vm._v("Discount Applied ")
+                        _vm._v("Discount ")
                       ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "price" }, [
@@ -40582,13 +40588,15 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
           _vm._m(1)
         ]),
         _vm._v(" "),
         _c(
           "button",
           {
-            staticClass: "hidden-print",
+            staticClass: "hidden-print btn btn-info",
             attrs: { id: "btnPrint" },
             on: {
               click: function($event) {
@@ -100709,6 +100717,17 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+
+/***/ "./resources/images/logo.png":
+/*!***********************************!*\
+  !*** ./resources/images/logo.png ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/logo.png?d434bfffdc6102ee4f04b7db9678b39e";
 
 /***/ }),
 
