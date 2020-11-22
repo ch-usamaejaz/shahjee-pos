@@ -50,10 +50,9 @@ class OrdersController extends Controller
 
     public function delete_order(Request $request)
     {
-        $id = @$request->order_id;
         $response = ['error' => false, 'message' => 'Order Deleted Successfully!'];
         try {
-            Orders::find($id)->delete();
+            Orders::find(@$request->order_id)->delete();
         } catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];
         }
@@ -63,11 +62,10 @@ class OrdersController extends Controller
 
     public function get_order(Request $request)
     {
-        $id = @$request->order_id;
         $response = [];
 
         try {
-            $orders_data = Orders::with('items')->where('id', $id)->get()->toArray();
+            $orders_data = Orders::with('items')->where('id', @$request->order_id)->get()->toArray();
             if (empty($orders_data)) throw new \Exception('No Data found against order ID.');
             $response = ['error' => false, 'data' => $orders_data];
         } catch (\Exception $exception) {
@@ -80,7 +78,19 @@ class OrdersController extends Controller
 
     public function update_order(Request $request)
     {
-        $order = @Orders::updateOrCreate(['id' => @$request->order_id, 'user_id' => @$request->user_id], $request->all());
+        $response = [];
+        try {
+            $order = @Orders::updateOrCreate(['id' => @$request->order_id, 'user_id' => @$request->user_id], $request->all());
+            if (isset($request['items']) && sizeof(@$request['items']) > 0) {
+                foreach ($request['items'] as $key => $item) {
+                    $order->items()->updateExistingPivot($item['item_id'], ['quantity' => $item['quantity']]);
+                }
+            }
+            $response = ['error' => false, 'message' => 'Order Successfully Updated!'];
+        } catch (\Exception $exception) {
+            $response = ['error' => true, 'message' => $exception->getMessage()];
+        }
 
+        return response()->json($response);
     }
 }
