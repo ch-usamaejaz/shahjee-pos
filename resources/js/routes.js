@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
 import Inventory from './pages/Inventory';
 import Profile from './pages/Profile';
+import Print from './components/ordersPage/printTicket'
 
 const routes = [
     {
@@ -64,6 +65,12 @@ const routes = [
         meta: {
             layout: ''
         }
+    },
+    {
+        name: 'print',
+        path: '/print',
+        props: true,
+        component: Print
     }
 ];
 

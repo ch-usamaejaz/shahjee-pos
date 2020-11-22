@@ -3,7 +3,7 @@
         <div class="ticket" id="print">
             <p class="centered">RECEIPT EXAMPLE
                 <br>Address line 1
-                <br>Address line 2</p>
+                <br>{{item.id}}</p>
             <table>
                 <thead>
                     <tr>
@@ -13,7 +13,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="numberOfItems in 10" :key="numberOfItems">
+                    <tr>
                         <td class="quantity">{{itemQuantity}}</td>
                         <td class="description">{{itemName}}</td>
                         <td class="price">Rs{{itemPrice}}</td>
@@ -34,6 +34,7 @@
 <script>
 export default {
     name: 'printTicket',
+    props: ['item'],
     data(){
         return{
             numberOfItems: 0,

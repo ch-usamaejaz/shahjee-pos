@@ -46,13 +46,15 @@
                   >
                   <v-overflow-btn
                     class="my-2"
-                    :items="dropdown_edit"
+                    :items="itemsTable"
+                    item-text="item_name"
                     v-model="newOrderRow[index].newItem"
                     label="Items"
                     editable
-                    item-value="text"
                     :rules="[v => !!v || 'Item is required']"
-                    required                    
+                    required
+                    return-object 
+                    @change="calculateOrderTotal"                   
                   ></v-overflow-btn>
                   </v-col>
                   <v-col
@@ -67,7 +69,7 @@
                       min="1"
                       :rules="itemSelectRules"
                       required
-                      @input="addPrice(index)"
+                     @input="calculateOrderTotal"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -78,7 +80,7 @@
                     <v-text-field
                       label="Price (Rs)"
                       type="number"
-                      v-model="newOrderRow[index].price"
+                      :value="newOrderRow[index].newItem.item_price * newOrderRow[index].quantity"
                       readonly
                     ></v-text-field>
                   </v-col>
@@ -209,12 +211,14 @@
             >
               mdi-delete
             </v-icon>
+            <router-link :to="{name: 'print', params: {item}}">
             <v-icon
               color="green"
               large
             >
               mdi-printer
             </v-icon>
+            </router-link>
           </template>
         </v-data-table>
     </div>
@@ -243,6 +247,7 @@
                 formTitle: '',
                 currentRowId: 0,
                 savedItems: [],
+                getEditItems: {},
                 
                 dropdown_edit: [],
                 dropdown_edit_status: ['Paid', 'Unpaid'],
@@ -266,6 +271,14 @@
                    (v) => !!v || 'Company Name is required',
                 ],                  
             }
+        },
+        computed: {
+          getTotal(){
+            let total = 0;
+            this.newOrderRow.forEach((value,index) => {
+              console.log(value,index, "total")
+            })
+          }
         },
         watch: {
             options: {
@@ -299,17 +312,27 @@
               this.axios.get('get_all_items').then(response =>{
                 console.log(response.data.data)
                 this.itemsTable = response.data.data;
-                let self = this;
-                this.itemsTable.forEach(function (item, index) {
-                self.dropdown_edit.push(item['item_name'])
-                })
+                // let self = this;
+                // this.itemsTable.forEach(function (item, index) {
+                // self.dropdown_edit.push(item['item_name'])
+                // })
               })
+              console.log(this.itemsTable, 'table')
+            },
+            calculateOrderTotal () {
+              let total = 0;
+              this.newOrderRow.forEach((value,index) => {
+                total = total + (value.newItem.item_price * value.quantity)
+                console.log(total,value.newItem.item_price,value.quantity, 'newTotal')
+            })
+            this.editedItem.order_total = total;
             },
             addPrice (index) {
+              console.log(this.newOrderRow[index], 'this')
               for(var i = 0; i<=this.itemsTable.length;i++){
                 if(this.newOrderRow[index].newItem === this.itemsTable[i].item_name){
-                  this.newOrderRow[index].items.push({newItemId: this.itemsTable[i].id, newItemQuantity: this.newOrderRow[index].quantity})
-                  this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
+                  this.savedItems.push({newItemId: this.itemsTable[i].id, newItemQuantity: this.newOrderRow[index].quantity})
+                  // this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
                   this.newOrderRow[index].orderItem_id = this.itemsTable[i].id;
                    console.log(this.itemsTable[i].id, 'itemID')
                    this.rowIndex = index
@@ -326,15 +349,39 @@
               this.editedItem.order_total = (this.editedItem.order_total - this.editedItem.order_discount);
             },
             addNewRow () { 
-              this.newOrderRow.push({price: 0, quantity: 0, newItem: '',orderItem_id:0, items: []});
+              this.newOrderRow.push({price: 0, quantity: 0, newItem:{},orderItem_id:0, items: []});
             },
             editItem (item) {
+              // this.addNewRow()
+              // this.addNewRow()
+              let newItems = [];
+              let itemsAtt = []
               this.formTitle = "Edit Order"
               this.currentRowId = this.orders.indexOf(item)
               this.selectedStatus = item.order_status;
               this.editedItem.order_total = item.order_total
+              this.axios.post('/get_order', {order_id: item.id}).then(response=>{
+                this.getEditItems = response.data.data
+                console.log(response.data.data, 'res')
+                this.getEditItems.forEach((value)=>{            
+                  newItems.push(value.items)
+                  newItems.forEach((newValue, index)=>{
+                    for(var i=0; i<=newItems.length; i++){
+                      this.addNewRow(i)
+                    itemsAtt = {"item_name": newValue[i].item_name, "item_price": newValue[i].item_price, "quantity": newValue[i].quantity}
+                    this.newOrderRow[i].newItem = itemsAtt
+                    this.newOrderRow[i].price = itemsAtt.item_price
+                    this.newOrderRow[i].quantity = itemsAtt.quantity
+                    this.editedItem.order_total = item.order_total
+                    this.editedItem.order_discount = item.order_discount
+                    }
+                  })
+                })                    
+              }).catch(error=>{
+                console.log(error)
+              })
+              this.close();
               this.dialog = true
-              console.log(item)
             },
             deleteItem () {
               let id = this.currentRowId;
@@ -363,7 +410,6 @@
               this.dialogDelete = true
             },
             close () {
-              this.newOrderRow = [{}];
               this.dialog = false
               this.order_total = null;
               this.editedItem = new Object;
@@ -373,21 +419,29 @@
             console.log("hi");
           },
             save () {
-              console.log(this.newOrderRow, 'ittems');
               this.postData();    
               this.close()
             },
             removeRow (index){
               this.newOrderRow.splice(index, 1)
             },
-          postData(rowIndex){
-            
+            getSelectedItems () {
+              let items = [];
+              this.newOrderRow.forEach((value,index)=>{
+                items.push({"item_id": value.newItem.id, "quantity": value.quantity}) 
+              })
+              console.log(items)
+              return items
+            },
+          postData(){
+            console.log(this.savedItems, 'post')
+            let items = this.getSelectedItems()
           let Data = {
             "order_total": this.editedItem.order_total,
             "order_status": this.selectedStatus,
             "order_discount": this.editedItem.order_discount,
             "user_id": 1,
-            "items": [].push(savedItems)
+            "items": items
           };
           console.log(Data);
           let url = "/create_new_order"

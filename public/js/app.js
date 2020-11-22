@@ -2332,6 +2332,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2353,7 +2357,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       newOrderRow: [],
       selectedStatus: "",
       formTitle: ''
-    }, _defineProperty(_ref, "formTitle", ''), _defineProperty(_ref, "currentRowId", 0), _defineProperty(_ref, "savedItems", []), _defineProperty(_ref, "dropdown_edit", []), _defineProperty(_ref, "dropdown_edit_status", ['Paid', 'Unpaid']), _defineProperty(_ref, "headers", [{
+    }, _defineProperty(_ref, "formTitle", ''), _defineProperty(_ref, "currentRowId", 0), _defineProperty(_ref, "savedItems", []), _defineProperty(_ref, "getEditItems", {}), _defineProperty(_ref, "dropdown_edit", []), _defineProperty(_ref, "dropdown_edit_status", ['Paid', 'Unpaid']), _defineProperty(_ref, "headers", [{
       text: 'Order#',
       align: 'start',
       value: 'id'
@@ -2383,6 +2387,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }), _defineProperty(_ref, "itemSelectRules", [function (v) {
       return !!v || 'Company Name is required';
     }]), _ref;
+  },
+  computed: {
+    getTotal: function getTotal() {
+      var total = 0;
+      this.newOrderRow.forEach(function (value, index) {
+        console.log(value, index, "total");
+      });
+    }
   },
   watch: {
     options: {
@@ -2418,22 +2430,31 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       this.axios.get('get_all_items').then(function (response) {
         console.log(response.data.data);
-        _this2.itemsTable = response.data.data;
-        var self = _this2;
-
-        _this2.itemsTable.forEach(function (item, index) {
-          self.dropdown_edit.push(item['item_name']);
-        });
+        _this2.itemsTable = response.data.data; // let self = this;
+        // this.itemsTable.forEach(function (item, index) {
+        // self.dropdown_edit.push(item['item_name'])
+        // })
       });
+      console.log(this.itemsTable, 'table');
+    },
+    calculateOrderTotal: function calculateOrderTotal() {
+      var total = 0;
+      this.newOrderRow.forEach(function (value, index) {
+        total = total + value.newItem.item_price * value.quantity;
+        console.log(total, value.newItem.item_price, value.quantity, 'newTotal');
+      });
+      this.editedItem.order_total = total;
     },
     addPrice: function addPrice(index) {
+      console.log(this.newOrderRow[index], 'this');
+
       for (var i = 0; i <= this.itemsTable.length; i++) {
         if (this.newOrderRow[index].newItem === this.itemsTable[i].item_name) {
-          this.newOrderRow[index].items.push({
+          this.savedItems.push({
             newItemId: this.itemsTable[i].id,
             newItemQuantity: this.newOrderRow[index].quantity
-          });
-          this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
+          }); // this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
+
           this.newOrderRow[index].orderItem_id = this.itemsTable[i].id;
           console.log(this.itemsTable[i].id, 'itemID');
           this.rowIndex = index;
@@ -2452,18 +2473,52 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.newOrderRow.push({
         price: 0,
         quantity: 0,
-        newItem: '',
+        newItem: {},
         orderItem_id: 0,
         items: []
       });
     },
     editItem: function editItem(item) {
+      var _this3 = this;
+
+      // this.addNewRow()
+      // this.addNewRow()
+      var newItems = [];
+      var itemsAtt = [];
       this.formTitle = "Edit Order";
       this.currentRowId = this.orders.indexOf(item);
       this.selectedStatus = item.order_status;
       this.editedItem.order_total = item.order_total;
+      this.axios.post('/get_order', {
+        order_id: item.id
+      }).then(function (response) {
+        _this3.getEditItems = response.data.data;
+        console.log(response.data.data, 'res');
+
+        _this3.getEditItems.forEach(function (value) {
+          newItems.push(value.items);
+          newItems.forEach(function (newValue, index) {
+            for (var i = 0; i <= newItems.length; i++) {
+              _this3.addNewRow(i);
+
+              itemsAtt = {
+                "item_name": newValue[i].item_name,
+                "item_price": newValue[i].item_price,
+                "quantity": newValue[i].quantity
+              };
+              _this3.newOrderRow[i].newItem = itemsAtt;
+              _this3.newOrderRow[i].price = itemsAtt.item_price;
+              _this3.newOrderRow[i].quantity = itemsAtt.quantity;
+              _this3.editedItem.order_total = item.order_total;
+              _this3.editedItem.order_discount = item.order_discount;
+            }
+          });
+        });
+      })["catch"](function (error) {
+        console.log(error);
+      });
+      this.close();
       this.dialog = true;
-      console.log(item);
     },
     deleteItem: function deleteItem() {
       var id = this.currentRowId;
@@ -2496,7 +2551,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.dialogDelete = true;
     },
     close: function close() {
-      this.newOrderRow = [{}];
       this.dialog = false;
       this.order_total = null;
       this.editedItem = new Object();
@@ -2506,20 +2560,32 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       console.log("hi");
     },
     save: function save() {
-      console.log(this.newOrderRow, 'ittems');
       this.postData();
       this.close();
     },
     removeRow: function removeRow(index) {
       this.newOrderRow.splice(index, 1);
     },
-    postData: function postData(rowIndex) {
+    getSelectedItems: function getSelectedItems() {
+      var items = [];
+      this.newOrderRow.forEach(function (value, index) {
+        items.push({
+          "item_id": value.newItem.id,
+          "quantity": value.quantity
+        });
+      });
+      console.log(items);
+      return items;
+    },
+    postData: function postData() {
+      console.log(this.savedItems, 'post');
+      var items = this.getSelectedItems();
       var Data = {
         "order_total": this.editedItem.order_total,
         "order_status": this.selectedStatus,
         "order_discount": this.editedItem.order_discount,
         "user_id": 1,
-        "items": [].push(savedItems)
+        "items": items
       };
       console.log(Data);
       var url = "/create_new_order";
@@ -2590,6 +2656,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'printTicket',
+  props: ['item'],
   data: function data() {
     return {
       numberOfItems: 0,
@@ -39861,10 +39928,10 @@ var render = function() {
                                                   _c("v-overflow-btn", {
                                                     staticClass: "my-2",
                                                     attrs: {
-                                                      items: _vm.dropdown_edit,
+                                                      items: _vm.itemsTable,
+                                                      "item-text": "item_name",
                                                       label: "Items",
                                                       editable: "",
-                                                      "item-value": "text",
                                                       rules: [
                                                         function(v) {
                                                           return (
@@ -39873,7 +39940,12 @@ var render = function() {
                                                           )
                                                         }
                                                       ],
-                                                      required: ""
+                                                      required: "",
+                                                      "return-object": ""
+                                                    },
+                                                    on: {
+                                                      change:
+                                                        _vm.calculateOrderTotal
                                                     },
                                                     model: {
                                                       value:
@@ -39916,11 +39988,8 @@ var render = function() {
                                                       required: ""
                                                     },
                                                     on: {
-                                                      input: function($event) {
-                                                        return _vm.addPrice(
-                                                          index
-                                                        )
-                                                      }
+                                                      input:
+                                                        _vm.calculateOrderTotal
                                                     },
                                                     model: {
                                                       value:
@@ -39957,23 +40026,12 @@ var render = function() {
                                                     attrs: {
                                                       label: "Price (Rs)",
                                                       type: "number",
-                                                      readonly: ""
-                                                    },
-                                                    model: {
                                                       value:
                                                         _vm.newOrderRow[index]
-                                                          .price,
-                                                      callback: function($$v) {
-                                                        _vm.$set(
-                                                          _vm.newOrderRow[
-                                                            index
-                                                          ],
-                                                          "price",
-                                                          $$v
-                                                        )
-                                                      },
-                                                      expression:
-                                                        "newOrderRow[index].price"
+                                                          .newItem.item_price *
+                                                        _vm.newOrderRow[index]
+                                                          .quantity,
+                                                      readonly: ""
                                                     }
                                                   })
                                                 ],
@@ -40347,9 +40405,16 @@ var render = function() {
                   [_vm._v("\n          mdi-delete\n        ")]
                 ),
                 _vm._v(" "),
-                _c("v-icon", { attrs: { color: "green", large: "" } }, [
-                  _vm._v("\n          mdi-printer\n        ")
-                ])
+                _c(
+                  "router-link",
+                  { attrs: { to: { name: "print", params: { item: item } } } },
+                  [
+                    _c("v-icon", { attrs: { color: "green", large: "" } }, [
+                      _vm._v("\n          mdi-printer\n        ")
+                    ])
+                  ],
+                  1
+                )
               ]
             }
           }
@@ -40383,45 +40448,45 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "ticket", attrs: { id: "print" } }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c("table", [
-        _vm._m(1),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          [
-            _vm._l(10, function(numberOfItems) {
-              return _c("tr", { key: numberOfItems }, [
-                _c("td", { staticClass: "quantity" }, [
-                  _vm._v(_vm._s(_vm.itemQuantity))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "description" }, [
-                  _vm._v(_vm._s(_vm.itemName))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "price" }, [
-                  _vm._v("Rs" + _vm._s(_vm.itemPrice))
-                ])
-              ])
-            }),
-            _vm._v(" "),
-            _c("tr", [
-              _c("td", { staticClass: "quantity" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "description" }, [_vm._v("TOTAL")]),
-              _vm._v(" "),
-              _c("td", { staticClass: "price" }, [
-                _vm._v("Rs" + _vm._s(_vm.totalPrice))
-              ])
-            ])
-          ],
-          2
-        )
+      _c("p", { staticClass: "centered" }, [
+        _vm._v("RECEIPT EXAMPLE\n            "),
+        _c("br"),
+        _vm._v("Address line 1\n            "),
+        _c("br"),
+        _vm._v(_vm._s(_vm.item.id))
       ]),
       _vm._v(" "),
-      _vm._m(2)
+      _c("table", [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("tbody", [
+          _c("tr", [
+            _c("td", { staticClass: "quantity" }, [
+              _vm._v(_vm._s(_vm.itemQuantity))
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "description" }, [
+              _vm._v(_vm._s(_vm.itemName))
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "price" }, [
+              _vm._v("Rs" + _vm._s(_vm.itemPrice))
+            ])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", { staticClass: "quantity" }),
+            _vm._v(" "),
+            _c("td", { staticClass: "description" }, [_vm._v("TOTAL")]),
+            _vm._v(" "),
+            _c("td", { staticClass: "price" }, [
+              _vm._v("Rs" + _vm._s(_vm.totalPrice))
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._m(1)
     ]),
     _vm._v(" "),
     _c(
@@ -40440,18 +40505,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", { staticClass: "centered" }, [
-      _vm._v("RECEIPT EXAMPLE\n            "),
-      _c("br"),
-      _vm._v("Address line 1\n            "),
-      _c("br"),
-      _vm._v("Address line 2")
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -101866,9 +101919,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_Orders__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./pages/Orders */ "./resources/js/pages/Orders.vue");
 /* harmony import */ var _pages_Inventory__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./pages/Inventory */ "./resources/js/pages/Inventory.vue");
 /* harmony import */ var _pages_Profile__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./pages/Profile */ "./resources/js/pages/Profile.vue");
+/* harmony import */ var _components_ordersPage_printTicket__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/ordersPage/printTicket */ "./resources/js/components/ordersPage/printTicket.vue");
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
 
 
 
@@ -101919,6 +101974,11 @@ var routes = [{
   meta: {
     layout: ''
   }
+}, {
+  name: 'print',
+  path: '/print',
+  props: true,
+  component: _components_ordersPage_printTicket__WEBPACK_IMPORTED_MODULE_9__["default"]
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: 'history',
