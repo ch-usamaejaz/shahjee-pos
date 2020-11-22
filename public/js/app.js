@@ -2107,7 +2107,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _printTicket__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./printTicket */ "./resources/js/components/ordersPage/printTicket.vue");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 //
@@ -2333,14 +2332,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    printTicket: _printTicket__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
   data: function data() {
     var _ref;
 
@@ -2654,59 +2646,45 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'printTicket',
-  props: ['item'],
   data: function data() {
     return {
-      numberOfItems: [],
-      itemsTemplate: [],
-      itemQuantity: 2,
-      itemName: 'Chicken Karahi',
-      itemPrice: 0,
-      totalPrice: 0,
-      discount: 0
+      orderData: {},
+      isDataLoaded: false
     };
   },
   mounted: function mounted() {
-    this.getOrderItems(this.item);
+    this.getOrderData();
   },
   methods: {
-    getOrderItems: function getOrderItems(item) {
+    getOrderData: function getOrderData() {
       var _this = this;
 
-      this.itemsTemplate.push({
-        newItem: {},
-        price: 0,
-        quantity: 0
-      });
-      var newItems = [];
-      var itemsAtt = [];
       this.axios.post('/get_order', {
-        order_id: item.id
-      }).then(function (response) {
-        _this.getEditItems = response.data.data;
-        console.log(response.data.data, 'res');
+        "order_id": this.$route.params.id
+      }).then(function (resp) {
+        _this.isDataLoaded = true;
 
-        _this.numberOfItems.forEach(function (value) {
-          newItems.push(value.items);
-          newItems.forEach(function (newValue, index) {
-            for (var i = 0; i <= newItems.length; i++) {
-              itemsAtt = {
-                "item_name": newValue[i].item_name,
-                "item_price": newValue[i].item_price,
-                "quantity": newValue[i].quantity
-              };
-              _this.itemsTemplate[i].newItem = itemsAtt;
-              _this.itemsTemplate[i].price = itemsAtt.item_price;
-              _this.itemsTemplate[i].quantity = itemsAtt.quantity;
-              _this.totalPrice = item.order_total;
-              _this.discount = item.order_discount;
-            }
-          });
-        });
-      })["catch"](function (error) {
-        console.log(error);
+        if (!resp.data.error) {
+          _this.orderData = resp.data.data[0];
+        }
+      })["catch"](function (err) {
+        console.log(err.message);
       });
     },
     printTicket: function printTicket() {
@@ -40338,8 +40316,6 @@ var render = function() {
                           1
                         ),
                         _vm._v(" "),
-                        _c("v-dialog", [_c("printTicket")], 1),
-                        _vm._v(" "),
                         _c(
                           "v-dialog",
                           {
@@ -40449,7 +40425,11 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "router-link",
-                  { attrs: { to: { name: "print", params: { item: item } } } },
+                  {
+                    attrs: {
+                      to: { name: "print_order", params: { id: item.id } }
+                    }
+                  },
                   [
                     _c("v-icon", { attrs: { color: "green", large: "" } }, [
                       _vm._v("\n          mdi-printer\n        ")
@@ -40488,69 +40468,105 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "ticket", attrs: { id: "print" } }, [
-      _c("p", { staticClass: "centered" }, [
-        _vm._v("RECEIPT EXAMPLE\n            "),
-        _c("br"),
-        _vm._v("Address line 1\n            "),
-        _c("br"),
-        _vm._v(_vm._s(_vm.item.id))
-      ]),
-      _vm._v(" "),
-      _c("table", [
-        _vm._m(0),
+  return _vm.isDataLoaded
+    ? _c("div", [
+        _c("div", { staticClass: "ticket", attrs: { id: "print" } }, [
+          _c("p", { staticClass: "centered" }, [
+            _vm._v("Shahjee Restaurants\n            "),
+            _c("br"),
+            _vm._v("Adda Plot, Main Raiwind Road, Lahore\n            "),
+            _c("br"),
+            _vm._v("Order ID : " + _vm._s(_vm.orderData.id))
+          ]),
+          _vm._v(" "),
+          _c("table", [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              [
+                _vm._l(_vm.orderData.items, function(item, index) {
+                  return _c("tr", { key: index }, [
+                    _c("td", { staticClass: "quantity" }, [
+                      _vm._v(_vm._s(item.quantity))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "name" }, [
+                      _vm._v(_vm._s(item.item_name))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "price" }, [
+                      _vm._v("Rs " + _vm._s(item.item_price * item.quantity))
+                    ])
+                  ])
+                }),
+                _vm._v(" "),
+                _vm.orderData.order_discount > 0
+                  ? _c("tr", [
+                      _c("td", { staticClass: "quantity" }),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "description" }, [
+                        _vm._v("Total Bill ")
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "price" }, [
+                        _vm._v(
+                          "Rs " +
+                            _vm._s(
+                              _vm.orderData.order_total +
+                                _vm.orderData.order_discount
+                            )
+                        )
+                      ])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.orderData.order_discount > 0
+                  ? _c("tr", [
+                      _c("td", { staticClass: "quantity" }),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "description" }, [
+                        _vm._v("Discount Applied ")
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "price" }, [
+                        _vm._v("Rs " + _vm._s(_vm.orderData.order_discount))
+                      ])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", { staticClass: "quantity" }),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "description" }, [_vm._v("TOTAL: ")]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "price" }, [
+                    _vm._v("Rs " + _vm._s(_vm.orderData.order_total))
+                  ])
+                ])
+              ],
+              2
+            )
+          ]),
+          _vm._v(" "),
+          _vm._m(1)
+        ]),
         _vm._v(" "),
         _c(
-          "tbody",
-          [
-            _vm._l(_vm.numberOfItems, function(items, index) {
-              return _c("tr", { key: index }, [
-                _c("td", { staticClass: "quantity" }, [
-                  _vm._v(_vm._s(_vm.itemQuantity))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "name" }, [
-                  _vm._v(_vm._s(_vm.itemName))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "price" }, [
-                  _vm._v("Rs" + _vm._s(_vm.itemPrice))
-                ])
-              ])
-            }),
-            _vm._v(" "),
-            _c("tr", [
-              _c("td", { staticClass: "quantity" }),
-              _vm._v(" "),
-              _c("td", { staticClass: "description" }, [_vm._v("TOTAL")]),
-              _vm._v(" "),
-              _c("td", { staticClass: "price" }, [
-                _vm._v("Rs" + _vm._s(_vm.totalPrice))
-              ])
-            ])
-          ],
-          2
+          "button",
+          {
+            staticClass: "hidden-print",
+            attrs: { id: "btnPrint" },
+            on: {
+              click: function($event) {
+                return _vm.printTicket()
+              }
+            }
+          },
+          [_vm._v("Print")]
         )
-      ]),
-      _vm._v(" "),
-      _vm._m(1)
-    ]),
-    _vm._v(" "),
-    _c(
-      "button",
-      {
-        staticClass: "hidden-print",
-        attrs: { id: "btnPrint" },
-        on: {
-          click: function($event) {
-            return _vm.printTicket()
-          }
-        }
-      },
-      [_vm._v("Print")]
-    )
-  ])
+      ])
+    : _c("div", [_c("h1", [_vm._v("No Data Found!")])])
 }
 var staticRenderFns = [
   function() {
@@ -40563,7 +40579,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticClass: "name" }, [_vm._v("Description")]),
         _vm._v(" "),
-        _c("th", { staticClass: "price" }, [_vm._v("Rs")])
+        _c("th", { staticClass: "price" }, [_vm._v("Amount")])
       ])
     ])
   },
@@ -40572,9 +40588,9 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", { staticClass: "centered" }, [
-      _vm._v("Thanks for your purchase!"),
+      _vm._v("Thank You for your purchase!"),
       _c("br"),
-      _vm._v("ShahJee Restuerent")
+      _vm._v("ShahJee Restaurant")
     ])
   }
 ]
@@ -102023,9 +102039,8 @@ var routes = [{
     layout: ''
   }
 }, {
-  name: 'print',
-  path: '/print',
-  props: true,
+  name: 'print_order',
+  path: '/print_order/:id',
   component: _components_ordersPage_printTicket__WEBPACK_IMPORTED_MODULE_9__["default"]
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
@@ -102054,8 +102069,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

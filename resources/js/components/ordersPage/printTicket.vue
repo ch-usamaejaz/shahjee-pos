@@ -1,78 +1,74 @@
 <template>
-    <div>
+    <div v-if="isDataLoaded">
         <div class="ticket" id="print">
-            <p class="centered">RECEIPT EXAMPLE
-                <br>Address line 1
-                <br>{{item.id}}</p>
+            <p class="centered">Shahjee Restaurants
+                <br>Adda Plot, Main Raiwind Road, Lahore
+                <br>Order ID : {{orderData.id}}</p>
             <table>
                 <thead>
                     <tr>
                         <th class="quantity">Q.</th>
                         <th class="name">Description</th>
-                        <th class="price">Rs</th>
+                        <th class="price">Amount</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(items,index) in numberOfItems" :key="index">
-                        <td class="quantity">{{itemQuantity}}</td>
-                        <td class="name">{{itemName}}</td>
-                        <td class="price">Rs{{itemPrice}}</td>
+                    <tr v-for="(item,index) in orderData.items" :key="index">
+                        <td class="quantity">{{item.quantity}}</td>
+                        <td class="name">{{item.item_name}}</td>
+                        <td class="price">Rs {{item.item_price * item.quantity}}</td>
                     </tr>
+                    <tr v-if="orderData.order_discount > 0">
+                        <td class="quantity"></td>
+                        <td class="description">Total Bill </td>
+                        <td class="price">Rs {{orderData.order_total + orderData.order_discount}}</td>
+                    </tr>
+                    <tr v-if="orderData.order_discount > 0">
+                        <td class="quantity"></td>
+                        <td class="description">Discount Applied </td>
+                        <td class="price">Rs {{orderData.order_discount}}</td>
+                    </tr>
+
                     <tr>
                         <td class="quantity"></td>
-                        <td class="description">TOTAL</td>
-                        <td class="price">Rs{{totalPrice}}</td>
+                        <td class="description">TOTAL: </td>
+                        <td class="price">Rs {{orderData.order_total}}</td>
                     </tr>
                 </tbody>
             </table>
-            <p class="centered">Thanks for your purchase!<br>ShahJee Restuerent</p>
+            <p class="centered">Thank You for your purchase!<br>ShahJee Restaurant</p>
         </div>
         <button id="btnPrint" class="hidden-print" @click="printTicket()">Print</button>
+    </div>
+    <div v-else>
+        <h1>No Data Found!</h1>
     </div>
 </template>
 
 <script>
 export default {
     name: 'printTicket',
-    props: ['item'],
     data(){
         return{
-            numberOfItems: [],
-            itemsTemplate:[],
-            itemQuantity: 2,
-            itemName: 'Chicken Karahi',
-            itemPrice: 0,
-            totalPrice: 0,
-            discount: 0,
+            orderData : {},
+            isDataLoaded : false
         }
     },
     mounted(){
-        this.getOrderItems(this.item)
+        this.getOrderData();
     },
     methods: {
-        getOrderItems(item){
-            this.itemsTemplate.push({newItem: {}, price: 0, quantity: 0})
-            let newItems = [];
-              let itemsAtt = []
-              this.axios.post('/get_order', {order_id: item.id}).then(response=>{
-                this.getEditItems = response.data.data
-                console.log(response.data.data, 'res')
-                this.numberOfItems.forEach((value)=>{            
-                  newItems.push(value.items)
-                  newItems.forEach((newValue, index)=>{
-                    for(var i=0; i<=newItems.length; i++){
-                    itemsAtt = {"item_name": newValue[i].item_name, "item_price": newValue[i].item_price, "quantity": newValue[i].quantity}
-                    this.itemsTemplate[i].newItem = itemsAtt
-                    this.itemsTemplate[i].price = itemsAtt.item_price
-                    this.itemsTemplate[i].quantity = itemsAtt.quantity
-                    this.totalPrice= item.order_total
-                    this.discount = item.order_discount
+        getOrderData(){
+            this.axios.post('/get_order', {"order_id" : this.$route.params.id})
+                .then (resp => {
+                    this.isDataLoaded = true;
+                    if (!resp.data.error) {
+                        this.orderData = resp.data.data[0];
                     }
-                  })
-                })                    
-              }).catch(error=>{
-                console.log(error)
-              })
+                })
+                .catch (err => {
+                    console.log(err.message)
+                })
         },
         printTicket(){
             const prtHtml = document.getElementById('print').innerHTML;

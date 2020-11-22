@@ -37,7 +37,7 @@
 
             <v-card-text>
               <v-container>
-                
+
                 <v-row v-for="(row, index) in newOrderRow" :key="index">
                   <v-col
                     cols="12"
@@ -53,8 +53,8 @@
                     editable
                     :rules="[v => !!v || 'Item is required']"
                     required
-                    return-object 
-                    @change="calculateOrderTotal"                   
+                    return-object
+                    @change="calculateOrderTotal"
                   ></v-overflow-btn>
                   </v-col>
                   <v-col
@@ -154,7 +154,7 @@
                     </v-btn>
                   </v-col>
                 </v-row>
-              
+
 
               </v-container>
             </v-card-text>
@@ -177,9 +177,6 @@
               </v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog>
-        <v-dialog>
-          <printTicket/>
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
@@ -211,7 +208,7 @@
             >
               mdi-delete
             </v-icon>
-            <router-link :to="{name: 'print', params: {item}}">
+            <router-link :to="{name: 'print_order', params: {id : item.id}}">
             <v-icon
               color="green"
               large
@@ -225,11 +222,7 @@
 </template>
 
 <script>
-  import printTicket from './printTicket'; 
     export default {
-      components: {
-        printTicket
-      },
         data () {
             return {
                 dialog: false,
@@ -248,7 +241,7 @@
                 currentRowId: 0,
                 savedItems: [],
                 getEditItems: {},
-                
+
                 dropdown_edit: [],
                 dropdown_edit_status: ['Paid', 'Unpaid'],
                 headers: [
@@ -269,7 +262,7 @@
                 },
                 itemSelectRules: [
                    (v) => !!v || 'Company Name is required',
-                ],                  
+                ],
             }
         },
         computed: {
@@ -342,13 +335,13 @@
                   },0)
                   break
                 }
-                
+
               }
             },
             addDiscount () {
               this.editedItem.order_total = (this.editedItem.order_total - this.editedItem.order_discount);
             },
-            addNewRow () { 
+            addNewRow () {
               this.newOrderRow.push({price: 0, quantity: 0, newItem:{},orderItem_id:0, items: []});
             },
             editItem (item) {
@@ -363,7 +356,7 @@
               this.axios.post('/get_order', {order_id: item.id}).then(response=>{
                 this.getEditItems = response.data.data
                 console.log(response.data.data, 'res')
-                this.getEditItems.forEach((value)=>{            
+                this.getEditItems.forEach((value)=>{
                   newItems.push(value.items)
                   newItems.forEach((newValue, index)=>{
                     for(var i=0; i<=newItems.length; i++){
@@ -376,7 +369,7 @@
                     this.editedItem.order_discount = item.order_discount
                     }
                   })
-                })                    
+                })
               }).catch(error=>{
                 console.log(error)
               })
@@ -419,7 +412,7 @@
             console.log("hi");
           },
             save () {
-              this.postData();    
+              this.postData();
               this.close()
             },
             removeRow (index){
@@ -428,7 +421,7 @@
             getSelectedItems () {
               let items = [];
               this.newOrderRow.forEach((value,index)=>{
-                items.push({"item_id": value.newItem.id, "quantity": value.quantity}) 
+                items.push({"item_id": value.newItem.id, "quantity": value.quantity})
               })
               console.log(items)
               return items
