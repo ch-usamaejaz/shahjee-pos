@@ -67,9 +67,8 @@ const routes = [
         }
     },
     {
-        name: 'print',
-        path: '/print',
-        props: true,
+        name: 'print_order',
+        path: '/print_order/:id',
         component: Print
     }
 ];

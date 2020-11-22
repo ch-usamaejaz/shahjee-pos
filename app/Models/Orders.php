@@ -13,7 +13,7 @@ class Orders extends Model
 
     public function items()
     {
-        return $this->belongsToMany('App\Models\Items')->select(['item_name', 'item_price', 'quantity']);
+        return $this->belongsToMany('App\Models\Items')->select(['id as item_id','item_name', 'item_price', 'quantity']);
     }
 
 }
