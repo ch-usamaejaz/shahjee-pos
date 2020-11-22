@@ -169,7 +169,7 @@
               <v-btn
                 color="blue darken-1"
                 text
-                @click="save(rowIndex)"
+                @click="save()"
               >
                 Save
               </v-btn>
@@ -242,6 +242,7 @@
                 formTitle: '',
                 formTitle: '',
                 currentRowId: 0,
+                savedItems: [],
                 
                 dropdown_edit: [],
                 dropdown_edit_status: ['Paid', 'Unpaid'],
@@ -307,10 +308,11 @@
             addPrice (index) {
               for(var i = 0; i<=this.itemsTable.length;i++){
                 if(this.newOrderRow[index].newItem === this.itemsTable[i].item_name){
-                  // this.newOrderRow[index].items[index].newItemId = this.itemsTable[i].item_name
+                  this.newOrderRow[index].items.push({newItemId: this.itemsTable[i].id, newItemQuantity: this.newOrderRow[index].quantity})
                   this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
                   this.newOrderRow[index].orderItem_id = this.itemsTable[i].id;
                    console.log(this.itemsTable[i].id, 'itemID')
+                   this.rowIndex = index
                    console.log(this.newOrderRow)
                   this.editedItem.order_total = this.newOrderRow.reduce(function(a,b){
                     return a+b.price
@@ -324,7 +326,7 @@
               this.editedItem.order_total = (this.editedItem.order_total - this.editedItem.order_discount);
             },
             addNewRow () { 
-              this.newOrderRow.push({price: 0, quantity: 0, newItem: '',orderItem_id:0, items: [{newItemId: 0, itemQuantity: 0}]});
+              this.newOrderRow.push({price: 0, quantity: 0, newItem: '',orderItem_id:0, items: []});
             },
             editItem (item) {
               this.formTitle = "Edit Order"
@@ -370,9 +372,9 @@
           getBill () {
             console.log("hi");
           },
-            save (rowIndex) {
-              console.log(rowIndex, 'index')
-              this.postData(rowIndex);    
+            save () {
+              console.log(this.newOrderRow, 'ittems');
+              this.postData();    
               this.close()
             },
             removeRow (index){
@@ -385,12 +387,7 @@
             "order_status": this.selectedStatus,
             "order_discount": this.editedItem.order_discount,
             "user_id": 1,
-            "items": [
-              {
-                "item_id": this.newOrderRow[rowIndex].orderItem_id,
-                "quantity": this.newOrderRow[rowIndex].quantity
-              }
-            ]
+            "items": [].push(savedItems)
           };
           console.log(Data);
           let url = "/create_new_order"
