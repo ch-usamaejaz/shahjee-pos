@@ -171,6 +171,7 @@
               <v-btn
                 color="blue darken-1"
                 text
+                type="submit"
                 @click="save()"
               >
                 Save
@@ -258,7 +259,7 @@
                     { text: 'Order Total ', value: 'order_total', sortable: false },
                     { text: 'Actions', value: 'actions', sortable: false }
                 ],
-                editedIndex: -1,
+                editedIndex: 0,
                 editedItem: {
                   selectedItem: "",
                   quantity: 0,
@@ -268,7 +269,8 @@
                   order_total: 0,
                 },
                 itemSelectRules: [
-                   (v) => !!v || 'Company Name is required',
+                   (v) => !!v || 'Quantity is required',
+                   v => ( v && v >= 1 ) || "Quantity should be atleast 1"
                 ],                  
             }
         },
@@ -310,14 +312,14 @@
             },
             getItemTable () {
               this.axios.get('get_all_items').then(response =>{
-                console.log(response.data.data)
+                console.log('new',response.data.data)
                 this.itemsTable = response.data.data;
                 // let self = this;
                 // this.itemsTable.forEach(function (item, index) {
                 // self.dropdown_edit.push(item['item_name'])
                 // })
               })
-              console.log(this.itemsTable, 'table')
+              // console.log(this.itemsTable, 'table')
             },
             calculateOrderTotal () {
               let total = 0;
@@ -354,6 +356,7 @@
             editItem (item) {
               // this.addNewRow()
               // this.addNewRow()
+              this.editedIndex = item
               let newItems = [];
               let itemsAtt = []
               this.formTitle = "Edit Order"
@@ -368,12 +371,12 @@
                   newItems.forEach((newValue, index)=>{
                     for(var i=0; i<=newItems.length; i++){
                       this.addNewRow(i)
-                    itemsAtt = {"item_name": newValue[i].item_name, "item_price": newValue[i].item_price, "quantity": newValue[i].quantity}
-                    this.newOrderRow[i].newItem = itemsAtt
-                    this.newOrderRow[i].price = itemsAtt.item_price
-                    this.newOrderRow[i].quantity = itemsAtt.quantity
-                    this.editedItem.order_total = item.order_total
-                    this.editedItem.order_discount = item.order_discount
+                      itemsAtt = {"item_name": newValue[i].item_name, "item_price": newValue[i].item_price, "quantity": newValue[i].quantity}
+                      this.newOrderRow[i].newItem = itemsAtt
+                      this.newOrderRow[i].price = itemsAtt.item_price
+                      this.newOrderRow[i].quantity = itemsAtt.quantity
+                      this.editedItem.order_total = item.order_total
+                      this.editedItem.order_discount = item.order_discount
                     }
                   })
                 })                    
@@ -414,12 +417,19 @@
               this.order_total = null;
               this.editedItem = new Object;
               this.currentRowId = 0;
+              this.newOrderRow=[]
           },
           getBill () {
             console.log("hi");
           },
             save () {
-              this.postData();    
+              if(this.formTitle === "New Order"){
+                this.postData(); 
+              }
+              else{
+                this.postEditedData();
+              }
+                 
               this.close()
             },
             removeRow (index){
@@ -450,7 +460,22 @@
           }).catch(error =>{
             console.log(error);
           })
-        }
+        },
+        postEditedData(){
+          
+          let items = this.getSelectedItems()
+          let editData = {
+            "order_id": this.editedIndex.id,
+            "order_total": this.editedItem.order_total,
+            "order_status": this.selectedStatus,
+            "order_discount": this.editedItem.order_discount,
+            "user_id": 1,
+            "items": items
+          }
+          console.log(editData,"editData")
+          this.close();
+        },
       }
+
     }
 </script>

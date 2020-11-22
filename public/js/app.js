@@ -2336,6 +2336,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2377,7 +2378,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       text: 'Actions',
       value: 'actions',
       sortable: false
-    }]), _defineProperty(_ref, "editedIndex", -1), _defineProperty(_ref, "editedItem", {
+    }]), _defineProperty(_ref, "editedIndex", 0), _defineProperty(_ref, "editedItem", {
       selectedItem: "",
       quantity: 0,
       price: 0,
@@ -2385,7 +2386,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       order_discount: 0,
       order_total: 0
     }), _defineProperty(_ref, "itemSelectRules", [function (v) {
-      return !!v || 'Company Name is required';
+      return !!v || 'Quantity is required';
+    }, function (v) {
+      return v && v >= 1 || "Quantity should be atleast 1";
     }]), _ref;
   },
   computed: {
@@ -2429,13 +2432,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this2 = this;
 
       this.axios.get('get_all_items').then(function (response) {
-        console.log(response.data.data);
+        console.log('new', response.data.data);
         _this2.itemsTable = response.data.data; // let self = this;
         // this.itemsTable.forEach(function (item, index) {
         // self.dropdown_edit.push(item['item_name'])
         // })
-      });
-      console.log(this.itemsTable, 'table');
+      }); // console.log(this.itemsTable, 'table')
     },
     calculateOrderTotal: function calculateOrderTotal() {
       var total = 0;
@@ -2483,6 +2485,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       // this.addNewRow()
       // this.addNewRow()
+      this.editedIndex = item;
       var newItems = [];
       var itemsAtt = [];
       this.formTitle = "Edit Order";
@@ -2555,12 +2558,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.order_total = null;
       this.editedItem = new Object();
       this.currentRowId = 0;
+      this.newOrderRow = [];
     },
     getBill: function getBill() {
       console.log("hi");
     },
     save: function save() {
-      this.postData();
+      if (this.formTitle === "New Order") {
+        this.postData();
+      } else {
+        this.postEditedData();
+      }
+
       this.close();
     },
     removeRow: function removeRow(index) {
@@ -2594,6 +2603,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    postEditedData: function postEditedData() {
+      var items = this.getSelectedItems();
+      var editData = {
+        "order_id": this.editedIndex.id,
+        "order_total": this.editedItem.order_total,
+        "order_status": this.selectedStatus,
+        "order_discount": this.editedItem.order_discount,
+        "user_id": 1,
+        "items": items
+      };
+      console.log(editData, "editData");
+      this.close();
     }
   }
 });
@@ -40318,7 +40340,8 @@ var render = function() {
                                       {
                                         attrs: {
                                           color: "blue darken-1",
-                                          text: ""
+                                          text: "",
+                                          type: "submit"
                                         },
                                         on: {
                                           click: function($event) {
