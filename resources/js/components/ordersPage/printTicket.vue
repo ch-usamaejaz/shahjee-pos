@@ -8,14 +8,14 @@
                 <thead>
                     <tr>
                         <th class="quantity">Q.</th>
-                        <th class="description">Description</th>
+                        <th class="name">Description</th>
                         <th class="price">Rs</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr v-for="(items,index) in numberOfItems" :key="index">
                         <td class="quantity">{{itemQuantity}}</td>
-                        <td class="description">{{itemName}}</td>
+                        <td class="name">{{itemName}}</td>
                         <td class="price">Rs{{itemPrice}}</td>
                     </tr>
                     <tr>
@@ -37,14 +37,43 @@ export default {
     props: ['item'],
     data(){
         return{
-            numberOfItems: 0,
+            numberOfItems: [],
+            itemsTemplate:[],
             itemQuantity: 2,
             itemName: 'Chicken Karahi',
-            itemPrice: 200,
-            totalPrice: 400
+            itemPrice: 0,
+            totalPrice: 0,
+            discount: 0,
         }
     },
+    mounted(){
+        this.getOrderItems(this.item)
+    },
     methods: {
+        getOrderItems(item){
+            this.itemsTemplate.push({newItem: {}, price: 0, quantity: 0})
+            let newItems = [];
+              let itemsAtt = []
+              this.axios.post('/get_order', {order_id: item.id}).then(response=>{
+                this.getEditItems = response.data.data
+                console.log(response.data.data, 'res')
+                this.numberOfItems.forEach((value)=>{            
+                  newItems.push(value.items)
+                  newItems.forEach((newValue, index)=>{
+                    for(var i=0; i<=newItems.length; i++){
+                    itemsAtt = {"item_name": newValue[i].item_name, "item_price": newValue[i].item_price, "quantity": newValue[i].quantity}
+                    this.itemsTemplate[i].newItem = itemsAtt
+                    this.itemsTemplate[i].price = itemsAtt.item_price
+                    this.itemsTemplate[i].quantity = itemsAtt.quantity
+                    this.totalPrice= item.order_total
+                    this.discount = item.order_discount
+                    }
+                  })
+                })                    
+              }).catch(error=>{
+                console.log(error)
+              })
+        },
         printTicket(){
             const prtHtml = document.getElementById('print').innerHTML;
             // Get all stylesheets HTML

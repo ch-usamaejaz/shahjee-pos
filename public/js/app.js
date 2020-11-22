@@ -2659,14 +2659,56 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   props: ['item'],
   data: function data() {
     return {
-      numberOfItems: 0,
+      numberOfItems: [],
+      itemsTemplate: [],
       itemQuantity: 2,
       itemName: 'Chicken Karahi',
-      itemPrice: 200,
-      totalPrice: 400
+      itemPrice: 0,
+      totalPrice: 0,
+      discount: 0
     };
   },
+  mounted: function mounted() {
+    this.getOrderItems(this.item);
+  },
   methods: {
+    getOrderItems: function getOrderItems(item) {
+      var _this = this;
+
+      this.itemsTemplate.push({
+        newItem: {},
+        price: 0,
+        quantity: 0
+      });
+      var newItems = [];
+      var itemsAtt = [];
+      this.axios.post('/get_order', {
+        order_id: item.id
+      }).then(function (response) {
+        _this.getEditItems = response.data.data;
+        console.log(response.data.data, 'res');
+
+        _this.numberOfItems.forEach(function (value) {
+          newItems.push(value.items);
+          newItems.forEach(function (newValue, index) {
+            for (var i = 0; i <= newItems.length; i++) {
+              itemsAtt = {
+                "item_name": newValue[i].item_name,
+                "item_price": newValue[i].item_price,
+                "quantity": newValue[i].quantity
+              };
+              _this.itemsTemplate[i].newItem = itemsAtt;
+              _this.itemsTemplate[i].price = itemsAtt.item_price;
+              _this.itemsTemplate[i].quantity = itemsAtt.quantity;
+              _this.totalPrice = item.order_total;
+              _this.discount = item.order_discount;
+            }
+          });
+        });
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     printTicket: function printTicket() {
       var prtHtml = document.getElementById('print').innerHTML; // Get all stylesheets HTML
 
@@ -40459,31 +40501,37 @@ var render = function() {
       _c("table", [
         _vm._m(0),
         _vm._v(" "),
-        _c("tbody", [
-          _c("tr", [
-            _c("td", { staticClass: "quantity" }, [
-              _vm._v(_vm._s(_vm.itemQuantity))
-            ]),
+        _c(
+          "tbody",
+          [
+            _vm._l(_vm.numberOfItems, function(items, index) {
+              return _c("tr", { key: index }, [
+                _c("td", { staticClass: "quantity" }, [
+                  _vm._v(_vm._s(_vm.itemQuantity))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "name" }, [
+                  _vm._v(_vm._s(_vm.itemName))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "price" }, [
+                  _vm._v("Rs" + _vm._s(_vm.itemPrice))
+                ])
+              ])
+            }),
             _vm._v(" "),
-            _c("td", { staticClass: "description" }, [
-              _vm._v(_vm._s(_vm.itemName))
-            ]),
-            _vm._v(" "),
-            _c("td", { staticClass: "price" }, [
-              _vm._v("Rs" + _vm._s(_vm.itemPrice))
+            _c("tr", [
+              _c("td", { staticClass: "quantity" }),
+              _vm._v(" "),
+              _c("td", { staticClass: "description" }, [_vm._v("TOTAL")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "price" }, [
+                _vm._v("Rs" + _vm._s(_vm.totalPrice))
+              ])
             ])
-          ]),
-          _vm._v(" "),
-          _c("tr", [
-            _c("td", { staticClass: "quantity" }),
-            _vm._v(" "),
-            _c("td", { staticClass: "description" }, [_vm._v("TOTAL")]),
-            _vm._v(" "),
-            _c("td", { staticClass: "price" }, [
-              _vm._v("Rs" + _vm._s(_vm.totalPrice))
-            ])
-          ])
-        ])
+          ],
+          2
+        )
       ]),
       _vm._v(" "),
       _vm._m(1)
@@ -40513,7 +40561,7 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", { staticClass: "quantity" }, [_vm._v("Q.")]),
         _vm._v(" "),
-        _c("th", { staticClass: "description" }, [_vm._v("Description")]),
+        _c("th", { staticClass: "name" }, [_vm._v("Description")]),
         _vm._v(" "),
         _c("th", { staticClass: "price" }, [_vm._v("Rs")])
       ])
@@ -102006,8 +102054,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
