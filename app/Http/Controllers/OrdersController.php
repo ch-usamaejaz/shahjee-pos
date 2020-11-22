@@ -55,7 +55,7 @@ class OrdersController extends Controller
         return response()->json($response);
     }
 
-    public function edit_order(Request $request)
+    public function get_order(Request $request)
     {
         $id = @$request->order_id;
         $response = [];
