@@ -1,6 +1,7 @@
 <template>
     <div v-if="isDataLoaded">
         <div class="ticket" id="print">
+            <img src="./logo.png" alt="Logo">
             <p class="centered">Shahjee Restaurants
                 <br>Adda Plot, Main Raiwind Road, Lahore
                 <br>Order ID : {{orderData.id}}</p>

@@ -2683,6 +2683,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'printTicket',
   data: function data() {
@@ -40495,6 +40496,8 @@ var render = function() {
   return _vm.isDataLoaded
     ? _c("div", [
         _c("div", { staticClass: "ticket", attrs: { id: "print" } }, [
+          _c("img", { attrs: { src: __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module './logo.png'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())), alt: "Logo" } }),
+          _vm._v(" "),
           _c("p", { staticClass: "centered" }, [
             _vm._v("Shahjee Restaurants\n            "),
             _c("br"),
