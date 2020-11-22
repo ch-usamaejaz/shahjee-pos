@@ -171,8 +171,7 @@
               <v-btn
                 color="blue darken-1"
                 text
-                type="submit"
-                @click="save()"
+                @click="save"
               >
                 Save
               </v-btn>
@@ -237,7 +236,6 @@
                 itemsTable: [],
                 newOrderRow: [],
                 selectedStatus: "",
-                formTitle: '',
                 formTitle: '',
                 currentRowId: 0,
                 savedItems: [],
@@ -358,18 +356,20 @@
               this.editedItem.order_total = item.order_total
               this.axios.post('/get_order', {order_id: item.id}).then(response=>{
                 this.getEditItems = response.data.data
-                console.log(response, 'res')
+                console.log(response.data.data, 'res')
                 this.getEditItems.forEach((value)=>{
                   newItems.push(value.items)
                   newItems.forEach((newValue, index)=>{
                     for(var i=0; i<=newItems.length; i++){
                       this.addNewRow(i)
-                      itemsAtt = {"item_name": newValue[i].item_name, "item_price": newValue[i].item_price, "quantity": newValue[i].quantity}
+                      itemsAtt = {"item_id": newValue[i].item_id,"item_name": newValue[i].item_name, "item_price": newValue[i].item_price, "quantity": newValue[i].quantity}
                       this.newOrderRow[i].newItem = itemsAtt
                       this.newOrderRow[i].price = itemsAtt.item_price
                       this.newOrderRow[i].quantity = itemsAtt.quantity
+                      this.newOrderRow[i].newItem.id = itemsAtt.item_id
                       this.editedItem.order_total = item.order_total
                       this.editedItem.order_discount = item.order_discount
+                      console.log(this.newOrderRow[i].newItem.id, 'neeeeeeeee')
                     }
                   })
                 })
@@ -416,14 +416,13 @@
             console.log("hi");
           },
             save () {
-              if(this.formTitle === "New Order"){
+            console.log(this.formTitle)
+              if(this.formTitle == "New Order"){
                 this.postData(); 
               }
               else{
                 this.postEditedData();
               }
-                 
-              this.postData();
               this.close()
             },
             removeRow (index){
@@ -466,7 +465,12 @@
             "user_id": 1,
             "items": items
           }
-          console.log(editData,"editData")
+          let url = "/update_order"
+            this.axios.post(url,editData).then(response =>{
+              console.log(response)
+            }).catch(error =>{
+              console.log(error);
+            })
           this.close();
         },
       }

@@ -2107,9 +2107,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-//
 //
 //
 //
@@ -2335,9 +2332,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    var _ref;
-
-    return _ref = {
+    return {
       dialog: false,
       dialogDelete: false,
       valid: true,
@@ -2349,39 +2344,48 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       itemsTable: [],
       newOrderRow: [],
       selectedStatus: "",
-      formTitle: ''
-    }, _defineProperty(_ref, "formTitle", ''), _defineProperty(_ref, "currentRowId", 0), _defineProperty(_ref, "savedItems", []), _defineProperty(_ref, "getEditItems", {}), _defineProperty(_ref, "dropdown_edit", []), _defineProperty(_ref, "dropdown_edit_status", ['Paid', 'Unpaid']), _defineProperty(_ref, "headers", [{
-      text: 'Order#',
-      align: 'start',
-      value: 'id'
-    }, {
-      text: 'Order Status',
-      value: 'order_status',
-      sortable: false
-    }, {
-      text: 'Discount',
-      value: 'order_discount',
-      sortable: false
-    }, {
-      text: 'Order Total ',
-      value: 'order_total',
-      sortable: false
-    }, {
-      text: 'Actions',
-      value: 'actions',
-      sortable: false
-    }]), _defineProperty(_ref, "editedIndex", 0), _defineProperty(_ref, "editedItem", {
-      selectedItem: "",
-      quantity: 0,
-      price: 0,
-      order_status: '',
-      order_discount: 0,
-      order_total: 0
-    }), _defineProperty(_ref, "itemSelectRules", [function (v) {
-      return !!v || 'Quantity is required';
-    }, function (v) {
-      return v && v >= 1 || "Quantity should be atleast 1";
-    }]), _ref;
+      formTitle: '',
+      currentRowId: 0,
+      savedItems: [],
+      getEditItems: {},
+      dropdown_edit: [],
+      dropdown_edit_status: ['Paid', 'Unpaid'],
+      headers: [{
+        text: 'Order#',
+        align: 'start',
+        value: 'id'
+      }, {
+        text: 'Order Status',
+        value: 'order_status',
+        sortable: false
+      }, {
+        text: 'Discount',
+        value: 'order_discount',
+        sortable: false
+      }, {
+        text: 'Order Total ',
+        value: 'order_total',
+        sortable: false
+      }, {
+        text: 'Actions',
+        value: 'actions',
+        sortable: false
+      }],
+      editedIndex: 0,
+      editedItem: {
+        selectedItem: "",
+        quantity: 0,
+        price: 0,
+        order_status: '',
+        order_discount: 0,
+        order_total: 0
+      },
+      itemSelectRules: [function (v) {
+        return !!v || 'Quantity is required';
+      }, function (v) {
+        return v && v >= 1 || "Quantity should be atleast 1";
+      }]
+    };
   },
   computed: {
     getTotal: function getTotal() {
@@ -2488,7 +2492,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         order_id: item.id
       }).then(function (response) {
         _this3.getEditItems = response.data.data;
-        console.log(response, 'res');
+        console.log(response.data.data, 'res');
 
         _this3.getEditItems.forEach(function (value) {
           newItems.push(value.items);
@@ -2497,6 +2501,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               _this3.addNewRow(i);
 
               itemsAtt = {
+                "item_id": newValue[i].item_id,
                 "item_name": newValue[i].item_name,
                 "item_price": newValue[i].item_price,
                 "quantity": newValue[i].quantity
@@ -2504,8 +2509,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               _this3.newOrderRow[i].newItem = itemsAtt;
               _this3.newOrderRow[i].price = itemsAtt.item_price;
               _this3.newOrderRow[i].quantity = itemsAtt.quantity;
+              _this3.newOrderRow[i].newItem.id = itemsAtt.item_id;
               _this3.editedItem.order_total = item.order_total;
               _this3.editedItem.order_discount = item.order_discount;
+              console.log(_this3.newOrderRow[i].newItem.id, 'neeeeeeeee');
             }
           });
         });
@@ -2556,13 +2563,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       console.log("hi");
     },
     save: function save() {
-      if (this.formTitle === "New Order") {
+      console.log(this.formTitle);
+
+      if (this.formTitle == "New Order") {
         this.postData();
       } else {
         this.postEditedData();
       }
 
-      this.postData();
       this.close();
     },
     removeRow: function removeRow(index) {
@@ -2607,7 +2615,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         "user_id": 1,
         "items": items
       };
-      console.log(editData, "editData");
+      var url = "/update_order";
+      this.axios.post(url, editData).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
       this.close();
     }
   }
@@ -40320,14 +40333,9 @@ var render = function() {
                                       {
                                         attrs: {
                                           color: "blue darken-1",
-                                          text: "",
-                                          type: "submit"
+                                          text: ""
                                         },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.save()
-                                          }
-                                        }
+                                        on: { click: _vm.save }
                                       },
                                       [_vm._v("\n            Save\n          ")]
                                     )
@@ -40496,8 +40504,6 @@ var render = function() {
   return _vm.isDataLoaded
     ? _c("div", [
         _c("div", { staticClass: "ticket", attrs: { id: "print" } }, [
-          _c("img", { attrs: { src: __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module './logo.png'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())), alt: "Logo" } }),
-          _vm._v(" "),
           _c("p", { staticClass: "centered" }, [
             _vm._v("Shahjee Restaurants\n            "),
             _c("br"),
