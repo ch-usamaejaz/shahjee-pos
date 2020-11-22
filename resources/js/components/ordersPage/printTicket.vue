@@ -1,10 +1,10 @@
 <template>
     <div v-if="isDataLoaded">
         <div class="ticket" id="print">
-            <img src="./logo.png" alt="Logo">
+            <img class="img-fluid" src="../../../images/logo.png" alt="Logo">
             <p class="centered">Shahjee Restaurants
                 <br>Adda Plot, Main Raiwind Road, Lahore
-                <br>Order ID : {{orderData.id}}</p>
+                <br>Order# {{orderData.id}}</p>
             <table>
                 <thead>
                     <tr>
@@ -26,10 +26,9 @@
                     </tr>
                     <tr v-if="orderData.order_discount > 0">
                         <td class="quantity"></td>
-                        <td class="description">Discount Applied </td>
+                        <td class="description">Discount </td>
                         <td class="price">Rs {{orderData.order_discount}}</td>
                     </tr>
-
                     <tr>
                         <td class="quantity"></td>
                         <td class="description">TOTAL: </td>
@@ -37,9 +36,10 @@
                     </tr>
                 </tbody>
             </table>
+            <br>
             <p class="centered">Thank You for your purchase!<br>ShahJee Restaurant</p>
         </div>
-        <button id="btnPrint" class="hidden-print" @click="printTicket()">Print</button>
+        <button id="btnPrint" class="hidden-print btn btn-info" @click="printTicket()">Print</button>
     </div>
     <div v-else>
         <h1>No Data Found!</h1>

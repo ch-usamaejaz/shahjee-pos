@@ -208,7 +208,7 @@
             >
               mdi-delete
             </v-icon>
-            <router-link :to="{name: 'print_order', params: {id : item.id}}">
+            <router-link :to="{name: 'print_order', params: {id : item.id}}" target="_blank">
             <v-icon
               color="green"
               large
