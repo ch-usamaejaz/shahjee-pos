@@ -9,6 +9,7 @@
             class="elevation-1"
         >
         <template v-slot:top>
+          <v-form ref="form" v-model="valid" lazy-validation>
           <v-toolbar
             flat
             v-model="rowIndex"
@@ -36,7 +37,7 @@
 
             <v-card-text>
               <v-container>
-                <form action="submit">
+                
                 <v-row v-for="(row, index) in newOrderRow" :key="index">
                   <v-col
                     cols="12"
@@ -50,7 +51,8 @@
                     label="Items"
                     editable
                     item-value="text"
-                    
+                    :rules="[v => !!v || 'Item is required']"
+                    required                    
                   ></v-overflow-btn>
                   </v-col>
                   <v-col
@@ -63,6 +65,8 @@
                       label="Quantity"
                       type="number"
                       min="1"
+                      :rules="itemSelectRules"
+                      required
                       @input="addPrice(index)"
                     ></v-text-field>
                   </v-col>
@@ -148,7 +152,7 @@
                     </v-btn>
                   </v-col>
                 </v-row>
-              </form>
+              
 
               </v-container>
             </v-card-text>
@@ -172,6 +176,9 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog>
+          <printTicket/>
+        </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
@@ -184,6 +191,7 @@
           </v-card>
         </v-dialog>
       </v-toolbar>
+      </v-form>
     </template>
           <template v-slot:item.actions="{ item }">
             <v-icon
@@ -222,13 +230,14 @@
             return {
                 dialog: false,
                 dialogDelete: false,
+                valid: true,
                 totalOrders: 0,
                 rowIndex: 0,
                 orders: [],
                 loading: true,
                 options: {},
                 itemsTable: [],
-                newOrderRow: [{}],
+                newOrderRow: [],
                 selectedStatus: "",
                 formTitle: '',
                 formTitle: '',
@@ -252,6 +261,9 @@
                   order_discount: 0,
                   order_total: 0,
                 },
+                itemSelectRules: [
+                   (v) => !!v || 'Company Name is required',
+                ],                  
             }
         },
         watch: {
@@ -277,13 +289,14 @@
                         this.orders = response.data.orders;
                         this.totalOrders = response.data.orders.length;
                         this.loading = false
-                        console.log(response.data.orders)
+                        console.log(response.data.orders , "orders")
                     }).catch (error => {
                         console.log(error.message)
                 })
             },
             getItemTable () {
               this.axios.get('get_all_items').then(response =>{
+                console.log(response.data.data)
                 this.itemsTable = response.data.data;
                 let self = this;
                 this.itemsTable.forEach(function (item, index) {
@@ -294,20 +307,24 @@
             addPrice (index) {
               for(var i = 0; i<=this.itemsTable.length;i++){
                 if(this.newOrderRow[index].newItem === this.itemsTable[i].item_name){
+                  // this.newOrderRow[index].items[index].newItemId = this.itemsTable[i].item_name
                   this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
-
+                  this.newOrderRow[index].orderItem_id = this.itemsTable[i].id;
+                   console.log(this.itemsTable[i].id, 'itemID')
+                   console.log(this.newOrderRow)
                   this.editedItem.order_total = this.newOrderRow.reduce(function(a,b){
                     return a+b.price
                   },0)
                   break
                 }
+                
               }
             },
             addDiscount () {
               this.editedItem.order_total = (this.editedItem.order_total - this.editedItem.order_discount);
             },
             addNewRow () { 
-              this.newOrderRow.push({price: 0, quantity: 0, newItem: ''});
+              this.newOrderRow.push({price: 0, quantity: 0, newItem: '',orderItem_id:0, items: [{newItemId: 0, itemQuantity: 0}]});
             },
             editItem (item) {
               this.formTitle = "Edit Order"
@@ -319,9 +336,15 @@
             },
             deleteItem () {
               let id = this.currentRowId;
-              for(var i =0; i <this.orders.length; i++){
+              for(var i =0; i <=this.orders.length; i++){
                 if(this.orders[i].id == id){
                   this.orders.splice(i, 1);
+                  console.log(id)
+                  this.axios.post('/delete_order', {order_id: id}).then(response=>{
+                    console.log(response)
+                  }).catch(error=>{
+                    console.log(error)
+                  })
                   break;
                 }
               }
@@ -338,32 +361,38 @@
               this.dialogDelete = true
             },
             close () {
-              this.newOrderRow = new Array;
+              this.newOrderRow = [{}];
               this.dialog = false
               this.order_total = null;
               this.editedItem = new Object;
               this.currentRowId = 0;
           },
+          getBill () {
+            console.log("hi");
+          },
             save (rowIndex) {
-              this.postData(rowIndex);
+              console.log(rowIndex, 'index')
+              this.postData(rowIndex);    
               this.close()
             },
             removeRow (index){
               this.newOrderRow.splice(index, 1)
             },
           postData(rowIndex){
+            
           let Data = {
             "order_total": this.editedItem.order_total,
             "order_status": this.selectedStatus,
+            "order_discount": this.editedItem.order_discount,
             "user_id": 1,
             "items": [
               {
-                "item_id": this.newOrderRow[rowIndex].id,
+                "item_id": this.newOrderRow[rowIndex].orderItem_id,
                 "quantity": this.newOrderRow[rowIndex].quantity
               }
             ]
           };
-          console.log(rowIndex)
+          console.log(Data);
           let url = "/create_new_order"
           this.axios.post(url,Data).then(response =>{
             console.log(response)
