@@ -2488,7 +2488,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         order_id: item.id
       }).then(function (response) {
         _this3.getEditItems = response.data.data;
-        console.log(response.data.data, 'res');
+        console.log(response, 'res');
 
         _this3.getEditItems.forEach(function (value) {
           newItems.push(value.items);

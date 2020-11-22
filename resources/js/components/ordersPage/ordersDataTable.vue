@@ -358,7 +358,7 @@
               this.editedItem.order_total = item.order_total
               this.axios.post('/get_order', {order_id: item.id}).then(response=>{
                 this.getEditItems = response.data.data
-                console.log(response.data.data, 'res')
+                console.log(response, 'res')
                 this.getEditItems.forEach((value)=>{
                   newItems.push(value.items)
                   newItems.forEach((newValue, index)=>{
