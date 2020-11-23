@@ -51,7 +51,6 @@
                     v-model="newOrderRow[index].newItem"
                     label="Items"
                     editable
-                    :rules="[v=>v.newOrderRow[index].newItem === itemsTable]"
                     required
 
                     return-object
@@ -109,7 +108,7 @@
                       min="0"
                       outlined
                       hint="Press ENTER after adding Discount"
-                      persistent-hint="true"
+                      persistent-hint
                       color="green"
                       @keydown.enter.once="addDiscount"
                       v-model="editedItem.order_discount"
@@ -331,10 +330,12 @@
             calculateOrderTotal () {
               let total = 0;
               this.newOrderRow.forEach((value,index) => {
-                total = total + (value.newItem.item_price * value.quantity)
-                console.log(total,value.newItem.item_price,value.quantity, 'newTotal')
+                total +=  (value.newItem.item_price * value.quantity)
+                console.log(value, 'inside total')
             })
+            this.totalWithoutDiscount = total
             this.editedItem.order_total = total;
+            console.log(this.totalWithoutDiscount, 'newTotal')
             },
             addPrice (index) {
               console.log(this.newOrderRow[index], 'this')
@@ -366,6 +367,9 @@
             },
             addNewRow () {
               this.valid = true;
+              // for(var i=0; i <= this.newOrderRow.length; i++){
+              //   if()
+              // }
               this.newOrderRow.push({price: 0, quantity: 0, newItem:{},orderItem_id:0, items: []});
             },
             editItem (item) {

@@ -2586,7 +2586,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _this = this;
@@ -2705,10 +2704,12 @@ __webpack_require__.r(__webpack_exports__);
     calculateOrderTotal: function calculateOrderTotal() {
       var total = 0;
       this.newOrderRow.forEach(function (value, index) {
-        total = total + value.newItem.item_price * value.quantity;
-        console.log(total, value.newItem.item_price, value.quantity, 'newTotal');
+        total += value.newItem.item_price * value.quantity;
+        console.log(value, 'inside total');
       });
+      this.totalWithoutDiscount = total;
       this.editedItem.order_total = total;
+      console.log(this.totalWithoutDiscount, 'newTotal');
     },
     addPrice: function addPrice(index) {
       console.log(this.newOrderRow[index], 'this');
@@ -2742,7 +2743,10 @@ __webpack_require__.r(__webpack_exports__);
       console.log(this.editedItem.order_total, 'totallll');
     },
     addNewRow: function addNewRow() {
-      this.valid = true;
+      this.valid = true; // for(var i=0; i <= this.newOrderRow.length; i++){
+      //   if()
+      // }
+
       this.newOrderRow.push({
         price: 0,
         quantity: 0,
@@ -40630,15 +40634,6 @@ var render = function() {
                                                       "item-text": "item_name",
                                                       label: "Items",
                                                       editable: "",
-                                                      rules: [
-                                                        function(v) {
-                                                          return (
-                                                            v.newOrderRow[index]
-                                                              .newItem ===
-                                                            _vm.itemsTable
-                                                          )
-                                                        }
-                                                      ],
                                                       required: "",
                                                       "return-object": ""
                                                     },
@@ -40795,7 +40790,7 @@ var render = function() {
                                                     outlined: "",
                                                     hint:
                                                       "Press ENTER after adding Discount",
-                                                    "persistent-hint": "true",
+                                                    "persistent-hint": "",
                                                     color: "green"
                                                   },
                                                   on: {
@@ -102867,8 +102862,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
