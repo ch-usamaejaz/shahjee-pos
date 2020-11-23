@@ -9,7 +9,7 @@
             class="elevation-1"
         >
         <template v-slot:top>
-          <v-form ref="form" v-model="valid" lazy-validation>
+          <v-form ref="form" v-model="isFormValid" lazy-validation>
           <v-toolbar
             flat
             v-model="rowIndex"
@@ -38,7 +38,7 @@
             <v-card-text>
               <v-container>
 
-                <v-row v-for="(row, index) in newOrderRow" :key="index">
+                <v-row v-for="(row, index) in newOrderRow" :key="index" :rules="rowRules">
                   <v-col
                     cols="12"
                     sm="6"
@@ -51,8 +51,9 @@
                     v-model="newOrderRow[index].newItem"
                     label="Items"
                     editable
-                    :rules="[v => !!v || 'Item is required']"
+                    :rules="itemSelectRules"
                     required
+                    
                     return-object
                     @change="calculateOrderTotal"
                   ></v-overflow-btn>
@@ -67,7 +68,7 @@
                       label="Quantity"
                       type="number"
                       min="1"
-                      :rules="itemSelectRules"
+                      :rules="quantityRules"
                       required
                      @input="calculateOrderTotal"
                     ></v-text-field>
@@ -107,7 +108,7 @@
                       type="number"
                       min="0"
                       outlined
-                      @keydown.enter.once="addDiscount"
+                      @keydown.enter="addDiscount"
                       v-model="editedItem.order_discount"
                   ></v-text-field>
                   </v-col>
@@ -171,6 +172,7 @@
               <v-btn
                 color="blue darken-1"
                 text
+                :disabled="!isFormValid || !valid"
                 @click="save"
               >
                 Save
@@ -227,7 +229,8 @@
             return {
                 dialog: false,
                 dialogDelete: false,
-                valid: true,
+                isFormValid: false,
+                valid: false,
                 totalOrders: 0,
                 rowIndex: 0,
                 orders: [],
@@ -259,10 +262,17 @@
                   order_discount: 0,
                   order_total: 0,
                 },
-                itemSelectRules: [
+                quantityRules: [
                    (v) => !!v || 'Quantity is required',
-                   v => ( v && v >= 1 ) || "Quantity should be atleast 1"
-                ],                  
+                   v =>  v  >= 1 || "Quantity should be atleast 1"
+                ],
+                rowRules: [
+                  (v) => v  === null || 'An Item is required'
+                  
+                ],
+                itemSelectRules: [
+                  (v) => v === null || 'Select an Item',
+                ]                  
             }
         },
         computed: {
@@ -338,10 +348,18 @@
 
               }
             },
+            selectRules(){
+              if(this.newOrderRow == null){
+                return "Select an Item"
+              }
+            },
             addDiscount () {
+              console.log("working")
               this.editedItem.order_total = (this.editedItem.order_total - this.editedItem.order_discount);
+              console.log(this.editedItem.order_total, 'totallll')
             },
             addNewRow () {
+              this.valid = true;
               this.newOrderRow.push({price: 0, quantity: 0, newItem:{},orderItem_id:0, items: []});
             },
             editItem (item) {
@@ -397,6 +415,7 @@
             },
             closeDelete () {
               this.dialogDelete = false
+              this.valid = false
             },
             changeFormTitle () {
               this.formTitle = "New Order"
@@ -411,6 +430,7 @@
               this.editedItem = new Object;
               this.currentRowId = 0;
               this.newOrderRow=[]
+              this.valid = false
           },
           getBill () {
             console.log("hi");

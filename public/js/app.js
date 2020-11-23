@@ -2330,12 +2330,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       dialog: false,
       dialogDelete: false,
-      valid: true,
+      isFormValid: false,
+      valid: false,
       totalOrders: 0,
       rowIndex: 0,
       orders: [],
@@ -2380,10 +2383,16 @@ __webpack_require__.r(__webpack_exports__);
         order_discount: 0,
         order_total: 0
       },
-      itemSelectRules: [function (v) {
+      quantityRules: [function (v) {
         return !!v || 'Quantity is required';
       }, function (v) {
-        return v && v >= 1 || "Quantity should be atleast 1";
+        return v >= 1 || "Quantity should be atleast 1";
+      }],
+      rowRules: [function (v) {
+        return v === null || 'An Item is required';
+      }],
+      itemSelectRules: [function (v) {
+        return v === null || 'Select an Item';
       }]
     };
   },
@@ -2464,10 +2473,18 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     },
+    selectRules: function selectRules() {
+      if (this.newOrderRow == null) {
+        return "Select an Item";
+      }
+    },
     addDiscount: function addDiscount() {
+      console.log("working");
       this.editedItem.order_total = this.editedItem.order_total - this.editedItem.order_discount;
+      console.log(this.editedItem.order_total, 'totallll');
     },
     addNewRow: function addNewRow() {
+      this.valid = true;
       this.newOrderRow.push({
         price: 0,
         quantity: 0,
@@ -2544,6 +2561,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     closeDelete: function closeDelete() {
       this.dialogDelete = false;
+      this.valid = false;
     },
     changeFormTitle: function changeFormTitle() {
       this.formTitle = "New Order";
@@ -2558,6 +2576,7 @@ __webpack_require__.r(__webpack_exports__);
       this.editedItem = new Object();
       this.currentRowId = 0;
       this.newOrderRow = [];
+      this.valid = false;
     },
     getBill: function getBill() {
       console.log("hi");
@@ -39875,11 +39894,11 @@ var render = function() {
                     ref: "form",
                     attrs: { "lazy-validation": "" },
                     model: {
-                      value: _vm.valid,
+                      value: _vm.isFormValid,
                       callback: function($$v) {
-                        _vm.valid = $$v
+                        _vm.isFormValid = $$v
                       },
-                      expression: "valid"
+                      expression: "isFormValid"
                     }
                   },
                   [
@@ -39970,7 +39989,10 @@ var render = function() {
                                         ) {
                                           return _c(
                                             "v-row",
-                                            { key: index },
+                                            {
+                                              key: index,
+                                              attrs: { rules: _vm.rowRules }
+                                            },
                                             [
                                               _c(
                                                 "v-col",
@@ -39989,14 +40011,8 @@ var render = function() {
                                                       "item-text": "item_name",
                                                       label: "Items",
                                                       editable: "",
-                                                      rules: [
-                                                        function(v) {
-                                                          return (
-                                                            !!v ||
-                                                            "Item is required"
-                                                          )
-                                                        }
-                                                      ],
+                                                      rules:
+                                                        _vm.itemSelectRules,
                                                       required: "",
                                                       "return-object": ""
                                                     },
@@ -40040,8 +40056,7 @@ var render = function() {
                                                       label: "Quantity",
                                                       type: "number",
                                                       min: "1",
-                                                      rules:
-                                                        _vm.itemSelectRules,
+                                                      rules: _vm.quantityRules,
                                                       required: ""
                                                     },
                                                     on: {
@@ -40154,9 +40169,7 @@ var render = function() {
                                                     outlined: ""
                                                   },
                                                   on: {
-                                                    "~keydown": function(
-                                                      $event
-                                                    ) {
+                                                    keydown: function($event) {
                                                       if (
                                                         !$event.type.indexOf(
                                                           "key"
@@ -40333,7 +40346,9 @@ var render = function() {
                                       {
                                         attrs: {
                                           color: "blue darken-1",
-                                          text: ""
+                                          text: "",
+                                          disabled:
+                                            !_vm.isFormValid || !_vm.valid
                                         },
                                         on: { click: _vm.save }
                                       },
