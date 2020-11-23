@@ -82,9 +82,12 @@ class OrdersController extends Controller
         try {
             $order = @Orders::updateOrCreate(['id' => @$request->order_id, 'user_id' => @$request->user_id], $request->all());
             if (isset($request['items']) && sizeof(@$request['items']) > 0) {
+                $items_array = [];
                 foreach ($request['items'] as $key => $item) {
-                    $order->items()->updateExistingPivot($item['item_id'], ['quantity' => $item['quantity']]);
+                    $items_array[$item['item_id']] = ['quantity' => $item['quantity']];
+//                    $order->items()->updateExistingPivot($item['item_id'], ['quantity' => $item['quantity']]);
                 }
+                $order->items()->sync($items_array, false);
             }
             $response = ['error' => false, 'message' => 'Order Successfully Updated!'];
         } catch (\Exception $exception) {

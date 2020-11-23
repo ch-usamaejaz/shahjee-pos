@@ -33,5 +33,19 @@ class ItemsController extends Controller
 
         return response()->json($response);
     }
+
+    public function update_item(Request $request) {
+        $response = ['error' => false, 'message' => 'Item updated Successfully!'];
+
+        try {
+            $updated_item = Items::updateOrCreate(['id' => @$request->item_id], $request->all());
+        }
+        catch (\Exception $exception) {
+            $response = ['error' => true, 'message' => $exception->getMessage()];
+        }
+
+        return response()->json($response);
+
+    }
 }
 
