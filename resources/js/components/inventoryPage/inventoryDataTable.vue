@@ -14,6 +14,7 @@
             flat
           >
           <v-dialog
+            @click:outside="closeDialog"
             v-model="dialog"
             max-width="1000px"
           >
@@ -87,7 +88,11 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-dialog 
+        v-model="dialogDelete"  
+        max-width="500px"
+        @click:outside="closeDialog"
+        >
           <v-card>
             <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
             <v-card-actions>
@@ -214,7 +219,12 @@ export default {
               this.dialog = false
               this.currentRowId = 0;
               this.formTitle = '';
+              this.itemName = '';
+              this.itemPrice = 0;
           },
+            closeDialog () {
+              this.close();
+            },
             save () {
               if(this.formTitle == "New Order"){
                 this.saveNewItem();
@@ -236,6 +246,7 @@ export default {
                 }).catch(err=>{
                     console.log(err)
                 })
+                this.getDataFromApi()
             },
             saveNewItem () {
                 let Data = {
@@ -247,9 +258,9 @@ export default {
                     this.axios.post(url,Data).then(response =>{
                         console.log(response)
                         }).catch(error =>{
-                        console.log(error);
-                    }
-                )
+                        console.log(error)
+                    })
+                this.getDataFromApi()
             },
         }
 }

@@ -2237,6 +2237,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'inventoryDataTable',
   data: function data() {
@@ -2342,6 +2347,11 @@ __webpack_require__.r(__webpack_exports__);
       this.dialog = false;
       this.currentRowId = 0;
       this.formTitle = '';
+      this.itemName = '';
+      this.itemPrice = 0;
+    },
+    closeDialog: function closeDialog() {
+      this.close();
     },
     save: function save() {
       if (this.formTitle == "New Order") {
@@ -2364,6 +2374,7 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (err) {
         console.log(err);
       });
+      this.getDataFromApi();
     },
     saveNewItem: function saveNewItem() {
       var Data = {
@@ -2377,6 +2388,7 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+      this.getDataFromApi();
     }
   }
 });
@@ -2392,6 +2404,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -2739,32 +2752,10 @@ __webpack_require__.r(__webpack_exports__);
       var total = 0;
       this.newOrderRow.forEach(function (value, index) {
         total += value.newItem.item_price * value.quantity;
-        console.log(value, 'inside total');
       });
-      this.totalWithoutDiscount = total;
       this.editedItem.order_total = total;
-      console.log(this.totalWithoutDiscount, 'newTotal');
-    },
-    addPrice: function addPrice(index) {
-      console.log(this.newOrderRow[index], 'this');
-
-      for (var i = 0; i <= this.itemsTable.length; i++) {
-        if (this.newOrderRow[index].newItem === this.itemsTable[i].item_name) {
-          this.savedItems.push({
-            newItemId: this.itemsTable[i].id,
-            newItemQuantity: this.newOrderRow[index].quantity
-          }); // this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
-
-          this.newOrderRow[index].orderItem_id = this.itemsTable[i].id;
-          console.log(this.itemsTable[i].id, 'itemID');
-          this.rowIndex = index;
-          console.log(this.newOrderRow);
-          this.editedItem.order_total = this.newOrderRow.reduce(function (a, b) {
-            return a + b.price;
-          }, 0);
-          break;
-        }
-      }
+      this.editedItem.order_discount = 0;
+      this.totalWithoutDiscount = total;
     },
     selectRules: function selectRules() {
       if (this.newOrderRow == null) {
@@ -2773,8 +2764,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     addDiscount: function addDiscount() {
       console.log("working");
-      this.editedItem.order_total = this.editedItem.order_total - this.editedItem.order_discount;
-      console.log(this.editedItem.order_total, 'totallll');
+      this.editedItem.order_total = this.totalWithoutDiscount - this.editedItem.order_discount;
     },
     addNewRow: function addNewRow() {
       this.valid = true;
@@ -2800,12 +2790,13 @@ __webpack_require__.r(__webpack_exports__);
         order_id: item.id
       }).then(function (response) {
         _this4.getEditItems = response.data.data;
-        console.log(response.data.data, 'res');
 
         _this4.getEditItems.forEach(function (value) {
           newItems.push(value.items);
           newItems.forEach(function (newValue, index) {
-            for (var i = 0; i <= newItems.length + 1; i++) {
+            console.log(response.data.data.length, 'neeeeeeeee');
+
+            for (var i = 0; i <= response.data.data[0].items.length - 1; i++) {
               _this4.addNewRow(i);
 
               itemsAtt = {
@@ -2819,8 +2810,8 @@ __webpack_require__.r(__webpack_exports__);
               _this4.newOrderRow[i].quantity = itemsAtt.quantity;
               _this4.newOrderRow[i].newItem.id = itemsAtt.item_id;
               _this4.editedItem.order_total = item.order_total;
+              _this4.totalWithoutDiscount = item.order_total;
               _this4.editedItem.order_discount = item.order_discount;
-              console.log(i, 'neeeeeeeee');
             }
           });
         });
@@ -2864,13 +2855,15 @@ __webpack_require__.r(__webpack_exports__);
     close: function close() {
       this.dialog = false;
       this.order_total = null;
-      this.editedItem = new Object();
+      this.editedItem.order_total = 0;
+      this.editedItem.order_discount = 0;
+      this.getEditItems = new Array();
       this.currentRowId = 0;
       this.newOrderRow = [];
       this.valid = false;
     },
-    getBill: function getBill() {
-      console.log("hi");
+    closeDialog: function closeDialog() {
+      this.close();
     },
     save: function save() {
       console.log(this.formTitle);
@@ -2915,6 +2908,7 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+      this.getDataFromApi();
     },
     postEditedData: function postEditedData() {
       var items = this.getSelectedItems();
@@ -2932,6 +2926,7 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+      this.getDataFromApi();
       this.close();
     }
   }
@@ -8106,7 +8101,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n*[data-v-7a80bea9] {\n    font-size: 12px;\n    font-family: 'Times New Roman';\n    font-weight: bolder;\n}\ntd[data-v-7a80bea9],\nth[data-v-7a80bea9],\ntr[data-v-7a80bea9],\ntable[data-v-7a80bea9] {\n    border-top: 1px solid black;\n    border-collapse: collapse;\n    align-items: center !important;\n    margin-left: auto;\n    margin-right: auto;\n}\ntd.description[data-v-7a80bea9],\nth.description[data-v-7a80bea9] {\n    width: 75px;\n    max-width: 75px;\n}\ntd.quantity[data-v-7a80bea9],\nth.quantity[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    word-break: break-all;\n}\ntd.price[data-v-7a80bea9],\nth.price[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    word-break: break-all;\n}\n.centered[data-v-7a80bea9] {\n    text-align: center;\n    align-content: center;\n}\n.ticket[data-v-7a80bea9] {\n    width: 155px;\n    max-width: 155px;\n}\nimg[data-v-7a80bea9] {\n    max-width: 100px;\n    width: inherit;\n    display: block;\n    margin-left: auto;\n    margin-right: auto;\n}\n@media print {\n.hidden-print[data-v-7a80bea9],\n    .hidden-print *[data-v-7a80bea9] {\n        display: none !important;\n}\n}\n", ""]);
+exports.push([module.i, "\n*[data-v-7a80bea9] {\n    font-size: 12px;\n    font-family: 'Times New Roman';\n    font-weight: bolder;\n}\ntd[data-v-7a80bea9],\nth[data-v-7a80bea9],\ntr[data-v-7a80bea9],\ntable[data-v-7a80bea9] {\n    border-top: 1px solid black;\n    border-collapse: collapse;\n    align-items: center !important;\n    margin-left: auto;\n    margin-right: auto;\n}\ntd.description[data-v-7a80bea9],\nth.description[data-v-7a80bea9] {\n    width: 75px;\n    max-width: 75px;\n}\ntd.quantity[data-v-7a80bea9],\nth.quantity[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    /* word-break: break-all; */\n}\ntd.price[data-v-7a80bea9],\nth.price[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    /* word-break: break-all; */\n}\n.centered[data-v-7a80bea9] {\n    text-align: center;\n    align-content: center;\n}\n.ticket[data-v-7a80bea9] {\n    width: 155px;\n    max-width: 155px;\n}\nimg[data-v-7a80bea9] {\n    max-width: 100px;\n    width: inherit;\n    display: block;\n    margin-left: auto;\n    margin-right: auto;\n}\n@media print {\n.hidden-print[data-v-7a80bea9],\n    .hidden-print *[data-v-7a80bea9] {\n        display: none !important;\n}\n}\n", ""]);
 
 // exports
 
@@ -40211,6 +40206,7 @@ var render = function() {
                           "v-dialog",
                           {
                             attrs: { "max-width": "1000px" },
+                            on: { "click:outside": _vm.closeDialog },
                             scopedSlots: _vm._u([
                               {
                                 key: "activator",
@@ -40385,6 +40381,7 @@ var render = function() {
                           "v-dialog",
                           {
                             attrs: { "max-width": "500px" },
+                            on: { "click:outside": _vm.closeDialog },
                             model: {
                               value: _vm.dialogDelete,
                               callback: function($$v) {
@@ -40545,7 +40542,7 @@ var render = function() {
                   "v-form",
                   {
                     ref: "form",
-                    attrs: { "lazy-validation": "" },
+                    attrs: { action: "" },
                     model: {
                       value: _vm.isFormValid,
                       callback: function($$v) {
@@ -40572,6 +40569,7 @@ var render = function() {
                           "v-dialog",
                           {
                             attrs: { "max-width": "1000px" },
+                            on: { "click:outside": _vm.closeDialog },
                             scopedSlots: _vm._u([
                               {
                                 key: "activator",
@@ -40824,9 +40822,7 @@ var render = function() {
                                                     color: "green"
                                                   },
                                                   on: {
-                                                    "~keydown": function(
-                                                      $event
-                                                    ) {
+                                                    keydown: function($event) {
                                                       if (
                                                         !$event.type.indexOf(
                                                           "key"
@@ -41230,7 +41226,7 @@ var render = function() {
                       _c("td", { staticClass: "quantity" }),
                       _vm._v(" "),
                       _c("td", { staticClass: "description" }, [
-                        _vm._v("Total Bill ")
+                        _vm._v("Gross Bill ")
                       ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "price" }, [

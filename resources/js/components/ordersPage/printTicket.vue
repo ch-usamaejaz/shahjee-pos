@@ -21,7 +21,7 @@
                     </tr>
                     <tr v-if="orderData.order_discount > 0">
                         <td class="quantity"></td>
-                        <td class="description">Total Bill </td>
+                        <td class="description">Gross Bill </td>
                         <td class="price">Rs {{orderData.order_total + orderData.order_discount}}</td>
                     </tr>
                     <tr v-if="orderData.order_discount > 0">
@@ -129,14 +129,14 @@ td.quantity,
 th.quantity {
     width: 40px;
     max-width: 40px;
-    word-break: break-all;
+    /* word-break: break-all; */
 }
 
 td.price,
 th.price {
     width: 40px;
     max-width: 40px;
-    word-break: break-all;
+    /* word-break: break-all; */
 }
 
 .centered {

@@ -9,12 +9,13 @@
             class="elevation-1"
         >
         <template v-slot:top>
-          <v-form ref="form" v-model="isFormValid" lazy-validation>
+          <v-form ref="form" action="" v-model="isFormValid">
           <v-toolbar
             flat
             v-model="rowIndex"
           >
           <v-dialog
+            @click:outside="closeDialog"
             v-model="dialog"
             max-width="1000px"
           >
@@ -109,7 +110,7 @@
                       hint="Press ENTER after adding Discount"
                       persistent-hint
                       color="green"
-                      @keydown.enter.once="addDiscount"
+                      @keydown.enter="addDiscount"
                       v-model="editedItem.order_discount"
                   ></v-text-field>
                   </v-col>
@@ -329,30 +330,11 @@
             calculateOrderTotal () {
               let total = 0;
               this.newOrderRow.forEach((value,index) => {
-                total +=  (value.newItem.item_price * value.quantity)
-                console.log(value, 'inside total')
+                total +=  (value.newItem.item_price * value.quantity)                
             })
-            this.totalWithoutDiscount = total
-            this.editedItem.order_total = total;
-            console.log(this.totalWithoutDiscount, 'newTotal')
-            },
-            addPrice (index) {
-              console.log(this.newOrderRow[index], 'this')
-              for(var i = 0; i<=this.itemsTable.length;i++){
-                if(this.newOrderRow[index].newItem === this.itemsTable[i].item_name){
-                  this.savedItems.push({newItemId: this.itemsTable[i].id, newItemQuantity: this.newOrderRow[index].quantity})
-                  // this.newOrderRow[index].price = this.itemsTable[i].item_price * this.newOrderRow[index].quantity;
-                  this.newOrderRow[index].orderItem_id = this.itemsTable[i].id;
-                   console.log(this.itemsTable[i].id, 'itemID')
-                   this.rowIndex = index
-                   console.log(this.newOrderRow)
-                  this.editedItem.order_total = this.newOrderRow.reduce(function(a,b){
-                    return a+b.price
-                  },0)
-                  break
-                }
-
-              }
+              this.editedItem.order_total = total;
+              this.editedItem.order_discount = 0;
+              this.totalWithoutDiscount = total            
             },
             selectRules(){
               if(this.newOrderRow == null){
@@ -361,8 +343,7 @@
             },
             addDiscount () {
               console.log("working")
-              this.editedItem.order_total = (this.editedItem.order_total - this.editedItem.order_discount);
-              console.log(this.editedItem.order_total, 'totallll')
+              this.editedItem.order_total = (this.totalWithoutDiscount - this.editedItem.order_discount);
             },
             addNewRow () {
               this.valid = true;
@@ -378,12 +359,11 @@
               this.editedItem.order_total = item.order_total
               this.axios.post('/get_order', {order_id: item.id}).then(response=>{
                 this.getEditItems = response.data.data
-                console.log(response.data.data, 'res')
                 this.getEditItems.forEach((value)=>{
                   newItems.push(value.items)
                   newItems.forEach((newValue, index)=>{
-                    
-                    for(var i=0; i <= newItems.length+1; i++){
+                    console.log(response.data.data.length, 'neeeeeeeee')
+                    for(var i=0; i <= response.data.data[0].items.length-1; i++){
                       this.addNewRow(i)
                       itemsAtt = {"item_id": newValue[i].item_id,"item_name": newValue[i].item_name, "item_price": newValue[i].item_price, "quantity": newValue[i].quantity}
                       this.newOrderRow[i].newItem = itemsAtt
@@ -391,14 +371,15 @@
                       this.newOrderRow[i].quantity = itemsAtt.quantity
                       this.newOrderRow[i].newItem.id = itemsAtt.item_id
                       this.editedItem.order_total = item.order_total
+                      this.totalWithoutDiscount = item.order_total
                       this.editedItem.order_discount = item.order_discount
-                      console.log(i, 'neeeeeeeee')
                     }
                   })
                 })
               }).catch(error=>{
                 console.log(error)
               })
+              
               this.close();
               this.dialog = true
             },
@@ -432,14 +413,16 @@
             close () {
               this.dialog = false
               this.order_total = null;
-              this.editedItem = new Object;
+              this.editedItem.order_total = 0;
+              this.editedItem.order_discount = 0;
+              this.getEditItems= new Array;
               this.currentRowId = 0;
               this.newOrderRow=[]
               this.valid = false
           },
-          getBill () {
-            console.log("hi");
-          },
+            closeDialog () {
+              this.close();
+            },
             save () {
             console.log(this.formTitle)
               if(this.formTitle == "New Order"){
@@ -465,7 +448,7 @@
           postData(){
             console.log(this.savedItems, 'post')
             let items = this.getSelectedItems()
-          let Data = {
+            let Data = {
             "order_total": this.editedItem.order_total,
             "order_status": this.selectedStatus,
             "order_discount": this.editedItem.order_discount,
@@ -479,6 +462,7 @@
           }).catch(error =>{
             console.log(error);
           })
+          this.getDataFromApi();
         },
         postEditedData(){
 
@@ -497,6 +481,7 @@
             }).catch(error =>{
               console.log(error);
             })
+          this.getDataFromApi();
           this.close();
         },
       }
