@@ -2582,8 +2582,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
+    var _this = this;
+
     return {
       dialog: false,
       dialogDelete: false,
@@ -2642,7 +2645,7 @@ __webpack_require__.r(__webpack_exports__);
         return v === null || 'An Item is required';
       }],
       itemSelectRules: [function (v) {
-        return v === null || 'Select an Item';
+        return v !== _this.itemsTable || 'Select an Item';
       }]
     };
   },
@@ -2672,23 +2675,23 @@ __webpack_require__.r(__webpack_exports__);
       var items = this.getOrders(this.options);
     },
     getOrders: function getOrders(order_data) {
-      var _this = this;
+      var _this2 = this;
 
       this.axios.post('/get_user_orders', order_data).then(function (response) {
-        _this.orders = response.data.orders;
-        _this.totalOrders = response.data.orders.length;
-        _this.loading = false;
+        _this2.orders = response.data.orders;
+        _this2.totalOrders = response.data.orders.length;
+        _this2.loading = false;
         console.log(response.data.orders, "orders");
       })["catch"](function (error) {
         console.log(error.message);
       });
     },
     getItemTable: function getItemTable() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.axios.get('get_all_items').then(function (response) {
         console.log('new', response.data.data);
-        _this2.itemsTable = response.data.data; // let self = this;
+        _this3.itemsTable = response.data.data; // let self = this;
         // this.itemsTable.forEach(function (item, index) {
         // self.dropdown_edit.push(item['item_name'])
         // })
@@ -2744,7 +2747,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     editItem: function editItem(item) {
-      var _this3 = this;
+      var _this4 = this;
 
       this.editedIndex = item;
       var newItems = [];
@@ -2756,14 +2759,14 @@ __webpack_require__.r(__webpack_exports__);
       this.axios.post('/get_order', {
         order_id: item.id
       }).then(function (response) {
-        _this3.getEditItems = response.data.data;
+        _this4.getEditItems = response.data.data;
         console.log(response.data.data, 'res');
 
-        _this3.getEditItems.forEach(function (value) {
+        _this4.getEditItems.forEach(function (value) {
           newItems.push(value.items);
           newItems.forEach(function (newValue, index) {
             for (var i = 0; i <= newItems.length; i++) {
-              _this3.addNewRow(i);
+              _this4.addNewRow(i);
 
               itemsAtt = {
                 "item_id": newValue[i].item_id,
@@ -2771,13 +2774,13 @@ __webpack_require__.r(__webpack_exports__);
                 "item_price": newValue[i].item_price,
                 "quantity": newValue[i].quantity
               };
-              _this3.newOrderRow[i].newItem = itemsAtt;
-              _this3.newOrderRow[i].price = itemsAtt.item_price;
-              _this3.newOrderRow[i].quantity = itemsAtt.quantity;
-              _this3.newOrderRow[i].newItem.id = itemsAtt.item_id;
-              _this3.editedItem.order_total = item.order_total;
-              _this3.editedItem.order_discount = item.order_discount;
-              console.log(_this3.newOrderRow[i].newItem.id, 'neeeeeeeee');
+              _this4.newOrderRow[i].newItem = itemsAtt;
+              _this4.newOrderRow[i].price = itemsAtt.item_price;
+              _this4.newOrderRow[i].quantity = itemsAtt.quantity;
+              _this4.newOrderRow[i].newItem.id = itemsAtt.item_id;
+              _this4.editedItem.order_total = item.order_total;
+              _this4.editedItem.order_discount = item.order_discount;
+              console.log(_this4.newOrderRow[i].newItem.id, 'neeeeeeeee');
             }
           });
         });
@@ -2841,6 +2844,7 @@ __webpack_require__.r(__webpack_exports__);
       this.close();
     },
     removeRow: function removeRow(index) {
+      this.editedItem.order_total = this.editedItem.order_total - this.newOrderRow[index].newItem.item_price * this.newOrderRow[index].quantity;
       this.newOrderRow.splice(index, 1);
     },
     getSelectedItems: function getSelectedItems() {
@@ -40957,7 +40961,9 @@ var render = function() {
                                           color: "blue darken-1",
                                           text: "",
                                           disabled:
-                                            !_vm.isFormValid || !_vm.valid
+                                            !_vm.isFormValid ||
+                                            !_vm.valid ||
+                                            _vm.editedItem.order_total === 0
                                         },
                                         on: { click: _vm.save }
                                       },
@@ -41057,7 +41063,11 @@ var render = function() {
                   "v-icon",
                   {
                     staticClass: "mr-2",
-                    attrs: { color: "primary", small: "" },
+                    attrs: {
+                      color: "primary",
+                      small: "",
+                      disabled: item.order_status === "Paid"
+                    },
                     on: {
                       click: function($event) {
                         return _vm.editItem(item)

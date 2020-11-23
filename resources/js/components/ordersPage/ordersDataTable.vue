@@ -172,7 +172,7 @@
               <v-btn
                 color="blue darken-1"
                 text
-                :disabled="!isFormValid || !valid"
+                :disabled="!isFormValid || !valid || editedItem.order_total === 0"
                 @click="save"
               >
                 Save
@@ -200,6 +200,7 @@
               small
               class="mr-2"
               @click="editItem(item)"
+              :disabled="item.order_status === 'Paid'"
             >
               mdi-pencil
             </v-icon>
@@ -271,7 +272,7 @@
                   
                 ],
                 itemSelectRules: [
-                  (v) => v === null || 'Select an Item',
+                  (v) => v !== this.itemsTable || 'Select an Item',
                 ]                  
             }
         },
@@ -444,7 +445,8 @@
               this.close()
             },
             removeRow (index){
-              this.newOrderRow.splice(index, 1)
+              this.editedItem.order_total = this.editedItem.order_total - (this.newOrderRow[index].newItem.item_price * this.newOrderRow[index].quantity)
+              this.newOrderRow.splice(index, 1)  
             },
             getSelectedItems () {
               let items = [];
