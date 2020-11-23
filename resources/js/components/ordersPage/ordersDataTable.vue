@@ -366,9 +366,6 @@
             },
             addNewRow () {
               this.valid = true;
-              // for(var i=0; i <= this.newOrderRow.length; i++){
-              //   if()
-              // }
               this.newOrderRow.push({price: 0, quantity: 0, newItem:{},orderItem_id:0, items: []});
             },
             editItem (item) {

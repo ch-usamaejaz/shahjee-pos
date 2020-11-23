@@ -2748,10 +2748,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log(this.editedItem.order_total, 'totallll');
     },
     addNewRow: function addNewRow() {
-      this.valid = true; // for(var i=0; i <= this.newOrderRow.length; i++){
-      //   if()
-      // }
-
+      this.valid = true;
       this.newOrderRow.push({
         price: 0,
         quantity: 0,
