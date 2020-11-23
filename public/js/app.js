@@ -1922,16 +1922,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    // console.log('Component mounted.')
-    this.axios.post('update_item', {
-      item_id: 3,
-      item_price: 1000,
-      item_name: 'Chapli Kebab'
-    }).then(function (resp) {
-      console.log(resp);
-    })["catch"](function (err) {
-      console.log(err.message);
-    });
+    console.log('Component mounted.'); // this.axios.post('create_new_item', {item_price : 1000, item_name : 'Kheer'})
+    //     .then (resp => {
+    //         console.log(resp);
+    //     })
+    //     .catch(err => {
+    //         console.log(err.message)
+    //     })
   }
 });
 
