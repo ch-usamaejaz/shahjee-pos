@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 
 class ItemsController extends Controller
 {
-    public function get_all_items($origin)
+    public function get_all_items($origin, $limit = null, $offset = null)
     {
         $response = [];
         try {
             $query = Items::select('id', 'item_price', 'item_name');
-            $items = $origin == 'orders' ? $query->withTrashed()->get()->toArray() : $query->get()->toArray();
+            $items = $origin == 'orders' ? $query->withTrashed()->get()->toArray() : ($limit !== -1 ? $query->limit($limit)->offset($offset - 1)->get()->toArray() : $query->get()->toArray());
             $response = ['error' => false, 'data' => $items];
         } catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];

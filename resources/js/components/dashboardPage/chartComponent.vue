@@ -5,7 +5,6 @@
                 class="mx-auto text-center"
                 color="rgb(2, 76, 196)"
                 dark
-                max-width="1100"
             >
     <v-card-text>
       <v-sheet color="blue">
@@ -33,7 +32,7 @@
     <v-divider></v-divider>
   </v-card>
 </template>
-    </div>    
+    </div>
 </template>
 
 <script>

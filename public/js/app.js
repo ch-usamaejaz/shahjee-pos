@@ -1980,7 +1980,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'chartComponent',
   data: function data() {
@@ -2258,7 +2257,8 @@ __webpack_require__.r(__webpack_exports__);
       headers: [{
         text: 'Item#',
         align: 'start',
-        value: 'id'
+        value: 'id',
+        sortable: false
       }, {
         text: 'Item-Name',
         value: 'item_name',
@@ -2299,7 +2299,7 @@ __webpack_require__.r(__webpack_exports__);
     getOrders: function getOrders(order_data) {
       var _this = this;
 
-      this.axios.get('/get_all_items/inventory', order_data).then(function (response) {
+      this.axios.get('/get_all_items/inventory/' + this.options.itemsPerPage + '/' + this.options.page).then(function (response) {
         _this.items = response.data.data;
         _this.totalItems = response.data.data.length;
         _this.loading = false;
@@ -39936,7 +39936,7 @@ var render = function() {
           "v-card",
           {
             staticClass: "mx-auto text-center",
-            attrs: { color: "rgb(2, 76, 196)", dark: "", "max-width": "1100" }
+            attrs: { color: "rgb(2, 76, 196)", dark: "" }
           },
           [
             _c(
