@@ -363,8 +363,6 @@
               this.newOrderRow.push({price: 0, quantity: 0, newItem:{},orderItem_id:0, items: []});
             },
             editItem (item) {
-              // this.addNewRow()
-              // this.addNewRow()
               this.editedIndex = item
               let newItems = [];
               let itemsAtt = []

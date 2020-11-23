@@ -2098,6 +2098,256 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'inventoryDataTable',
+  data: function data() {
+    return {
+      dialog: false,
+      dialogDelete: false,
+      isFormValid: false,
+      valid: false,
+      items: [],
+      loading: true,
+      options: {},
+      formTitle: '',
+      itemName: '',
+      itemPrice: 0,
+      totalItems: 0,
+      currentRowId: 0,
+      headers: [{
+        text: 'Item#',
+        align: 'start',
+        value: 'id'
+      }, {
+        text: 'Item-Name',
+        value: 'item_name',
+        sortable: false
+      }, {
+        text: 'Item-Price',
+        value: 'item_price',
+        sortable: false
+      }, {
+        text: 'Actions',
+        value: 'actions',
+        sortable: false
+      }],
+      editedIndex: 0,
+      editedItem: {
+        selectedItem: "",
+        quantity: 0,
+        price: 0
+      }
+    };
+  },
+  watch: {
+    options: {
+      handler: function handler() {
+        this.getDataFromApi();
+      },
+      deep: true
+    }
+  },
+  mounted: function mounted() {//   this.getItemTable();
+  },
+  methods: {
+    getDataFromApi: function getDataFromApi() {
+      this.loading = true;
+      this.options['user_id'] = 1;
+      var items = this.getOrders(this.options);
+    },
+    getOrders: function getOrders(order_data) {
+      var _this = this;
+
+      this.axios.get('/get_all_items', order_data).then(function (response) {
+        _this.items = response.data.data;
+        _this.totalItems = response.data.data.length;
+        _this.loading = false;
+        console.log(response.data.data, "orders");
+      })["catch"](function (error) {
+        console.log(error.message);
+      });
+    },
+    editItem: function editItem(item) {
+      this.formTitle = "Edit Item";
+      this.dialog = true;
+      this.itemName = item.item_name;
+      this.itemPrice = item.item_price;
+      this.close();
+    },
+    deleteItemConfirm: function deleteItemConfirm(item) {
+      this.currentRowId = item.id;
+      this.dialogDelete = true;
+    },
+    deleteItem: function deleteItem() {
+      var id = this.currentRowId;
+
+      for (var i = 0; i <= this.items.length; i++) {
+        if (this.items[i].id == id) {
+          this.items.splice(i, 1); //   this.axios.post('/delete_order', {order_id: id}).then(response=>{
+          //     console.log(response)
+          //   }).catch(error=>{
+          //     console.log(error)
+          //   })
+
+          break;
+        }
+      }
+
+      this.closeDelete();
+    },
+    closeDelete: function closeDelete() {
+      this.dialogDelete = false;
+    },
+    changeFormTitle: function changeFormTitle() {
+      this.formTitle = "New Item";
+      this.close();
+    },
+    close: function close() {
+      this.dialog = false;
+      this.itemPrice = null;
+      this.itemName = null;
+      this.currentRowId = 0;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=script&lang=js& ***!
@@ -3037,6 +3287,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_inventoryPage_inventoryDataTable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/inventoryPage/inventoryDataTable */ "./resources/js/components/inventoryPage/inventoryDataTable.vue");
 //
 //
 //
@@ -3047,9 +3298,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'inventory',
-  components: {}
+  components: {
+    inventoryDataTable: _components_inventoryPage_inventoryDataTable__WEBPACK_IMPORTED_MODULE_0__["default"]
+  }
 });
 
 /***/ }),
@@ -39851,6 +40106,359 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=template&id=7a6285d2&scoped=true&":
+/*!***********************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=template&id=7a6285d2&scoped=true& ***!
+  \***********************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("v-data-table", {
+        staticClass: "elevation-1",
+        attrs: {
+          headers: _vm.headers,
+          items: _vm.items,
+          options: _vm.options,
+          "server-items-length": _vm.totalItems,
+          loading: _vm.loading
+        },
+        on: {
+          "update:options": function($event) {
+            _vm.options = $event
+          }
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "top",
+            fn: function() {
+              return [
+                _c(
+                  "v-form",
+                  {
+                    ref: "form",
+                    attrs: { "lazy-validation": "" },
+                    model: {
+                      value: _vm.isFormValid,
+                      callback: function($$v) {
+                        _vm.isFormValid = $$v
+                      },
+                      expression: "isFormValid"
+                    }
+                  },
+                  [
+                    _c(
+                      "v-toolbar",
+                      { attrs: { flat: "" } },
+                      [
+                        _c(
+                          "v-dialog",
+                          {
+                            attrs: { "max-width": "1000px" },
+                            scopedSlots: _vm._u([
+                              {
+                                key: "activator",
+                                fn: function(ref) {
+                                  var on = ref.on
+                                  var attrs = ref.attrs
+                                  return [
+                                    _c(
+                                      "v-btn",
+                                      _vm._g(
+                                        _vm._b(
+                                          {
+                                            staticClass: "mb-2",
+                                            attrs: {
+                                              color: "primary",
+                                              dark: ""
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.changeFormTitle()
+                                              }
+                                            }
+                                          },
+                                          "v-btn",
+                                          attrs,
+                                          false
+                                        ),
+                                        on
+                                      ),
+                                      [_vm._v("\n          New Item\n        ")]
+                                    )
+                                  ]
+                                }
+                              }
+                            ]),
+                            model: {
+                              value: _vm.dialog,
+                              callback: function($$v) {
+                                _vm.dialog = $$v
+                              },
+                              expression: "dialog"
+                            }
+                          },
+                          [
+                            _vm._v(" "),
+                            _c(
+                              "v-card",
+                              [
+                                _c("v-card-title", [
+                                  _c("span", { staticClass: "headline" }, [
+                                    _vm._v(_vm._s(_vm.formTitle))
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "v-card-text",
+                                  [
+                                    _c(
+                                      "v-container",
+                                      [
+                                        _c(
+                                          "v-row",
+                                          [
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "6"
+                                                }
+                                              },
+                                              [
+                                                _c("v-text-field", {
+                                                  attrs: {
+                                                    label: "Item-Name",
+                                                    type: "text",
+                                                    outlined: ""
+                                                  },
+                                                  model: {
+                                                    value: _vm.itemName,
+                                                    callback: function($$v) {
+                                                      _vm.itemName = $$v
+                                                    },
+                                                    expression: "itemName"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "6"
+                                                }
+                                              },
+                                              [
+                                                _c("v-text-field", {
+                                                  attrs: {
+                                                    label: "Item-Price",
+                                                    type: "number",
+                                                    outlined: ""
+                                                  },
+                                                  model: {
+                                                    value: _vm.itemPrice,
+                                                    callback: function($$v) {
+                                                      _vm.itemPrice = $$v
+                                                    },
+                                                    expression: "itemPrice"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            )
+                                          ],
+                                          1
+                                        )
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-card-actions",
+                                  [
+                                    _c("v-spacer"),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: {
+                                          color: "blue darken-1",
+                                          text: ""
+                                        },
+                                        on: { click: _vm.close }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n            Cancel\n          "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: {
+                                          color: "blue darken-1",
+                                          text: "",
+                                          disabled:
+                                            !_vm.isFormValid || !_vm.valid
+                                        }
+                                      },
+                                      [_vm._v("\n            Save\n          ")]
+                                    )
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-dialog",
+                          {
+                            attrs: { "max-width": "500px" },
+                            model: {
+                              value: _vm.dialogDelete,
+                              callback: function($$v) {
+                                _vm.dialogDelete = $$v
+                              },
+                              expression: "dialogDelete"
+                            }
+                          },
+                          [
+                            _c(
+                              "v-card",
+                              [
+                                _c(
+                                  "v-card-title",
+                                  { staticClass: "headline" },
+                                  [
+                                    _vm._v(
+                                      "Are you sure you want to delete this item?"
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-card-actions",
+                                  [
+                                    _c("v-spacer"),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: {
+                                          color: "blue darken-1",
+                                          text: ""
+                                        },
+                                        on: { click: _vm.closeDelete }
+                                      },
+                                      [_vm._v("Cancel")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: {
+                                          color: "blue darken-1",
+                                          text: ""
+                                        },
+                                        on: { click: _vm.deleteItem }
+                                      },
+                                      [_vm._v("OK")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("v-spacer")
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "item.actions",
+            fn: function(ref) {
+              var item = ref.item
+              return [
+                _c(
+                  "v-icon",
+                  {
+                    staticClass: "mr-2",
+                    attrs: { color: "primary", small: "" },
+                    on: {
+                      click: function($event) {
+                        return _vm.editItem(item)
+                      }
+                    }
+                  },
+                  [_vm._v("\n          mdi-pencil\n        ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "v-icon",
+                  {
+                    staticClass: "mr-2",
+                    attrs: { color: "red", small: "" },
+                    on: {
+                      click: function($event) {
+                        return _vm.deleteItemConfirm(item)
+                      }
+                    }
+                  },
+                  [_vm._v("\n          mdi-delete\n        ")]
+                )
+              ]
+            }
+          }
+        ])
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22&":
 /*!*****************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ordersPage/ordersDataTable.vue?vue&type=template&id=2a35bf22& ***!
@@ -41099,22 +41707,24 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "br-mainpanel" }, [
-        _c("div", { staticClass: "pd-30" }, [
-          _c("h4", { staticClass: "tx-gray-800 mg-b-5" }, [_vm._v("Inventory")])
-        ])
-      ])
+  return _c("div", [
+    _c("div", { staticClass: "br-mainpanel" }, [
+      _c(
+        "div",
+        { staticClass: "pd-30" },
+        [
+          _c("h4", { staticClass: "tx-gray-800 mg-b-5" }, [
+            _vm._v("Inventory Page")
+          ]),
+          _vm._v(" "),
+          _c("inventoryDataTable")
+        ],
+        1
+      )
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -101042,6 +101652,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_statsComponent_vue_vue_type_template_id_25fa3c35_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_statsComponent_vue_vue_type_template_id_25fa3c35_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/inventoryPage/inventoryDataTable.vue":
+/*!**********************************************************************!*\
+  !*** ./resources/js/components/inventoryPage/inventoryDataTable.vue ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _inventoryDataTable_vue_vue_type_template_id_7a6285d2_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./inventoryDataTable.vue?vue&type=template&id=7a6285d2&scoped=true& */ "./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=template&id=7a6285d2&scoped=true&");
+/* harmony import */ var _inventoryDataTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./inventoryDataTable.vue?vue&type=script&lang=js& */ "./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _inventoryDataTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _inventoryDataTable_vue_vue_type_template_id_7a6285d2_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _inventoryDataTable_vue_vue_type_template_id_7a6285d2_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "7a6285d2",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/inventoryPage/inventoryDataTable.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_inventoryDataTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./inventoryDataTable.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_inventoryDataTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=template&id=7a6285d2&scoped=true&":
+/*!*****************************************************************************************************************!*\
+  !*** ./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=template&id=7a6285d2&scoped=true& ***!
+  \*****************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_inventoryDataTable_vue_vue_type_template_id_7a6285d2_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./inventoryDataTable.vue?vue&type=template&id=7a6285d2&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/inventoryPage/inventoryDataTable.vue?vue&type=template&id=7a6285d2&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_inventoryDataTable_vue_vue_type_template_id_7a6285d2_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_inventoryDataTable_vue_vue_type_template_id_7a6285d2_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
