@@ -2746,8 +2746,6 @@ __webpack_require__.r(__webpack_exports__);
     editItem: function editItem(item) {
       var _this3 = this;
 
-      // this.addNewRow()
-      // this.addNewRow()
       this.editedIndex = item;
       var newItems = [];
       var itemsAtt = [];
@@ -3093,6 +3091,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -8060,7 +8061,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n*[data-v-7a80bea9] {\n    font-size: 12px;\n    font-family: 'Times New Roman';\n    font-weight: bolder;\n}\ntd[data-v-7a80bea9],\nth[data-v-7a80bea9],\ntr[data-v-7a80bea9],\ntable[data-v-7a80bea9] {\n    border-top: 1px solid black;\n    border-collapse: collapse;\n    align-items: center !important;\n    margin-left: 60px;\n}\ntd.description[data-v-7a80bea9],\nth.description[data-v-7a80bea9] {\n    width: 75px;\n    max-width: 75px;\n}\ntd.quantity[data-v-7a80bea9],\nth.quantity[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    word-break: break-all;\n}\ntd.price[data-v-7a80bea9],\nth.price[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    word-break: break-all;\n}\n.centered[data-v-7a80bea9] {\n    text-align: center;\n    align-content: center;\n}\n.ticket[data-v-7a80bea9] {\n    width: 155px;\n    max-width: 155px;\n}\nimg[data-v-7a80bea9] {\n    max-width: inherit;\n    width: inherit;\n}\n@media print {\n.hidden-print[data-v-7a80bea9],\n    .hidden-print *[data-v-7a80bea9] {\n        display: none !important;\n}\n}\n", ""]);
+exports.push([module.i, "\n*[data-v-7a80bea9] {\n    font-size: 12px;\n    font-family: 'Times New Roman';\n    font-weight: bolder;\n}\ntd[data-v-7a80bea9],\nth[data-v-7a80bea9],\ntr[data-v-7a80bea9],\ntable[data-v-7a80bea9] {\n    border-top: 1px solid black;\n    border-collapse: collapse;\n    align-items: center !important;\n    margin-left: auto;\n    margin-right: auto;\n}\ntd.description[data-v-7a80bea9],\nth.description[data-v-7a80bea9] {\n    width: 75px;\n    max-width: 75px;\n}\ntd.quantity[data-v-7a80bea9],\nth.quantity[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    word-break: break-all;\n}\ntd.price[data-v-7a80bea9],\nth.price[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    word-break: break-all;\n}\n.centered[data-v-7a80bea9] {\n    text-align: center;\n    align-content: center;\n}\n.ticket[data-v-7a80bea9] {\n    width: 155px;\n    max-width: 155px;\n}\nimg[data-v-7a80bea9] {\n    max-width: 100px;\n    width: inherit;\n    display: block;\n    margin-left: auto;\n    margin-right: auto;\n}\n@media print {\n.hidden-print[data-v-7a80bea9],\n    .hidden-print *[data-v-7a80bea9] {\n        display: none !important;\n}\n}\n", ""]);
 
 // exports
 
@@ -41129,7 +41130,6 @@ var render = function() {
     ? _c("div", [
         _c("div", { staticClass: "ticket", attrs: { id: "print" } }, [
           _c("img", {
-            staticClass: "img-fluid",
             attrs: { src: __webpack_require__(/*! ../../../images/logo.png */ "./resources/images/logo.png"), alt: "Logo" }
           }),
           _vm._v(" "),
@@ -41415,15 +41415,17 @@ var render = function() {
             [
               _c("div", { staticClass: "br-menu-item" }, [
                 _c("i", {
-                  staticClass: "menu-item-icon icon ion-ios-home-outline tx-22"
+                  staticClass: "menu-item-icon icon ion-ios-home-outline tx-38"
                 }),
                 _vm._v(" "),
-                _c("span", { staticClass: "menu-item-label" }, [
-                  _vm._v("Dashboard")
+                _c("span", { staticClass: "menu-item-label tx-32" }, [
+                  _vm._v(" Dashboard")
                 ])
               ])
             ]
           ),
+          _vm._v(" "),
+          _c("v-divider"),
           _vm._v(" "),
           _c(
             "router-link",
@@ -41438,15 +41440,17 @@ var render = function() {
             [
               _c("div", { staticClass: "br-menu-item" }, [
                 _c("i", {
-                  staticClass: "menu-item-icon icon ion-ios-paper-outline tx-22"
+                  staticClass: "menu-item-icon icon ion-ios-paper-outline tx-38"
                 }),
                 _vm._v(" "),
-                _c("span", { staticClass: "menu-item-label" }, [
-                  _vm._v("Orders")
+                _c("span", { staticClass: "menu-item-label tx-32" }, [
+                  _vm._v(" Orders")
                 ])
               ])
             ]
           ),
+          _vm._v(" "),
+          _c("v-divider"),
           _vm._v(" "),
           _c(
             "router-link",
@@ -41462,15 +41466,17 @@ var render = function() {
               _c("div", { staticClass: "br-menu-item" }, [
                 _c("i", {
                   staticClass:
-                    "menu-item-icon icon ion-ios-bookmarks-outline tx-22"
+                    "menu-item-icon icon ion-ios-bookmarks-outline tx-38"
                 }),
                 _vm._v(" "),
-                _c("span", { staticClass: "menu-item-label" }, [
-                  _vm._v("Inventory")
+                _c("span", { staticClass: "menu-item-label tx-32" }, [
+                  _vm._v(" Inventory")
                 ])
               ])
             ]
-          )
+          ),
+          _vm._v(" "),
+          _c("v-divider")
         ],
         1
       )
@@ -101352,7 +101358,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/images/logo.png?d434bfffdc6102ee4f04b7db9678b39e";
+module.exports = "/images/logo.png?fa1a34e3d75a033346d56c655eee1771";
 
 /***/ }),
 

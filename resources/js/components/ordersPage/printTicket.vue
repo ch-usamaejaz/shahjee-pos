@@ -1,7 +1,7 @@
 <template>
     <div v-if="isDataLoaded">
         <div class="ticket" id="print">
-            <img class="img-fluid" src="../../../images/logo.png" alt="Logo">
+            <img  src="../../../images/logo.png" alt="Logo">
             <p class="centered">Shahjee Restaurants
                 <br>Adda Plot, Main Raiwind Road, Lahore
                 <br>Order# {{orderData.id}}</p>
@@ -115,7 +115,8 @@ table {
     border-top: 1px solid black;
     border-collapse: collapse;
     align-items: center !important;
-    margin-left: 60px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 td.description,
@@ -149,8 +150,11 @@ th.price {
 }
 
 img {
-    max-width: inherit;
+    max-width: 100px;
     width: inherit;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media print {
