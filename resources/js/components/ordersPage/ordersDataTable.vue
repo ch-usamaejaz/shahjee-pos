@@ -51,7 +51,7 @@
                     v-model="newOrderRow[index].newItem"
                     label="Items"
                     editable
-                    :rules="itemSelectRules"
+                    :rules="[v=>v.newOrderRow[index].newItem === itemsTable]"
                     required
                     
                     return-object
@@ -108,7 +108,10 @@
                       type="number"
                       min="0"
                       outlined
-                      @keydown.enter="addDiscount"
+                      hint="Press ENTER after adding Discount"
+                      persistent-hint="true"
+                      color="green"
+                      @keydown.enter.once="addDiscount"
                       v-model="editedItem.order_discount"
                   ></v-text-field>
                   </v-col>
@@ -119,6 +122,7 @@
                   >
                     <v-text-field
                       label="Total"
+                      :rules="[v=>v>0 || 'Total should not be negative']"
                       type="number"
                       outlined
                       readonly
@@ -242,6 +246,7 @@
                 selectedStatus: "",
                 formTitle: '',
                 currentRowId: 0,
+                totalWithoutDiscount: 0,
                 savedItems: [],
                 getEditItems: {},
 

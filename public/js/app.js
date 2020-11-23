@@ -2583,6 +2583,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _this = this;
@@ -2602,6 +2606,7 @@ __webpack_require__.r(__webpack_exports__);
       selectedStatus: "",
       formTitle: '',
       currentRowId: 0,
+      totalWithoutDiscount: 0,
       savedItems: [],
       getEditItems: {},
       dropdown_edit: [],
@@ -3095,6 +3100,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -40624,8 +40630,15 @@ var render = function() {
                                                       "item-text": "item_name",
                                                       label: "Items",
                                                       editable: "",
-                                                      rules:
-                                                        _vm.itemSelectRules,
+                                                      rules: [
+                                                        function(v) {
+                                                          return (
+                                                            v.newOrderRow[index]
+                                                              .newItem ===
+                                                            _vm.itemsTable
+                                                          )
+                                                        }
+                                                      ],
                                                       required: "",
                                                       "return-object": ""
                                                     },
@@ -40779,10 +40792,16 @@ var render = function() {
                                                     label: "Discount",
                                                     type: "number",
                                                     min: "0",
-                                                    outlined: ""
+                                                    outlined: "",
+                                                    hint:
+                                                      "Press ENTER after adding Discount",
+                                                    "persistent-hint": "true",
+                                                    color: "green"
                                                   },
                                                   on: {
-                                                    keydown: function($event) {
+                                                    "~keydown": function(
+                                                      $event
+                                                    ) {
                                                       if (
                                                         !$event.type.indexOf(
                                                           "key"
@@ -40834,6 +40853,14 @@ var render = function() {
                                                 _c("v-text-field", {
                                                   attrs: {
                                                     label: "Total",
+                                                    rules: [
+                                                      function(v) {
+                                                        return (
+                                                          v > 0 ||
+                                                          "Total should not be negative"
+                                                        )
+                                                      }
+                                                    ],
                                                     type: "number",
                                                     outlined: "",
                                                     readonly: ""
@@ -41403,94 +41430,103 @@ var render = function() {
   return _c("div", [
     _vm._m(0),
     _vm._v(" "),
-    _c("div", { staticClass: "br-sideleft overflow-y-auto" }, [
-      _c("label", { staticClass: "sidebar-label pd-x-15 mg-t-20" }, [
-        _vm._v("Navigation")
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "br-sideleft-menu" },
-        [
-          _c(
-            "router-link",
-            {
-              class: [
-                _vm.$route.name == "dashboard"
-                  ? "active br-menu-link"
-                  : "br-menu-link"
-              ],
-              attrs: { to: "/dashboard" }
-            },
-            [
-              _c("div", { staticClass: "br-menu-item" }, [
-                _c("i", {
-                  staticClass: "menu-item-icon icon ion-ios-home-outline tx-38"
-                }),
-                _vm._v(" "),
-                _c("span", { staticClass: "menu-item-label tx-32" }, [
-                  _vm._v(" Dashboard")
+    _c(
+      "div",
+      { staticClass: "br-sideleft overflow-y-auto" },
+      [
+        _c("label", { staticClass: "sidebar-label pd-x-15 mg-t-20" }, [
+          _vm._v("Navigation")
+        ]),
+        _vm._v(" "),
+        _c("v-divider"),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "br-sideleft-menu" },
+          [
+            _c(
+              "router-link",
+              {
+                class: [
+                  _vm.$route.name == "dashboard"
+                    ? "active br-menu-link"
+                    : "br-menu-link"
+                ],
+                attrs: { to: "/dashboard" }
+              },
+              [
+                _c("div", { staticClass: "br-menu-item" }, [
+                  _c("i", {
+                    staticClass:
+                      "menu-item-icon icon ion-ios-home-outline tx-22"
+                  }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "menu-item-label" }, [
+                    _vm._v(" Dashboard")
+                  ])
                 ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c("v-divider"),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              class: [
-                _vm.$route.name == "orders"
-                  ? "active br-menu-link"
-                  : "br-menu-link"
-              ],
-              attrs: { to: "/orders" }
-            },
-            [
-              _c("div", { staticClass: "br-menu-item" }, [
-                _c("i", {
-                  staticClass: "menu-item-icon icon ion-ios-paper-outline tx-38"
-                }),
-                _vm._v(" "),
-                _c("span", { staticClass: "menu-item-label tx-32" }, [
-                  _vm._v(" Orders")
+              ]
+            ),
+            _vm._v(" "),
+            _c("v-divider"),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                class: [
+                  _vm.$route.name == "orders"
+                    ? "active br-menu-link"
+                    : "br-menu-link"
+                ],
+                attrs: { to: "/orders" }
+              },
+              [
+                _c("div", { staticClass: "br-menu-item" }, [
+                  _c("i", {
+                    staticClass:
+                      "menu-item-icon icon ion-ios-paper-outline tx-22"
+                  }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "menu-item-label" }, [
+                    _vm._v(" Orders")
+                  ])
                 ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c("v-divider"),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              class: [
-                _vm.$route.name == "inventory"
-                  ? "active br-menu-link"
-                  : "br-menu-link"
-              ],
-              attrs: { to: "/inventory" }
-            },
-            [
-              _c("div", { staticClass: "br-menu-item" }, [
-                _c("i", {
-                  staticClass:
-                    "menu-item-icon icon ion-ios-bookmarks-outline tx-38"
-                }),
-                _vm._v(" "),
-                _c("span", { staticClass: "menu-item-label tx-32" }, [
-                  _vm._v(" Inventory")
+              ]
+            ),
+            _vm._v(" "),
+            _c("v-divider"),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                class: [
+                  _vm.$route.name == "inventory"
+                    ? "active br-menu-link"
+                    : "br-menu-link"
+                ],
+                attrs: { to: "/inventory" }
+              },
+              [
+                _c("div", { staticClass: "br-menu-item" }, [
+                  _c("i", {
+                    staticClass:
+                      "menu-item-icon icon ion-ios-bookmarks-outline tx-22"
+                  }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "menu-item-label" }, [
+                    _vm._v(" Inventory")
+                  ])
                 ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c("v-divider")
-        ],
-        1
-      )
-    ])
+              ]
+            ),
+            _vm._v(" "),
+            _c("v-divider")
+          ],
+          1
+        )
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = [
