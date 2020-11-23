@@ -52,7 +52,6 @@
                     label="Items"
                     editable
                     required
-
                     return-object
                     @change="calculateOrderTotal"
                   ></v-overflow-btn>
@@ -386,7 +385,8 @@
                 this.getEditItems.forEach((value)=>{
                   newItems.push(value.items)
                   newItems.forEach((newValue, index)=>{
-                    for(var i=0; i<=newItems.length; i++){
+                    
+                    for(var i=0; i <= newItems.length+1; i++){
                       this.addNewRow(i)
                       itemsAtt = {"item_id": newValue[i].item_id,"item_name": newValue[i].item_name, "item_price": newValue[i].item_price, "quantity": newValue[i].quantity}
                       this.newOrderRow[i].newItem = itemsAtt
@@ -395,7 +395,7 @@
                       this.newOrderRow[i].newItem.id = itemsAtt.item_id
                       this.editedItem.order_total = item.order_total
                       this.editedItem.order_discount = item.order_discount
-                      console.log(this.newOrderRow[i].newItem.id, 'neeeeeeeee')
+                      console.log(i, 'neeeeeeeee')
                     }
                   })
                 })

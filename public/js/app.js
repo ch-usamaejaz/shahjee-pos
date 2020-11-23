@@ -2594,7 +2594,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _this = this;
@@ -2783,7 +2782,7 @@ __webpack_require__.r(__webpack_exports__);
         _this4.getEditItems.forEach(function (value) {
           newItems.push(value.items);
           newItems.forEach(function (newValue, index) {
-            for (var i = 0; i <= newItems.length; i++) {
+            for (var i = 0; i <= newItems.length + 1; i++) {
               _this4.addNewRow(i);
 
               itemsAtt = {
@@ -2798,7 +2797,7 @@ __webpack_require__.r(__webpack_exports__);
               _this4.newOrderRow[i].newItem.id = itemsAtt.item_id;
               _this4.editedItem.order_total = item.order_total;
               _this4.editedItem.order_discount = item.order_discount;
-              console.log(_this4.newOrderRow[i].newItem.id, 'neeeeeeeee');
+              console.log(i, 'neeeeeeeee');
             }
           });
         });
