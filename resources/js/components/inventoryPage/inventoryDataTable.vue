@@ -73,7 +73,7 @@
                 color="blue darken-1"
                 text
                 @click="close"
-                
+
               >
                 Cancel
               </v-btn>
@@ -81,7 +81,7 @@
                 color="blue darken-1"
                 text
                 :disabled="!isFormValid || !valid"
-                
+
               >
                 Save
               </v-btn>
@@ -115,7 +115,7 @@
               color="red"
               small
               class="mr-2"
-              @click="deleteItemConfirm(item)"   
+              @click="deleteItemConfirm(item)"
             >
               mdi-delete
             </v-icon>
@@ -174,7 +174,7 @@ export default {
                 let items = this.getOrders (this.options);
             },
             getOrders (order_data) {
-                this.axios.get('/get_all_items', order_data)
+                this.axios.get('/get_all_items/inventory', order_data)
                     .then(response => {
                         this.items = response.data.data;
                         this.totalItems = response.data.data.length;
@@ -189,7 +189,7 @@ export default {
                 this.dialog = true
                 this.itemName = item.item_name
                 this.itemPrice = item.item_price
-                this.close();              
+                this.close();
             },
             deleteItemConfirm (item) {
               this.currentRowId = item.id
@@ -211,7 +211,7 @@ export default {
               this.closeDelete();
             },
              closeDelete () {
-              this.dialogDelete = false              
+              this.dialogDelete = false
             },
             changeFormTitle () {
               this.formTitle = "New Item"
@@ -222,7 +222,7 @@ export default {
               this.itemPrice = null;
               this.itemName = null;
               this.currentRowId = 0;
-          },           
+          },
         }
 }
 </script>

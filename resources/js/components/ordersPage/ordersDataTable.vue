@@ -53,7 +53,7 @@
                     editable
                     :rules="itemSelectRules"
                     required
-                    
+
                     return-object
                     @change="calculateOrderTotal"
                   ></v-overflow-btn>
@@ -269,11 +269,11 @@
                 ],
                 rowRules: [
                   (v) => v  === null || 'An Item is required'
-                  
+
                 ],
                 itemSelectRules: [
                   (v) => v !== this.itemsTable || 'Select an Item',
-                ]                  
+                ]
             }
         },
         computed: {
@@ -313,7 +313,7 @@
                 })
             },
             getItemTable () {
-              this.axios.get('get_all_items').then(response =>{
+              this.axios.get('get_all_items/orders').then(response =>{
                 console.log('new',response.data.data)
                 this.itemsTable = response.data.data;
                 // let self = this;
@@ -437,7 +437,7 @@
             save () {
             console.log(this.formTitle)
               if(this.formTitle == "New Order"){
-                this.postData(); 
+                this.postData();
               }
               else{
                 this.postEditedData();
@@ -446,7 +446,7 @@
             },
             removeRow (index){
               this.editedItem.order_total = this.editedItem.order_total - (this.newOrderRow[index].newItem.item_price * this.newOrderRow[index].quantity)
-              this.newOrderRow.splice(index, 1)  
+              this.newOrderRow.splice(index, 1)
             },
             getSelectedItems () {
               let items = [];
@@ -475,7 +475,7 @@
           })
         },
         postEditedData(){
-          
+
           let items = this.getSelectedItems()
           let editData = {
             "order_id": this.editedIndex.id,
