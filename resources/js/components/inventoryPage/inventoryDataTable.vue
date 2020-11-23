@@ -143,7 +143,7 @@ export default {
                 currentRowId: 0,
 
                 headers: [
-                    { text: 'Item#', align: 'start', value: 'id'},
+                    { text: 'Item#', align: 'start', value: 'id', sortable: false},
                     { text: 'Item-Name', value: 'item_name', sortable: false },
                     { text: 'Item-Price', value: 'item_price', sortable: false },
                     { text: 'Actions', value: 'actions', sortable: false }
@@ -174,7 +174,7 @@ export default {
                 let items = this.getOrders (this.options);
             },
             getOrders (order_data) {
-                this.axios.get('/get_all_items/inventory', order_data)
+                this.axios.get('/get_all_items/inventory/' + this.options.itemsPerPage + '/' + this.options.page)
                     .then(response => {
                         this.items = response.data.data;
                         this.totalItems = response.data.data.length;
