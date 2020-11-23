@@ -2293,7 +2293,7 @@ __webpack_require__.r(__webpack_exports__);
     getOrders: function getOrders(order_data) {
       var _this = this;
 
-      this.axios.get('/get_all_items', order_data).then(function (response) {
+      this.axios.get('/get_all_items/inventory', order_data).then(function (response) {
         _this.items = response.data.data;
         _this.totalItems = response.data.data.length;
         _this.loading = false;
@@ -2694,7 +2694,7 @@ __webpack_require__.r(__webpack_exports__);
     getItemTable: function getItemTable() {
       var _this3 = this;
 
-      this.axios.get('get_all_items').then(function (response) {
+      this.axios.get('get_all_items/orders').then(function (response) {
         console.log('new', response.data.data);
         _this3.itemsTable = response.data.data; // let self = this;
         // this.itemsTable.forEach(function (item, index) {
@@ -102867,8 +102867,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

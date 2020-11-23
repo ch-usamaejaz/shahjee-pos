@@ -18,7 +18,9 @@ Route::post('/create_new_order', 'OrdersController@create_new_order');
 Route::post('/delete_order', 'OrdersController@delete_order');
 Route::post('/update_order', 'OrdersController@update_order');
 Route::post('/get_order', 'OrdersController@get_order');
-Route::get('/get_all_items','ItemsController@get_all_items');
+Route::get('/get_all_items/{origin}','ItemsController@get_all_items');
+Route::post('/delete_item','ItemsController@delete_item');
+//Route::post('/update_item','ItemsController@delete_item');
 
 Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');
 

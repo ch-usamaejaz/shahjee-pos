@@ -7,13 +7,27 @@ use Illuminate\Http\Request;
 
 class ItemsController extends Controller
 {
-    public function get_all_items()
+    public function get_all_items($origin)
     {
         $response = [];
         try {
-            $items = Items::select('id','item_price', 'item_name')->get()->toArray();
+            $query = Items::select('id','item_price', 'item_name');
+            $items = $origin == 'orders' ? $query->withTrashed()->get()->toArray() : $query->get()->toArray();
             $response = ['error' => false, 'data' => $items];
         } catch (\Exception $exception) {
+            $response = ['error' => true, 'message' => $exception->getMessage()];
+        }
+
+        return response()->json($response);
+    }
+
+    public function delete_item(Request $request) {
+        $response = ['error' => false, 'message' => 'Item deleted Successfully!'];
+
+        try {
+            Items::where('id', @$request->item_id)->delete();
+        }
+        catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];
         }
 
