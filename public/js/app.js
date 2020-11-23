@@ -2237,7 +2237,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'inventoryDataTable',
   data: function data() {
@@ -2271,13 +2270,7 @@ __webpack_require__.r(__webpack_exports__);
         text: 'Actions',
         value: 'actions',
         sortable: false
-      }],
-      editedIndex: 0,
-      editedItem: {
-        selectedItem: "",
-        quantity: 0,
-        price: 0
-      }
+      }]
     };
   },
   watch: {
@@ -2310,10 +2303,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     editItem: function editItem(item) {
       this.formTitle = "Edit Item";
-      this.dialog = true;
+      this.currentRowId = item.id;
       this.itemName = item.item_name;
       this.itemPrice = item.item_price;
-      this.close();
+      console.log(item, "working");
+      this.dialog = true;
     },
     deleteItemConfirm: function deleteItemConfirm(item) {
       this.currentRowId = item.id;
@@ -2324,12 +2318,14 @@ __webpack_require__.r(__webpack_exports__);
 
       for (var i = 0; i <= this.items.length; i++) {
         if (this.items[i].id == id) {
-          this.items.splice(i, 1); //   this.axios.post('/delete_order', {order_id: id}).then(response=>{
-          //     console.log(response)
-          //   }).catch(error=>{
-          //     console.log(error)
-          //   })
-
+          this.items.splice(i, 1);
+          this.axios.post('/delete_item', {
+            item_id: id
+          }).then(function (response) {
+            console.log(response);
+          })["catch"](function (error) {
+            console.log(error);
+          });
           break;
         }
       }
@@ -2341,13 +2337,46 @@ __webpack_require__.r(__webpack_exports__);
     },
     changeFormTitle: function changeFormTitle() {
       this.formTitle = "New Item";
-      this.close();
     },
     close: function close() {
       this.dialog = false;
-      this.itemPrice = null;
-      this.itemName = null;
       this.currentRowId = 0;
+      this.formTitle = '';
+    },
+    save: function save() {
+      if (this.formTitle == "New Order") {
+        this.saveNewItem();
+      } else {
+        this.saveEditItem();
+      }
+
+      this.close();
+    },
+    saveEditItem: function saveEditItem() {
+      var editData = {
+        "item_id": this.currentRowId,
+        "item_name": this.itemName,
+        "item_price": this.itemPrice
+      };
+      var url = "/update_item";
+      this.axios.post(url, editData).then(function (response) {
+        console.log(response);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    saveNewItem: function saveNewItem() {
+      var Data = {
+        "item_name": this.itemName,
+        "item_price": this.itemPrice
+      };
+      console.log(Data);
+      var url = "/create_new_item";
+      this.axios.post(url, Data).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   }
 });
@@ -40336,10 +40365,9 @@ var render = function() {
                                       {
                                         attrs: {
                                           color: "blue darken-1",
-                                          text: "",
-                                          disabled:
-                                            !_vm.isFormValid || !_vm.valid
-                                        }
+                                          text: ""
+                                        },
+                                        on: { click: _vm.save }
                                       },
                                       [_vm._v("\n            Save\n          ")]
                                     )

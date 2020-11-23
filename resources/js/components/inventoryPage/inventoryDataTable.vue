@@ -80,8 +80,7 @@
               <v-btn
                 color="blue darken-1"
                 text
-                :disabled="!isFormValid || !valid"
-
+                @click="save"
               >
                 Save
               </v-btn>
@@ -148,12 +147,6 @@ export default {
                     { text: 'Item-Price', value: 'item_price', sortable: false },
                     { text: 'Actions', value: 'actions', sortable: false }
                 ],
-                editedIndex: 0,
-                editedItem: {
-                  selectedItem: "",
-                  quantity: 0,
-                  price: 0,
-                },
             }
         },
         watch: {
@@ -186,10 +179,11 @@ export default {
             },
             editItem (item) {
                 this.formTitle = "Edit Item"
-                this.dialog = true
+                this.currentRowId = item.id
                 this.itemName = item.item_name
                 this.itemPrice = item.item_price
-                this.close();
+                console.log(item,"working")
+                this.dialog = true
             },
             deleteItemConfirm (item) {
               this.currentRowId = item.id
@@ -200,11 +194,11 @@ export default {
               for(var i =0; i <=this.items.length; i++){
                 if(this.items[i].id == id){
                   this.items.splice(i, 1);
-                //   this.axios.post('/delete_order', {order_id: id}).then(response=>{
-                //     console.log(response)
-                //   }).catch(error=>{
-                //     console.log(error)
-                //   })
+                  this.axios.post('/delete_item', {item_id: id}).then(response=>{
+                    console.log(response)
+                  }).catch(error=>{
+                    console.log(error)
+                  })
                   break;
                 }
               }
@@ -215,14 +209,48 @@ export default {
             },
             changeFormTitle () {
               this.formTitle = "New Item"
-              this.close();
             },
             close () {
               this.dialog = false
-              this.itemPrice = null;
-              this.itemName = null;
               this.currentRowId = 0;
+              this.formTitle = '';
           },
+            save () {
+              if(this.formTitle == "New Order"){
+                this.saveNewItem();
+              }
+              else{
+                this.saveEditItem();
+              }
+              this.close()
+            },
+            saveEditItem () {
+                 let editData = {
+                    "item_id": this.currentRowId,
+                    "item_name": this.itemName,
+                    "item_price": this.itemPrice
+                }
+                let url = "/update_item"
+                this.axios.post( url, editData ).then(response =>{
+                    console.log(response);
+                }).catch(err=>{
+                    console.log(err)
+                })
+            },
+            saveNewItem () {
+                let Data = {
+                    "item_name": this.itemName,
+                    "item_price": this.itemPrice,
+                };
+                console.log(Data);
+                let url = "/create_new_item"
+                    this.axios.post(url,Data).then(response =>{
+                        console.log(response)
+                        }).catch(error =>{
+                        console.log(error);
+                    }
+                )
+            },
         }
 }
 </script>
