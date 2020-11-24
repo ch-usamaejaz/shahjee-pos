@@ -87,7 +87,7 @@ class OrdersController extends Controller
                     $items_array[$item['item_id']] = ['quantity' => $item['quantity']];
 //                    $order->items()->updateExistingPivot($item['item_id'], ['quantity' => $item['quantity']]);
                 }
-                $order->items()->sync($items_array, false);
+                $order->items()->sync($items_array, true);
             }
             $response = ['error' => false, 'message' => 'Order Successfully Updated!'];
         } catch (\Exception $exception) {
