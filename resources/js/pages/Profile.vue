@@ -9,10 +9,10 @@
                     lazy-validation
                     >
                     <v-text-field
-                        v-model="name"
+                        v-model="companyName"
                         :counter="5"
-                        :rules="nameRules"
-                        label="Name"
+                        :rules="companyNameRules"
+                        label="Company Name"
                         required
                     ></v-text-field>
 
@@ -24,16 +24,9 @@
                     ></v-text-field>
 
                     <v-text-field
-                        v-model="companyName"
-                        :counter="5"
-                        :rules="companyNameRules"
-                        label="Company Name"
-                        required
-                    ></v-text-field>
-
-                    <v-text-field
                         v-model="currentPassword"
                         label="Current Password"
+                        :rules="newPasswordRules"
                         required
                         type="password"
                     ></v-text-field>
@@ -42,7 +35,7 @@
                         v-model="newPassword"
                         label="New Password"
                         :counter="8"
-                        :rules="newPasswordRules"
+                        
                         type="password"
                     ></v-text-field>
 
@@ -91,7 +84,7 @@ export default {
       ],
       newPasswordRules: [
         v => !!v || 'Password is required',
-        v => (v && v.length >= 8) || 'Password must be greater than 8 characters',
+        // v => (v && v.length >= 8) || 'Password must be greater than 8 characters',
       ]
     }),
     methods: {

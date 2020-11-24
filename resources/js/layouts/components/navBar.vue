@@ -1,7 +1,7 @@
 <template>
 <div>
         <!-- ########## START: LEFT PANEL ########## -->
-    <div class="br-logo"><a href=""><span>[</span>ShahJee<span>]</span></a></div>
+    <div class="br-logo"><router-link to="/dashboard"><span>[</span>ShahJee<span>]</span></router-link></div>
     <div class="br-sideleft overflow-y-auto">
       <label class="sidebar-label pd-x-15 mg-t-20">Navigation</label>
       <v-divider></v-divider>

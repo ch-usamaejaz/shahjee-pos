@@ -48,6 +48,7 @@
                       type="text"
                       outlined
                       v-model="itemName"
+                      :rules="[(v)=>!!v || 'Item name is required']"
                   ></v-text-field>
                   </v-col>
                   <v-col
@@ -63,8 +64,6 @@
                   ></v-text-field>
                   </v-col>
                 </v-row>
-
-
               </v-container>
             </v-card-text>
 
@@ -82,6 +81,7 @@
                 color="blue darken-1"
                 text
                 @click="save"
+                :disabled="!isFormValid"
               >
                 Save
               </v-btn>

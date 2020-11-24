@@ -2690,7 +2690,7 @@ __webpack_require__.r(__webpack_exports__);
       quantityRules: [function (v) {
         return !!v || 'Quantity is required';
       }, function (v) {
-        return v >= 1 || "Quantity should be atleast 1";
+        return v > 0 || "Quantity should be greater than 0";
       }],
       rowRules: [function (v) {
         return v === null || 'An Item is required';
@@ -2717,7 +2717,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    this.getItemTable();
+    this.getItemTable(); // console.log(this.itemsTable, 'table')
   },
   methods: {
     getDataFromApi: function getDataFromApi() {
@@ -2746,7 +2746,8 @@ __webpack_require__.r(__webpack_exports__);
         // this.itemsTable.forEach(function (item, index) {
         // self.dropdown_edit.push(item['item_name'])
         // })
-      }); // console.log(this.itemsTable, 'table')
+      });
+      console.log(this.itemsTable, 'table');
     },
     calculateOrderTotal: function calculateOrderTotal() {
       var total = 0;
@@ -2808,9 +2809,12 @@ __webpack_require__.r(__webpack_exports__);
               _this4.newOrderRow[i].newItem = itemsAtt;
               _this4.newOrderRow[i].price = itemsAtt.item_price;
               _this4.newOrderRow[i].quantity = itemsAtt.quantity;
-              _this4.newOrderRow[i].newItem.id = itemsAtt.item_id;
-              _this4.editedItem.order_total = item.order_total;
-              _this4.totalWithoutDiscount = item.order_total;
+              _this4.newOrderRow[i].newItem.id = itemsAtt.item_id; //changes here
+
+              _this4.calculateOrderTotal(); // this.editedItem.order_total = item.order_total
+              // this.totalWithoutDiscount = item.order_total
+
+
               _this4.editedItem.order_discount = item.order_discount;
             }
           });
@@ -3511,13 +3515,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'profile',
   data: function data() {
@@ -3545,9 +3542,8 @@ __webpack_require__.r(__webpack_exports__);
       }],
       newPasswordRules: [function (v) {
         return !!v || 'Password is required';
-      }, function (v) {
-        return v && v.length >= 8 || 'Password must be greater than 8 characters';
-      }]
+      } // v => (v && v.length >= 8) || 'Password must be greater than 8 characters',
+      ]
     };
   },
   methods: {
@@ -3583,6 +3579,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -40284,7 +40281,15 @@ var render = function() {
                                                   attrs: {
                                                     label: "Item-Name",
                                                     type: "text",
-                                                    outlined: ""
+                                                    outlined: "",
+                                                    rules: [
+                                                      function(v) {
+                                                        return (
+                                                          !!v ||
+                                                          "Item name is required"
+                                                        )
+                                                      }
+                                                    ]
                                                   },
                                                   model: {
                                                     value: _vm.itemName,
@@ -40361,7 +40366,8 @@ var render = function() {
                                       {
                                         attrs: {
                                           color: "blue darken-1",
-                                          text: ""
+                                          text: "",
+                                          disabled: !_vm.isFormValid
                                         },
                                         on: { click: _vm.save }
                                       },
@@ -41449,7 +41455,18 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._m(0),
+    _c(
+      "div",
+      { staticClass: "br-logo" },
+      [
+        _c("router-link", { attrs: { to: "/dashboard" } }, [
+          _c("span", [_vm._v("[")]),
+          _vm._v("ShahJee"),
+          _c("span", [_vm._v("]")])
+        ])
+      ],
+      1
+    ),
     _vm._v(" "),
     _c(
       "div",
@@ -41550,20 +41567,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "br-logo" }, [
-      _c("a", { attrs: { href: "" } }, [
-        _c("span", [_vm._v("[")]),
-        _vm._v("ShahJee"),
-        _c("span", [_vm._v("]")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -41651,15 +41655,8 @@ var staticRenderFns = [
       },
       [
         _c("span", { staticClass: "logged-name hidden-md-down" }, [
-          _vm._v("Adnan")
-        ]),
-        _vm._v(" "),
-        _c("img", {
-          staticClass: "wd-32 rounded-circle",
-          attrs: { src: "http://via.placeholder.com/64x64", alt: "" }
-        }),
-        _vm._v(" "),
-        _c("span", { staticClass: "square-10 bg-success" })
+          _vm._v("Hi, ShahJee Resturents  ")
+        ])
       ]
     )
   },
@@ -41847,9 +41844,7 @@ var render = function() {
               [
                 _vm._m(0),
                 _vm._v(" "),
-                _c("div", { staticClass: "tx-center mg-b-60" }, [
-                  _vm._v("Restaurants")
-                ]),
+                _c("v-divider"),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
                   _c("input", {
@@ -41938,7 +41933,8 @@ var render = function() {
                   ],
                   1
                 )
-              ]
+              ],
+              1
             )
           ]
         )
@@ -41951,15 +41947,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "signin-logo tx-center tx-28 tx-bold tx-inverse" },
-      [
-        _c("span", { staticClass: "tx-normal" }, [_vm._v("[")]),
-        _vm._v(" ShahJee "),
-        _c("span", { staticClass: "tx-normal" }, [_vm._v("]")])
-      ]
-    )
+    return _c("div", { staticClass: "signin-logo tx-center" }, [
+      _c("img", {
+        staticClass: "wd-150",
+        attrs: { src: __webpack_require__(/*! ../../images/logo.png */ "./resources/images/logo.png"), alt: "" }
+      })
+    ])
   }
 ]
 render._withStripped = true
@@ -42047,16 +42040,16 @@ var render = function() {
               _c("v-text-field", {
                 attrs: {
                   counter: 5,
-                  rules: _vm.nameRules,
-                  label: "Name",
+                  rules: _vm.companyNameRules,
+                  label: "Company Name",
                   required: ""
                 },
                 model: {
-                  value: _vm.name,
+                  value: _vm.companyName,
                   callback: function($$v) {
-                    _vm.name = $$v
+                    _vm.companyName = $$v
                   },
-                  expression: "name"
+                  expression: "companyName"
                 }
               }),
               _vm._v(" "),
@@ -42073,23 +42066,8 @@ var render = function() {
               _vm._v(" "),
               _c("v-text-field", {
                 attrs: {
-                  counter: 5,
-                  rules: _vm.companyNameRules,
-                  label: "Company Name",
-                  required: ""
-                },
-                model: {
-                  value: _vm.companyName,
-                  callback: function($$v) {
-                    _vm.companyName = $$v
-                  },
-                  expression: "companyName"
-                }
-              }),
-              _vm._v(" "),
-              _c("v-text-field", {
-                attrs: {
                   label: "Current Password",
+                  rules: _vm.newPasswordRules,
                   required: "",
                   type: "password"
                 },
@@ -42103,12 +42081,7 @@ var render = function() {
               }),
               _vm._v(" "),
               _c("v-text-field", {
-                attrs: {
-                  label: "New Password",
-                  counter: 8,
-                  rules: _vm.newPasswordRules,
-                  type: "password"
-                },
+                attrs: { label: "New Password", counter: 8, type: "password" },
                 model: {
                   value: _vm.newPassword,
                   callback: function($$v) {
@@ -42192,11 +42165,19 @@ var render = function() {
               "login-wrapper wd-300 wd-xs-400 pd-25 pd-xs-40 bg-white rounded shadow-base"
           },
           [
-            _vm._m(0),
-            _vm._v(" "),
-            _c("div", { staticClass: "tx-center mg-b-40" }, [
-              _vm._v("Restuarants")
-            ]),
+            _c(
+              "div",
+              { staticClass: "signin-logo tx-center" },
+              [
+                _c("img", {
+                  staticClass: "wd-150",
+                  attrs: { src: __webpack_require__(/*! ../../images/logo.png */ "./resources/images/logo.png"), alt: "" }
+                }),
+                _vm._v(" "),
+                _c("v-divider")
+              ],
+              1
+            ),
             _vm._v(" "),
             _c("div", { staticClass: "form-group" }, [
               _c("input", {
@@ -42307,22 +42288,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "signin-logo tx-center tx-28 tx-bold tx-inverse" },
-      [
-        _c("span", { staticClass: "tx-normal" }, [_vm._v("[")]),
-        _vm._v(" ShahJee "),
-        _c("span", { staticClass: "tx-normal" }, [_vm._v("]")])
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -102821,7 +102787,7 @@ var routes = [{
   meta: {}
 }, {
   name: 'login',
-  path: '/',
+  path: '/login',
   component: _pages_Login__WEBPACK_IMPORTED_MODULE_3__["default"],
   meta: {}
 }, {
@@ -102888,8 +102854,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

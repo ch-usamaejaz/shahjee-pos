@@ -3,10 +3,11 @@
       <form  @submit.prevent="signUp()"></form>
         <div class="d-flex align-items-center justify-content-center bg-br-primary ht-100v">
           <div class="login-wrapper wd-300 wd-xs-400 pd-25 pd-xs-40 bg-white rounded shadow-base">
-            <div class="signin-logo tx-center tx-28 tx-bold tx-inverse">
-              <span class="tx-normal">[</span> ShahJee <span class="tx-normal">]</span>
+            <div class="signin-logo tx-center">
+              <!-- <span class="tx-normal">[</span> ShahJee <span class="tx-normal">]</span> -->
+              <img src="../../images/logo.png" class="wd-150" alt="">
+            <v-divider></v-divider>
             </div>
-          <div class="tx-center mg-b-40">Restuarants</div>
 
           <div class="form-group">
             <input v-model="email" type="text" class="form-control" placeholder="Enter your Email">

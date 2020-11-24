@@ -269,7 +269,7 @@
                 },
                 quantityRules: [
                    (v) => !!v || 'Quantity is required',
-                   v =>  v  >= 1 || "Quantity should be atleast 1"
+                   v =>  v  > 0 || "Quantity should be greater than 0"
                 ],
                 rowRules: [
                   (v) => v  === null || 'An Item is required'
@@ -298,6 +298,7 @@
         },
         mounted(){
           this.getItemTable();
+          // console.log(this.itemsTable, 'table')
         },
         methods: {
             getDataFromApi () {
@@ -325,7 +326,7 @@
                 // self.dropdown_edit.push(item['item_name'])
                 // })
               })
-              // console.log(this.itemsTable, 'table')
+              console.log(this.itemsTable, 'table')
             },
             calculateOrderTotal () {
               let total = 0;
@@ -370,8 +371,10 @@
                       this.newOrderRow[i].price = itemsAtt.item_price
                       this.newOrderRow[i].quantity = itemsAtt.quantity
                       this.newOrderRow[i].newItem.id = itemsAtt.item_id
-                      this.editedItem.order_total = item.order_total
-                      this.totalWithoutDiscount = item.order_total
+                      //changes here
+                      this.calculateOrderTotal()
+                      // this.editedItem.order_total = item.order_total
+                      // this.totalWithoutDiscount = item.order_total
                       this.editedItem.order_discount = item.order_discount
                     }
                   })
