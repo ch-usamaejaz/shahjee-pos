@@ -73,8 +73,16 @@ const routes = [
     }
 ];
 
+
 const router = new VueRouter({
     mode: 'history',
     routes: routes
 });
+
+router.beforeEach((to, from, next) => {
+    if (to.name !== 'login' && !localStorage.getItem(1)) next({ name: 'login' });
+    else if(to.name === 'login' && localStorage.getItem(1)) next({ name: 'dashboard' });
+    else next()
+});
+console.log(localStorage.getItem(1))
 export default router;

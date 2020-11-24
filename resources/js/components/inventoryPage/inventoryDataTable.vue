@@ -60,6 +60,7 @@
                       label="Item-Price"
                       type="number"
                       outlined
+                      :rules="[(v)=>!!v || 'Item price is required', (v)=> v>=1 || 'Price must be greater than 0']"                    
                       v-model="itemPrice"
                   ></v-text-field>
                   </v-col>
@@ -81,7 +82,7 @@
                 color="blue darken-1"
                 text
                 @click="save"
-                :disabled="!isFormValid"
+                :disabled="!isFormValid || itemName === '' || itemPrice === 0"
               >
                 Save
               </v-btn>

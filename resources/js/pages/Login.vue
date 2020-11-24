@@ -30,7 +30,8 @@ export default {
     data(){
         return {
             email: '',
-            password: ''
+            password: '',
+            isAuthenticated: false,
         }
     },
     mounted(){
@@ -38,16 +39,18 @@ export default {
     },
     methods: {
         login(){
-            let formData = new FormData();
-            formData.append("email" ,this.email);
-            formData.append("password",this.password);
-
+            let data = {"email" : this.email, "password" : this.password, "companyName" : this.companyName};
             let url = '/login';
-            this.axios.post(url, formData).then(function(response){
-                console.log(response)
-            })
-        }
+        //     this.axios.post(url, data).then( response => {
+        //         console.log(response)
+        //     }).catch(err => {
+        //         console.log(err.message);
+        //     }
+        // )
+        this.isAuthenticated = true
+        localStorage.setItem(1, this.isAuthenticated)
     }
+  }
 }
 </script>
 

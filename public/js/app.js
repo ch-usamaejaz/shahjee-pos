@@ -2242,6 +2242,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'inventoryDataTable',
   data: function data() {
@@ -3218,7 +3219,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "topBar"
+  name: "topBar",
+  methods: {
+    removeStorage: function removeStorage() {
+      localStorage.removeItem(1);
+    }
+  }
 });
 
 /***/ }),
@@ -3394,19 +3400,27 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      isAuthenticated: false
     };
   },
   mounted: function mounted() {},
   methods: {
     login: function login() {
-      var formData = new FormData();
-      formData.append("email", this.email);
-      formData.append("password", this.password);
-      var url = '/login';
-      this.axios.post(url, formData).then(function (response) {
-        console.log(response);
-      });
+      var data = {
+        "email": this.email,
+        "password": this.password,
+        "companyName": this.companyName
+      };
+      var url = '/login'; //     this.axios.post(url, data).then( response => {
+      //         console.log(response)
+      //     }).catch(err => {
+      //         console.log(err.message);
+      //     }
+      // )
+
+      this.isAuthenticated = true;
+      localStorage.setItem(1, this.isAuthenticated);
     }
   }
 });
@@ -40317,7 +40331,21 @@ var render = function() {
                                                   attrs: {
                                                     label: "Item-Price",
                                                     type: "number",
-                                                    outlined: ""
+                                                    outlined: "",
+                                                    rules: [
+                                                      function(v) {
+                                                        return (
+                                                          !!v ||
+                                                          "Item price is required"
+                                                        )
+                                                      },
+                                                      function(v) {
+                                                        return (
+                                                          v >= 1 ||
+                                                          "Price must be greater than 0"
+                                                        )
+                                                      }
+                                                    ]
                                                   },
                                                   model: {
                                                     value: _vm.itemPrice,
@@ -40367,7 +40395,10 @@ var render = function() {
                                         attrs: {
                                           color: "blue darken-1",
                                           text: "",
-                                          disabled: !_vm.isFormValid
+                                          disabled:
+                                            !_vm.isFormValid ||
+                                            _vm.itemName === "" ||
+                                            _vm.itemPrice === 0
                                         },
                                         on: { click: _vm.save }
                                       },
@@ -41614,7 +41645,17 @@ var render = function() {
                     1
                   ),
                   _vm._v(" "),
-                  _vm._m(2)
+                  _c(
+                    "li",
+                    { on: { click: _vm.removeStorage } },
+                    [
+                      _c("router-link", { attrs: { to: "/login" } }, [
+                        _c("i", { staticClass: "icon ion-power" }),
+                        _vm._v(" Sign Out")
+                      ])
+                    ],
+                    1
+                  )
                 ])
               ]
             )
@@ -41659,17 +41700,6 @@ var staticRenderFns = [
         ])
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", [
-      _c("a", { attrs: { href: "" } }, [
-        _c("i", { staticClass: "icon ion-power" }),
-        _vm._v(" Sign Out")
-      ])
-    ])
   }
 ]
 render._withStripped = true
@@ -102832,6 +102862,14 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: 'history',
   routes: routes
 });
+router.beforeEach(function (to, from, next) {
+  if (to.name !== 'login' && !localStorage.getItem(1)) next({
+    name: 'login'
+  });else if (to.name === 'login' && localStorage.getItem(1)) next({
+    name: 'dashboard'
+  });else next();
+});
+console.log(localStorage.getItem(1));
 /* harmony default export */ __webpack_exports__["default"] = (router);
 
 /***/ }),
