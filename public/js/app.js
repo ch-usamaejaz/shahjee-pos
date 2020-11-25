@@ -41699,7 +41699,7 @@ var render = function() {
                 _c("div", { staticClass: "br-menu-item" }, [
                   _c("i", {
                     staticClass:
-                      "menu-item-icon icon ion-ios-bookmarks-outline tx-22"
+                      "menu-item-icon icon ion-ios-cart-outline tx-22"
                   }),
                   _vm._v(" "),
                   _c("span", { staticClass: "menu-item-label" }, [
