@@ -20,8 +20,8 @@
             </a>
             <div class="dropdown-menu dropdown-menu-header wd-200">
               <ul class="list-unstyled user-profile-nav">
-                <li><router-link to="/profile"><i class="icon ion-ios-person"></i> Edit Profile</router-link></li>
-                <li @click="removeStorage"><router-link to="/login"><i class="icon ion-power"></i> Sign Out</router-link></li>
+                <router-link to="/profile"><li><i class="icon ion-ios-person"></i> Edit Profile</li></router-link>
+                <router-link to="/"><li @click="removeStorage"><i class="icon ion-power"></i> Sign Out</li></router-link>
               </ul>
             </div><!-- dropdown-menu -->
           </div><!-- dropdown -->
@@ -38,6 +38,7 @@ export default {
     methods: {
       removeStorage(){
         localStorage.removeItem(1);
+        // router.push({path: '/'})
       }
     }
 }

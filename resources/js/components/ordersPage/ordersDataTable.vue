@@ -68,6 +68,8 @@
                       type="number"
                       min="1"
                       :rules="quantityRules"
+                      hint="KG"
+                      persistent-hint
                       required
                      @input="calculateOrderTotal"
                     ></v-text-field>
@@ -242,7 +244,7 @@
                 options: {},
                 itemsTable: [],
                 newOrderRow: [],
-                selectedStatus: "",
+                selectedStatus: "Unpaid",
                 formTitle: '',
                 currentRowId: 0,
                 totalWithoutDiscount: 0,
