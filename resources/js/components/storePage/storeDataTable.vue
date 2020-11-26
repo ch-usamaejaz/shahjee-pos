@@ -188,7 +188,7 @@ export default {
                 let items = this.getOrders (this.options);
             },
             getOrders (order_data) {
-                this.axios.get('get_all_items/get_store_items' + this.options.itemsPerPage + '/' + this.options.page)
+                this.axios.get('/get_store_items' + this.options.itemsPerPage + '/' + this.options.page)
                     .then(response => {
                         this.items = response.data.data;
                         // this.totalItems = response.data.data.length;

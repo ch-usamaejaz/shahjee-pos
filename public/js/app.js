@@ -3302,7 +3302,7 @@ __webpack_require__.r(__webpack_exports__);
     getOrders: function getOrders(order_data) {
       var _this = this;
 
-      this.axios.get('get_all_items/get_store_items' + this.options.itemsPerPage + '/' + this.options.page).then(function (response) {
+      this.axios.get('/get_store_items' + this.options.itemsPerPage + '/' + this.options.page).then(function (response) {
         _this.items = response.data.data; // this.totalItems = response.data.data.length;
 
         _this.loading = false;
