@@ -7,11 +7,12 @@ use Illuminate\Http\Request;
 
 class StoreController extends Controller
 {
-    public function get_all_items($origin, $limit = null, $offset = null)
+    public function get_all_items($limit = null, $offset = null)
     {
         $response = [];
         try {
-            $items = Store::select('id', 'item_price', 'item_name', 'quantity', 'created_at')->get()->toArray();
+            $query = Store::select('id', 'item_price', 'item_name', 'quantity', 'created_at');
+            $items = $limit !== -1 ? $query->limit($limit)->offset($offset - 1)->get()->toArray() : $query->get()->toArray();
             $response = ['error' => false, 'data' => $items];
         } catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];
