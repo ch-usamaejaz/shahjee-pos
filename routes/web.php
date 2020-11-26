@@ -26,6 +26,7 @@ Route::get('/get_store_items/{limit?}/{offset?}','StoreController@get_all_items'
 Route::post('/delete_store_item','StoreController@delete_item');
 Route::post('/create_store_item','StoreController@create_item');
 Route::post('/update_store_item','StoreController@update_item');
+Route::get('/get_dashboard_data', 'DashboardController@get_dashboard_data');
 
 Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');
 

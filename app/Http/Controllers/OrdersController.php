@@ -17,6 +17,9 @@ class OrdersController extends Controller
             if (@$request['itemsPerPage'] !== -1) {
                 $query->limit(@$request['itemsPerPage'])->offset(@$request['page'] - 1);
             };
+            if(!empty(@$request['search_order'])){
+                $query->where('id', @$request['search_order']);
+            }
             $orders = $query->orderBy('created_at', @$request['sortDesc'][0] ? 'DESC' : 'ASC')
                 ->get()->toArray();
 
