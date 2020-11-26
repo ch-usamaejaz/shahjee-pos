@@ -20,7 +20,12 @@
             max-width="1000px"
           >
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
+            <v-row>
+              <v-col
+                  cols="12"
+                  sm="6"
+                  md="6">
+                <v-btn
               color="primary"
               dark
               class="mb-2"
@@ -30,6 +35,20 @@
             >
               New Order
             </v-btn>
+              </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="6">
+            <v-text-field  
+              class="d-flex align-end flex-column"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+              </v-col>
+            </v-row>
           </template>
           <v-card>
             <v-card-title>
@@ -440,7 +459,10 @@
             },
             removeRow (index){
               this.editedItem.order_total = this.editedItem.order_total - (this.newOrderRow[index].newItem.item_price * this.newOrderRow[index].quantity)
+              // this.newOrderRow[index].newItem.item_id = 0;
+              // this.mewOrderRow[index].quantity = null;
               this.newOrderRow.splice(index, 1)
+              console.log(this.newOrderRow, 'here')
             },
             getSelectedItems () {
               let items = [];
@@ -451,6 +473,7 @@
               return items
             },
           postData(){
+            console.log('hello from save')
             console.log(this.savedItems, 'post')
             let items = this.getSelectedItems()
             let Data = {
@@ -470,7 +493,8 @@
           this.getDataFromApi();
         },
         postEditedData(){
-
+            console.log('hello from edit')
+          
           let items = this.getSelectedItems()
           let editData = {
             "order_id": this.editedIndex.id,
