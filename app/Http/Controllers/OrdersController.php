@@ -12,7 +12,7 @@ class OrdersController extends Controller
         $response = [];
 
         try {
-            $query = @Orders::select('id', 'order_status', 'order_total', 'order_discount')
+            $query = @Orders::select('id', 'order_status', 'order_total', 'order_discount', 'order_shift')
                 ->where('user_id', $request['user_id']);
             if (@$request['itemsPerPage'] !== -1) {
                 $query->limit(@$request['itemsPerPage'])->offset(@$request['page'] - 1);
@@ -87,7 +87,7 @@ class OrdersController extends Controller
                     $items_array[$item['item_id']] = ['quantity' => $item['quantity']];
 //                    $order->items()->updateExistingPivot($item['item_id'], ['quantity' => $item['quantity']]);
                 }
-                $order->items()->sync($items_array, false);
+                $order->items()->sync($items_array, true);
             }
             $response = ['error' => false, 'message' => 'Order Successfully Updated!'];
         } catch (\Exception $exception) {
