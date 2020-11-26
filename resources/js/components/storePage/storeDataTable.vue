@@ -159,6 +159,7 @@ export default {
                 itemPrice: 0,
                 totalItems: 0,
                 currentRowId: 0,
+                quantity: 0,
 
                 headers: [
                     { text: 'Item#', align: 'start', value: 'id', sortable: false},

@@ -3255,6 +3255,7 @@ __webpack_require__.r(__webpack_exports__);
       itemPrice: 0,
       totalItems: 0,
       currentRowId: 0,
+      quantity: 0,
       headers: [{
         text: 'Item#',
         align: 'start',
