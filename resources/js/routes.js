@@ -10,30 +10,31 @@ import Orders from './pages/Orders';
 import Inventory from './pages/Inventory';
 import Profile from './pages/Profile';
 import Print from './components/ordersPage/printTicket'
+import Store from './pages/Store';
 
 const routes = [
-    {
-        name: 'example',
-        path: '/example',
-        component: ExampleComponent,
-        meta:{
-        }
-    },
+    // {
+    //     name: 'example',
+    //     path: '/example',
+    //     component: ExampleComponent,
+    //     meta:{
+    //     }
+    // },
     {
         name: 'login',
-        path: '/login',
+        path: '/',
         component: Login,
         meta:{
         }
     },
-    {
-        name: 'signup',
-        path: '/signup',
-        component: SignUp,
-        meta:{
+    // {
+    //     name: 'signup',
+    //     path: '/signup',
+    //     component: SignUp,
+    //     meta:{
 
-        }
-    },
+    //     }
+    // },
     {
         name: 'dashboard',
         path: '/dashboard',
@@ -54,6 +55,14 @@ const routes = [
         name: 'inventory',
         path: '/inventory',
         component: Inventory,
+        meta: {
+            layout: ''
+        }
+    },
+    {
+        name: 'store',
+        path: '/store',
+        component: Store,
         meta: {
             layout: ''
         }

@@ -37,7 +37,7 @@
                 </tbody>
             </table>
             <br>
-            <p class="centered">Thank You for your purchase!<br>ShahJee Restaurant</p>
+            <p class="centered">Thank You for your visit!<br>ShahJee Restaurant</p>
         </div>
         <button id="btnPrint" class="hidden-print btn btn-info" @click="printTicket()">Print</button>
     </div>
