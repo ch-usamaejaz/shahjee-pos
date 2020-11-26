@@ -22,6 +22,10 @@ Route::get('/get_all_items/{origin}/{limit?}/{offset?}','ItemsController@get_all
 Route::post('/delete_item','ItemsController@delete_item');
 Route::post('/create_new_item','ItemsController@create_item');
 Route::post('/update_item','ItemsController@update_item');
+Route::get('/get_store_items/{limit?}/{offset?}','StoreController@get_all_items');
+Route::post('/delete_store_item','StoreController@delete_item');
+Route::post('/create_store_item','StoreController@create_item');
+Route::post('/update_store_item','StoreController@update_item');
 
 Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');
 
