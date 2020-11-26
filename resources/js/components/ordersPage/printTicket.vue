@@ -65,12 +65,22 @@ export default {
                     this.isDataLoaded = true;
                     if (!resp.data.error) {
                         this.orderData = resp.data.data[0];
+                        console.log(this.orderData);
                     }
                 })
                 .catch (err => {
                     console.log(err.message)
                 })
         },
+        updateTotal(){
+        //     let total = 0;
+        //     this.newOrderRow.forEach((value,index) => {
+        //     total +=  (value.newItem.item_price * value.quantity)                
+        // })
+        //     this.editedItem.order_total = total;
+        //     this.editedItem.order_discount = 0;
+        //     this.totalWithoutDiscount = total            
+        },          
         printTicket(){
             const prtHtml = document.getElementById('print').innerHTML;
             // Get all stylesheets HTML

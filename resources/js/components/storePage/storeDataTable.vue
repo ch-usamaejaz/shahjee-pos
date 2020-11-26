@@ -163,9 +163,9 @@ export default {
                 headers: [
                     { text: 'Item#', align: 'start', value: 'id', sortable: false},
                     { text: 'Item-Name', value: 'item_name', sortable: false },
-                    { text: 'Quantity', value: '2', sortable: false },
+                    { text: 'Quantity', value: 'quantity', sortable: false },
                     { text: 'Item-Price', value: 'item_price', sortable: false },
-                    { text: 'Date', value: 'Date', sortable: false },
+                    { text: 'Date', value: 'created_at', sortable: false },
                     { text: 'Actions', value: 'actions', sortable: false }
                 ],
             }
@@ -188,12 +188,12 @@ export default {
                 let items = this.getOrders (this.options);
             },
             getOrders (order_data) {
-                this.axios.get('/get_all_items/inventory/' + this.options.itemsPerPage + '/' + this.options.page)
+                this.axios.get('get_all_items/get_store_items' + this.options.itemsPerPage + '/' + this.options.page)
                     .then(response => {
                         this.items = response.data.data;
-                        this.totalItems = response.data.data.length;
+                        // this.totalItems = response.data.data.length;
                         this.loading = false
-                        console.log(response.data.data , "orders")
+                        console.log(response.data, "orders")
                     }).catch (error => {
                         console.log(error.message)
                 })

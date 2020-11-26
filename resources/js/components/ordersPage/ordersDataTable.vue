@@ -121,7 +121,7 @@
                   <v-col
                     cols="12"
                     sm="6"
-                    md="3"
+                    md="2"
                   >
                     <v-text-field
                       label="Discount"
@@ -165,6 +165,18 @@
                     cols="12"
                     sm="6"
                     md="3"
+                  >
+                    <v-select
+                    :items="dropdown_edit_shift"
+                    v-model="selectedShift"
+                    label="Shift"
+                    outlined
+                  ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="1"
                   >
                     <v-btn
                       class="mx-2"
@@ -264,6 +276,7 @@
                 itemsTable: [],
                 newOrderRow: [],
                 selectedStatus: "Unpaid",
+                selectedShift: 'breakfast',
                 formTitle: '',
                 currentRowId: 0,
                 totalWithoutDiscount: 0,
@@ -272,11 +285,13 @@
 
                 dropdown_edit: [],
                 dropdown_edit_status: ['Paid', 'Unpaid'],
+                dropdown_edit_shift: ['BreakFast', 'Dinner'],
                 headers: [
                     { text: 'Order#', align: 'start', value: 'id'},
                     { text: 'Order Status', value: 'order_status', sortable: false},
                     { text: 'Discount', value: 'order_discount', sortable: false },
                     { text: 'Order Total ', value: 'order_total', sortable: false },
+                    { text: 'Shift ', value: 'order_shift', sortable: false },
                     { text: 'Actions', value: 'actions', sortable: false }
                 ],
                 editedIndex: 0,
@@ -331,9 +346,9 @@
                 this.axios.post('/get_user_orders', order_data)
                     .then(response => {
                         this.orders = response.data.orders;
-                        this.totalOrders = response.data.orders.length;
+                        this.totalOrders = this.orders.length;
                         this.loading = false
-                        console.log(response.data.orders , "orders")
+                        console.log(response, "orders")
                     }).catch (error => {
                         console.log(error.message)
                 })
@@ -381,10 +396,10 @@
               this.editedItem.order_total = item.order_total
               this.axios.post('/get_order', {order_id: item.id}).then(response=>{
                 this.getEditItems = response.data.data
+                console.log(this.getEditItems, 'edit')
                 this.getEditItems.forEach((value)=>{
                   newItems.push(value.items)
                   newItems.forEach((newValue, index)=>{
-                    console.log(response.data.data.length, 'neeeeeeeee')
                     for(var i=0; i <= response.data.data[0].items.length-1; i++){
                       this.addNewRow(i)
                       itemsAtt = {"item_id": newValue[i].item_id,"item_name": newValue[i].item_name, "item_price": newValue[i].item_price, "quantity": newValue[i].quantity}
@@ -392,8 +407,9 @@
                       this.newOrderRow[i].price = itemsAtt.item_price
                       this.newOrderRow[i].quantity = itemsAtt.quantity
                       this.newOrderRow[i].newItem.id = itemsAtt.item_id
-                      //changes here
+                      this.selectedShift = item.order_shift
                       this.calculateOrderTotal()
+                      console.log(this.selectedShift, 'change')
                       // this.editedItem.order_total = item.order_total
                       // this.totalWithoutDiscount = item.order_total
                       this.editedItem.order_discount = item.order_discount
@@ -462,7 +478,6 @@
               // this.newOrderRow[index].newItem.item_id = 0;
               // this.mewOrderRow[index].quantity = null;
               this.newOrderRow.splice(index, 1)
-              console.log(this.newOrderRow, 'here')
             },
             getSelectedItems () {
               let items = [];
@@ -476,10 +491,12 @@
             console.log('hello from save')
             console.log(this.savedItems, 'post')
             let items = this.getSelectedItems()
+            let shift = this.selectedShift.toLowerCase();
             let Data = {
             "order_total": this.editedItem.order_total,
             "order_status": this.selectedStatus,
             "order_discount": this.editedItem.order_discount,
+            "order_shift": shift,
             "user_id": 1,
             "items": items
           };
@@ -493,14 +510,15 @@
           this.getDataFromApi();
         },
         postEditedData(){
-            console.log('hello from edit')
-          
+         
           let items = this.getSelectedItems()
+          let shift = this.selectedShift.toLowerCase();
           let editData = {
             "order_id": this.editedIndex.id,
             "order_total": this.editedItem.order_total,
             "order_status": this.selectedStatus,
             "order_discount": this.editedItem.order_discount,
+            "order_shift": shift,
             "user_id": 1,
             "items": items
           }

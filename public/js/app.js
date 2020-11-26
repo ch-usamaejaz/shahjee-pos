@@ -2655,6 +2655,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _this = this;
@@ -2672,6 +2684,7 @@ __webpack_require__.r(__webpack_exports__);
       itemsTable: [],
       newOrderRow: [],
       selectedStatus: "Unpaid",
+      selectedShift: 'breakfast',
       formTitle: '',
       currentRowId: 0,
       totalWithoutDiscount: 0,
@@ -2679,6 +2692,7 @@ __webpack_require__.r(__webpack_exports__);
       getEditItems: {},
       dropdown_edit: [],
       dropdown_edit_status: ['Paid', 'Unpaid'],
+      dropdown_edit_shift: ['BreakFast', 'Dinner'],
       headers: [{
         text: 'Order#',
         align: 'start',
@@ -2694,6 +2708,10 @@ __webpack_require__.r(__webpack_exports__);
       }, {
         text: 'Order Total ',
         value: 'order_total',
+        sortable: false
+      }, {
+        text: 'Shift ',
+        value: 'order_shift',
         sortable: false
       }, {
         text: 'Actions',
@@ -2752,9 +2770,9 @@ __webpack_require__.r(__webpack_exports__);
 
       this.axios.post('/get_user_orders', order_data).then(function (response) {
         _this2.orders = response.data.orders;
-        _this2.totalOrders = response.data.orders.length;
+        _this2.totalOrders = _this2.orders.length;
         _this2.loading = false;
-        console.log(response.data.orders, "orders");
+        console.log(response, "orders");
       })["catch"](function (error) {
         console.log(error.message);
       });
@@ -2813,12 +2831,11 @@ __webpack_require__.r(__webpack_exports__);
         order_id: item.id
       }).then(function (response) {
         _this4.getEditItems = response.data.data;
+        console.log(_this4.getEditItems, 'edit');
 
         _this4.getEditItems.forEach(function (value) {
           newItems.push(value.items);
           newItems.forEach(function (newValue, index) {
-            console.log(response.data.data.length, 'neeeeeeeee');
-
             for (var i = 0; i <= response.data.data[0].items.length - 1; i++) {
               _this4.addNewRow(i);
 
@@ -2831,11 +2848,13 @@ __webpack_require__.r(__webpack_exports__);
               _this4.newOrderRow[i].newItem = itemsAtt;
               _this4.newOrderRow[i].price = itemsAtt.item_price;
               _this4.newOrderRow[i].quantity = itemsAtt.quantity;
-              _this4.newOrderRow[i].newItem.id = itemsAtt.item_id; //changes here
+              _this4.newOrderRow[i].newItem.id = itemsAtt.item_id;
+              _this4.selectedShift = item.order_shift;
 
-              _this4.calculateOrderTotal(); // this.editedItem.order_total = item.order_total
+              _this4.calculateOrderTotal();
+
+              console.log(_this4.selectedShift, 'change'); // this.editedItem.order_total = item.order_total
               // this.totalWithoutDiscount = item.order_total
-
 
               _this4.editedItem.order_discount = item.order_discount;
             }
@@ -2907,7 +2926,6 @@ __webpack_require__.r(__webpack_exports__);
       // this.mewOrderRow[index].quantity = null;
 
       this.newOrderRow.splice(index, 1);
-      console.log(this.newOrderRow, 'here');
     },
     getSelectedItems: function getSelectedItems() {
       var items = [];
@@ -2924,10 +2942,12 @@ __webpack_require__.r(__webpack_exports__);
       console.log('hello from save');
       console.log(this.savedItems, 'post');
       var items = this.getSelectedItems();
+      var shift = this.selectedShift.toLowerCase();
       var Data = {
         "order_total": this.editedItem.order_total,
         "order_status": this.selectedStatus,
         "order_discount": this.editedItem.order_discount,
+        "order_shift": shift,
         "user_id": 1,
         "items": items
       };
@@ -2941,13 +2961,14 @@ __webpack_require__.r(__webpack_exports__);
       this.getDataFromApi();
     },
     postEditedData: function postEditedData() {
-      console.log('hello from edit');
       var items = this.getSelectedItems();
+      var shift = this.selectedShift.toLowerCase();
       var editData = {
         "order_id": this.editedIndex.id,
         "order_total": this.editedItem.order_total,
         "order_status": this.selectedStatus,
         "order_discount": this.editedItem.order_discount,
+        "order_shift": shift,
         "user_id": 1,
         "items": items
       };
@@ -3056,10 +3077,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
         if (!resp.data.error) {
           _this.orderData = resp.data.data[0];
+          console.log(_this.orderData);
         }
       })["catch"](function (err) {
         console.log(err.message);
       });
+    },
+    updateTotal: function updateTotal() {//     let total = 0;
+      //     this.newOrderRow.forEach((value,index) => {
+      //     total +=  (value.newItem.item_price * value.quantity)                
+      // })
+      //     this.editedItem.order_total = total;
+      //     this.editedItem.order_discount = 0;
+      //     this.totalWithoutDiscount = total            
     },
     printTicket: function printTicket() {
       var prtHtml = document.getElementById('print').innerHTML; // Get all stylesheets HTML
@@ -3263,7 +3293,7 @@ __webpack_require__.r(__webpack_exports__);
         sortable: false
       }, {
         text: 'Quantity',
-        value: '2',
+        value: 'quantity',
         sortable: false
       }, {
         text: 'Item-Price',
@@ -3271,7 +3301,7 @@ __webpack_require__.r(__webpack_exports__);
         sortable: false
       }, {
         text: 'Date',
-        value: 'Date',
+        value: 'created_at',
         sortable: false
       }, {
         text: 'Actions',
@@ -3299,11 +3329,11 @@ __webpack_require__.r(__webpack_exports__);
     getOrders: function getOrders(order_data) {
       var _this = this;
 
-      this.axios.get('/get_all_items/inventory/' + this.options.itemsPerPage + '/' + this.options.page).then(function (response) {
-        _this.items = response.data.data;
-        _this.totalItems = response.data.data.length;
+      this.axios.get('get_all_items/get_store_items' + this.options.itemsPerPage + '/' + this.options.page).then(function (response) {
+        _this.items = response.data.data; // this.totalItems = response.data.data.length;
+
         _this.loading = false;
-        console.log(response.data.data, "orders");
+        console.log(response.data, "orders");
       })["catch"](function (error) {
         console.log(error.message);
       });
@@ -41266,7 +41296,7 @@ var render = function() {
                                                 attrs: {
                                                   cols: "12",
                                                   sm: "6",
-                                                  md: "3"
+                                                  md: "2"
                                                 }
                                               },
                                               [
@@ -41401,6 +41431,35 @@ var render = function() {
                                                   cols: "12",
                                                   sm: "6",
                                                   md: "3"
+                                                }
+                                              },
+                                              [
+                                                _c("v-select", {
+                                                  attrs: {
+                                                    items:
+                                                      _vm.dropdown_edit_shift,
+                                                    label: "Shift",
+                                                    outlined: ""
+                                                  },
+                                                  model: {
+                                                    value: _vm.selectedShift,
+                                                    callback: function($$v) {
+                                                      _vm.selectedShift = $$v
+                                                    },
+                                                    expression: "selectedShift"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "1"
                                                 }
                                               },
                                               [
@@ -103906,8 +103965,8 @@ console.log(localStorage.getItem(1));
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
