@@ -227,7 +227,7 @@ export default {
               this.close();
             },
             save () {
-              if(this.formTitle == "New Order"){
+              if(this.formTitle == "New Item"){
                 this.saveNewItem();
               }
               else{

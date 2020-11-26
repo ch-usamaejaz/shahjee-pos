@@ -73,6 +73,8 @@
                       label="Quantity"
                       type="number"
                       hint="KG"
+                      :rules="quantityRules"
+                      v-model="quantity"
                       persistent-hint
                       outlined                 
                   ></v-text-field>
@@ -95,7 +97,7 @@
                 color="blue darken-1"
                 text
                 @click="save"
-                :disabled="!isFormValid || itemName === '' || itemPrice === 0"
+                :disabled="!isFormValid || itemName === '' || itemPrice === 0 || quantity === 0"
               >
                 Save
               </v-btn>
@@ -151,6 +153,7 @@ export default {
                 dialogDelete: false,
                 isFormValid: false,
                 valid: false,
+                date: {},
                 items: [],
                 loading: true,
                 options: {},
@@ -166,9 +169,12 @@ export default {
                     { text: 'Item-Name', value: 'item_name', sortable: false },
                     { text: 'Quantity', value: 'quantity', sortable: false },
                     { text: 'Item-Price', value: 'item_price', sortable: false },
-                    { text: 'Date', value: 'created_at', sortable: false },
+                    { text: 'Created At', value: 'created_at', sortable: false },
                     { text: 'Actions', value: 'actions', sortable: false }
                 ],
+              quantityRules: [
+                   (v) => !!v || 'Quantity is required',
+                   v =>  v  > 0 || "Quantity should be greater than 0"]                
             }
         },
         watch: {
@@ -189,21 +195,23 @@ export default {
                 let items = this.getOrders (this.options);
             },
             getOrders (order_data) {
-                this.axios.get('/get_store_items' + this.options.itemsPerPage + '/' + this.options.page)
+                this.axios.get('/get_store_items/' + this.options.itemsPerPage + '/' + this.options.page)
                     .then(response => {
                         this.items = response.data.data;
-                        // this.totalItems = response.data.data.length;
+                        this.totalItems = response.data.data.length;
                         this.loading = false
                         console.log(response.data, "orders")
                     }).catch (error => {
                         console.log(error.message)
                 })
             },
+
             editItem (item) {
                 this.formTitle = "Edit Item"
                 this.currentRowId = item.id
                 this.itemName = item.item_name
                 this.itemPrice = item.item_price
+                this.quantity = item.quantity
                 console.log(item,"working")
                 this.dialog = true
             },
@@ -216,7 +224,7 @@ export default {
               for(var i =0; i <=this.items.length; i++){
                 if(this.items[i].id == id){
                   this.items.splice(i, 1);
-                  this.axios.post('/delete_item', {item_id: id}).then(response=>{
+                  this.axios.post('/delete_store_item', {item_id: id}).then(response=>{
                     console.log(response)
                   }).catch(error=>{
                     console.log(error)
@@ -238,12 +246,13 @@ export default {
               this.formTitle = '';
               this.itemName = '';
               this.itemPrice = 0;
+              this.quantity =0;
           },
             closeDialog () {
               this.close();
             },
             save () {
-              if(this.formTitle == "New Order"){
+              if(this.formTitle === "New Item"){
                 this.saveNewItem();
               }
               else{
@@ -255,9 +264,10 @@ export default {
                  let editData = {
                     "item_id": this.currentRowId,
                     "item_name": this.itemName,
-                    "item_price": this.itemPrice
+                    "item_price": this.itemPrice,
+                    "quantity": this.quantity
                 }
-                let url = "/update_item"
+                let url = "/update_store_item"
                 this.axios.post( url, editData ).then(response =>{
                     console.log(response);
                 }).catch(err=>{
@@ -266,12 +276,14 @@ export default {
                 this.getDataFromApi()
             },
             saveNewItem () {
+              console.log('new')
                 let Data = {
                     "item_name": this.itemName,
                     "item_price": this.itemPrice,
+                    "quantity": this.quantity
                 };
                 console.log(Data);
-                let url = "/create_new_item"
+                let url = '/create_store_item'
                     this.axios.post(url,Data).then(response =>{
                         console.log(response)
                         }).catch(error =>{

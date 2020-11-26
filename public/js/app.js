@@ -2328,7 +2328,7 @@ __webpack_require__.r(__webpack_exports__);
       this.close();
     },
     save: function save() {
-      if (this.formTitle == "New Order") {
+      if (this.formTitle == "New Item") {
         this.saveNewItem();
       } else {
         this.saveEditItem();
@@ -3239,6 +3239,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'storeDataTable',
   data: function data() {
@@ -3247,6 +3249,7 @@ __webpack_require__.r(__webpack_exports__);
       dialogDelete: false,
       isFormValid: false,
       valid: false,
+      date: {},
       items: [],
       loading: true,
       options: {},
@@ -3274,13 +3277,18 @@ __webpack_require__.r(__webpack_exports__);
         value: 'item_price',
         sortable: false
       }, {
-        text: 'Date',
+        text: 'Created At',
         value: 'created_at',
         sortable: false
       }, {
         text: 'Actions',
         value: 'actions',
         sortable: false
+      }],
+      quantityRules: [function (v) {
+        return !!v || 'Quantity is required';
+      }, function (v) {
+        return v > 0 || "Quantity should be greater than 0";
       }]
     };
   },
@@ -3303,9 +3311,9 @@ __webpack_require__.r(__webpack_exports__);
     getOrders: function getOrders(order_data) {
       var _this = this;
 
-      this.axios.get('/get_store_items' + this.options.itemsPerPage + '/' + this.options.page).then(function (response) {
-        _this.items = response.data.data; // this.totalItems = response.data.data.length;
-
+      this.axios.get('/get_store_items/' + this.options.itemsPerPage + '/' + this.options.page).then(function (response) {
+        _this.items = response.data.data;
+        _this.totalItems = response.data.data.length;
         _this.loading = false;
         console.log(response.data, "orders");
       })["catch"](function (error) {
@@ -3317,6 +3325,7 @@ __webpack_require__.r(__webpack_exports__);
       this.currentRowId = item.id;
       this.itemName = item.item_name;
       this.itemPrice = item.item_price;
+      this.quantity = item.quantity;
       console.log(item, "working");
       this.dialog = true;
     },
@@ -3330,7 +3339,7 @@ __webpack_require__.r(__webpack_exports__);
       for (var i = 0; i <= this.items.length; i++) {
         if (this.items[i].id == id) {
           this.items.splice(i, 1);
-          this.axios.post('/delete_item', {
+          this.axios.post('/delete_store_item', {
             item_id: id
           }).then(function (response) {
             console.log(response);
@@ -3355,12 +3364,13 @@ __webpack_require__.r(__webpack_exports__);
       this.formTitle = '';
       this.itemName = '';
       this.itemPrice = 0;
+      this.quantity = 0;
     },
     closeDialog: function closeDialog() {
       this.close();
     },
     save: function save() {
-      if (this.formTitle == "New Order") {
+      if (this.formTitle === "New Item") {
         this.saveNewItem();
       } else {
         this.saveEditItem();
@@ -3372,9 +3382,10 @@ __webpack_require__.r(__webpack_exports__);
       var editData = {
         "item_id": this.currentRowId,
         "item_name": this.itemName,
-        "item_price": this.itemPrice
+        "item_price": this.itemPrice,
+        "quantity": this.quantity
       };
-      var url = "/update_item";
+      var url = "/update_store_item";
       this.axios.post(url, editData).then(function (response) {
         console.log(response);
       })["catch"](function (err) {
@@ -3383,12 +3394,14 @@ __webpack_require__.r(__webpack_exports__);
       this.getDataFromApi();
     },
     saveNewItem: function saveNewItem() {
+      console.log('new');
       var Data = {
         "item_name": this.itemName,
-        "item_price": this.itemPrice
+        "item_price": this.itemPrice,
+        "quantity": this.quantity
       };
       console.log(Data);
-      var url = "/create_new_item";
+      var url = '/create_store_item';
       this.axios.post(url, Data).then(function (response) {
         console.log(response);
       })["catch"](function (error) {
@@ -42061,8 +42074,16 @@ var render = function() {
                                                     label: "Quantity",
                                                     type: "number",
                                                     hint: "KG",
+                                                    rules: _vm.quantityRules,
                                                     "persistent-hint": "",
                                                     outlined: ""
+                                                  },
+                                                  model: {
+                                                    value: _vm.quantity,
+                                                    callback: function($$v) {
+                                                      _vm.quantity = $$v
+                                                    },
+                                                    expression: "quantity"
                                                   }
                                                 })
                                               ],
@@ -42108,7 +42129,8 @@ var render = function() {
                                           disabled:
                                             !_vm.isFormValid ||
                                             _vm.itemName === "" ||
-                                            _vm.itemPrice === 0
+                                            _vm.itemPrice === 0 ||
+                                            _vm.quantity === 0
                                         },
                                         on: { click: _vm.save }
                                       },
