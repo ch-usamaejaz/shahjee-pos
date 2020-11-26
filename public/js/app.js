@@ -2069,36 +2069,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "statsComponent",
-  data: function data() {
-    return {
-      todaySales: '',
-      yesterdaySales: '',
-      todayOrders: '',
-      moreThanYesterday: ''
-    };
-  },
-  mounted: function mounted() {
-    this.getStatsData();
-  },
-  methods: {
-    getStatsData: function getStatsData() {
-      var _this = this;
-
-      var url = 'https://jsonplaceholder.typicode.com/posts';
-      this.axios.get(url).then(function (response) {
-        _this.todaySales = response.data[1].id;
-        _this.yesterdaySales = response.data[5].id;
-        _this.todayOrders = response.data[55].id;
-        _this.moreThanYesterday = response.data[98].id;
-      }, function (error) {
-        console.log(error);
-      });
-    }
-  }
+  props: ['statsData']
 });
 
 /***/ }),
@@ -3344,16 +3317,38 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'dashboard',
+  data: function data() {
+    return {
+      stats: {}
+    };
+  },
   components: {
     bottomBar: _layouts_components_bottomBar__WEBPACK_IMPORTED_MODULE_0__["default"],
     statsComponent: _components_dashboardPage_statsComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
     chartComponent: _components_dashboardPage_chartComponent__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  mounted: function mounted() {
+    this.getStatsData();
+  },
+  methods: {
+    getStatsData: function getStatsData() {
+      var _this = this;
+
+      this.axios.get('get_dashboard_data').then(function (resp) {
+        if (resp.error) {
+          return;
+        }
+
+        _this.stats = resp.data.data;
+      })["catch"](function (err) {
+        console.log(err.message);
+      });
+    }
   }
 });
 
@@ -40129,7 +40124,7 @@ var render = function() {
             _c(
               "p",
               { staticClass: "tx-24 tx-white tx-lato tx-bold mg-b-2 lh-1" },
-              [_vm._v(_vm._s(_vm.todayOrders))]
+              [_vm._v(_vm._s(_vm.statsData.today_orders))]
             )
           ])
         ])
@@ -40154,7 +40149,7 @@ var render = function() {
             _c(
               "p",
               { staticClass: "tx-24 tx-white tx-lato tx-bold mg-b-2 lh-1" },
-              [_vm._v(_vm._s(_vm.todaySales))]
+              [_vm._v(_vm._s(_vm.statsData.today_sales) + " PKR")]
             )
           ])
         ])
@@ -40179,7 +40174,7 @@ var render = function() {
             _c(
               "p",
               { staticClass: "tx-24 tx-white tx-lato tx-bold mg-b-2 lh-1" },
-              [_vm._v(_vm._s(_vm.yesterdaySales))]
+              [_vm._v(_vm._s(_vm.statsData.yesterday_sales) + " PKR")]
             )
           ])
         ])
@@ -40204,7 +40199,15 @@ var render = function() {
             _c(
               "p",
               { staticClass: "tx-24 tx-white tx-lato tx-bold mg-b-2 lh-1" },
-              [_vm._v(_vm._s(_vm.moreThanYesterday) + "%")]
+              [
+                _vm._v(
+                  _vm._s(
+                    _vm.statsData.increase_percentage != ""
+                      ? _vm.statsData.increase_percentage + "%"
+                      : "N/A"
+                  )
+                )
+              ]
             )
           ])
         ])
@@ -41895,7 +41898,16 @@ var render = function() {
     _c("div", { staticClass: "pd-30" }, [
       _c("h4", { staticClass: "tx-gray-800 mg-b-5" }, [_vm._v("Dashboard")]),
       _vm._v(" "),
-      _c("div", { staticClass: " mg-t-5" }, [_c("stats-component")], 1),
+      _c(
+        "div",
+        { staticClass: " mg-t-5" },
+        [
+          !_vm.stats.error
+            ? _c("stats-component", { attrs: { "stats-data": _vm.stats } })
+            : _vm._e()
+        ],
+        1
+      ),
       _vm._v(" "),
       _c("div", { staticClass: "mg-t-5" }, [_c("chartComponent")], 1)
     ])
