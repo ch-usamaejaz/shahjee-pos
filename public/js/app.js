@@ -3277,7 +3277,7 @@ __webpack_require__.r(__webpack_exports__);
         value: 'item_price',
         sortable: false
       }, {
-        text: 'Created At',
+        text: 'Added At',
         value: 'created_at',
         sortable: false
       }, {
@@ -3379,6 +3379,8 @@ __webpack_require__.r(__webpack_exports__);
       this.close();
     },
     saveEditItem: function saveEditItem() {
+      var _this2 = this;
+
       var editData = {
         "item_id": this.currentRowId,
         "item_name": this.itemName,
@@ -3388,26 +3390,26 @@ __webpack_require__.r(__webpack_exports__);
       var url = "/update_store_item";
       this.axios.post(url, editData).then(function (response) {
         console.log(response);
+
+        _this2.getDataFromApi();
       })["catch"](function (err) {
         console.log(err);
       });
-      this.getDataFromApi();
     },
     saveNewItem: function saveNewItem() {
-      console.log('new');
+      var _this3 = this;
+
       var Data = {
         "item_name": this.itemName,
         "item_price": this.itemPrice,
         "quantity": this.quantity
       };
-      console.log(Data);
       var url = '/create_store_item';
       this.axios.post(url, Data).then(function (response) {
-        console.log(response);
+        _this3.getDataFromApi();
       })["catch"](function (error) {
         console.log(error);
       });
-      this.getDataFromApi();
     }
   }
 });
@@ -104000,8 +104002,8 @@ console.log(localStorage.getItem(1));
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

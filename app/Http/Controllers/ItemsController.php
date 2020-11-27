@@ -12,7 +12,7 @@ class ItemsController extends Controller
         $response = [];
         try {
             $query = Items::select('id', 'item_price', 'item_name');
-            $items = $origin == 'orders' ? $query->withTrashed()->get()->toArray() : ($limit !== -1 ? $query->limit($limit)->offset($offset - 1)->get()->toArray() : $query->get()->toArray());
+            $items = $origin == 'orders' ? $query->withTrashed()->get()->toArray() : ($limit != -1 ? $query->limit($limit)->offset($offset - 1)->get()->toArray() : $query->get()->toArray());
             $response = ['error' => false, 'data' => $items];
         } catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];

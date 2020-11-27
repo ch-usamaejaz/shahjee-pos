@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
 {
@@ -11,8 +12,11 @@ class StoreController extends Controller
     {
         $response = [];
         try {
-            $query = Store::select('id', 'item_price', 'item_name', 'quantity', 'created_at');
-            $items = $limit !== -1 ? $query->limit($limit)->offset($offset - 1)->get()->toArray() : $query->get()->toArray();
+            $query = DB::table('store')->select('id', 'item_price', 'item_name', 'quantity', DB::raw('DATE_FORMAT(store.created_at, "%d-%b-%Y") as created_at'));
+            if ($limit != -1) {
+                $query->limit($limit)->offset($offset - 1);
+            }
+            $items = $query->get()->toArray();
             $response = ['error' => false, 'data' => $items];
         } catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];
