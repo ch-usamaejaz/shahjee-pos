@@ -60,7 +60,7 @@
                       label="Item-Price"
                       type="number"
                       outlined
-                      :rules="[(v)=>!!v || 'Item price is required', (v)=> v>=1 || 'Price must be greater than 0']"                    
+                      :rules="[(v)=>!!v || 'Item price is required', (v)=> v>=1 || 'Price must be greater than 0']"
                       v-model="itemPrice"
                   ></v-text-field>
                   </v-col>
@@ -76,7 +76,7 @@
                       :rules="quantityRules"
                       v-model="quantity"
                       persistent-hint
-                      outlined                 
+                      outlined
                   ></v-text-field>
                   </v-col>
                 </v-row>
@@ -104,8 +104,8 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog 
-        v-model="dialogDelete"  
+        <v-dialog
+        v-model="dialogDelete"
         max-width="500px"
         @click:outside="closeDialog"
         >
@@ -169,12 +169,12 @@ export default {
                     { text: 'Item-Name', value: 'item_name', sortable: false },
                     { text: 'Quantity', value: 'quantity', sortable: false },
                     { text: 'Item-Price', value: 'item_price', sortable: false },
-                    { text: 'Created At', value: 'created_at', sortable: false },
+                    { text: 'Added At', value: 'created_at', sortable: false },
                     { text: 'Actions', value: 'actions', sortable: false }
                 ],
               quantityRules: [
                    (v) => !!v || 'Quantity is required',
-                   v =>  v  > 0 || "Quantity should be greater than 0"]                
+                   v =>  v  > 0 || "Quantity should be greater than 0"]
             }
         },
         watch: {
@@ -270,26 +270,23 @@ export default {
                 let url = "/update_store_item"
                 this.axios.post( url, editData ).then(response =>{
                     console.log(response);
+                    this.getDataFromApi()
                 }).catch(err=>{
                     console.log(err)
                 })
-                this.getDataFromApi()
             },
             saveNewItem () {
-              console.log('new')
                 let Data = {
                     "item_name": this.itemName,
                     "item_price": this.itemPrice,
                     "quantity": this.quantity
                 };
-                console.log(Data);
                 let url = '/create_store_item'
                     this.axios.post(url,Data).then(response =>{
-                        console.log(response)
-                        }).catch(error =>{
+                        this.getDataFromApi()
+                    }).catch(error =>{
                         console.log(error)
                     })
-                this.getDataFromApi()
             },
         }
 }
