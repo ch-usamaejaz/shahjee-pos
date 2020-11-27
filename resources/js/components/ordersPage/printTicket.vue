@@ -65,7 +65,7 @@ export default {
                     this.isDataLoaded = true;
                     if (!resp.data.error) {
                         this.orderData = resp.data.data[0];
-                        console.log(this.orderData);
+                        console.log(this.orderData, 'print');
                     }
                 })
                 .catch (err => {

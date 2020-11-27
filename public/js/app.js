@@ -2640,6 +2640,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _this = this;
@@ -2653,6 +2657,7 @@ __webpack_require__.r(__webpack_exports__);
       rowIndex: 0,
       orders: [],
       loading: true,
+      searchOrder: null,
       options: {},
       itemsTable: [],
       newOrderRow: [],
@@ -2736,6 +2741,7 @@ __webpack_require__.r(__webpack_exports__);
     getDataFromApi: function getDataFromApi() {
       this.loading = true;
       this.options['user_id'] = 1;
+      this.options['search_order'] = this.searchOrder;
       var items = this.getOrders(this.options);
     },
     getOrders: function getOrders(order_data) {
@@ -3050,7 +3056,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
         if (!resp.data.error) {
           _this.orderData = resp.data.data[0];
-          console.log(_this.orderData);
+          console.log(_this.orderData, 'print');
         }
       })["catch"](function (err) {
         console.log(err.message);
@@ -41004,7 +41010,7 @@ var render = function() {
                   "v-form",
                   {
                     ref: "form",
-                    attrs: { action: "" },
+                    attrs: { action: "@prevent-submit" },
                     model: {
                       value: _vm.isFormValid,
                       callback: function($$v) {
@@ -41095,13 +41101,41 @@ var render = function() {
                                           },
                                           [
                                             _c("v-text-field", {
-                                              staticClass:
-                                                "d-flex align-end flex-column",
                                               attrs: {
                                                 "append-icon": "mdi-magnify",
                                                 label: "Search",
                                                 "single-line": "",
-                                                "hide-details": ""
+                                                type: "number",
+                                                hint: "Enter Order Number",
+                                                "persistent-hint": ""
+                                              },
+                                              on: {
+                                                keydown: function($event) {
+                                                  if (
+                                                    !$event.type.indexOf(
+                                                      "key"
+                                                    ) &&
+                                                    _vm._k(
+                                                      $event.keyCode,
+                                                      "enter",
+                                                      13,
+                                                      $event.key,
+                                                      "Enter"
+                                                    )
+                                                  ) {
+                                                    return null
+                                                  }
+                                                  return _vm.getDataFromApi(
+                                                    $event
+                                                  )
+                                                }
+                                              },
+                                              model: {
+                                                value: _vm.searchOrder,
+                                                callback: function($$v) {
+                                                  _vm.searchOrder = $$v
+                                                },
+                                                expression: "searchOrder"
                                               }
                                             })
                                           ],

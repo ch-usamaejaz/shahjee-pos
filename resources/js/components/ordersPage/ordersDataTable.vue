@@ -9,7 +9,7 @@
             class="elevation-1"
         >
         <template v-slot:top>
-          <v-form ref="form" action="" v-model="isFormValid">
+          <v-form ref="form" action="@prevent-submit" v-model="isFormValid">
           <v-toolbar
             flat
             v-model="rowIndex"
@@ -41,11 +41,15 @@
               sm="6"
               md="6">
             <v-text-field  
-              class="d-flex align-end flex-column"
+              
               append-icon="mdi-magnify"
               label="Search"
               single-line
-              hide-details
+              v-model="searchOrder"
+              @keydown.enter="getDataFromApi"
+              type="number"
+              hint="Enter Order Number"
+              persistent-hint
             ></v-text-field>
               </v-col>
             </v-row>
@@ -272,6 +276,7 @@
                 rowIndex: 0,
                 orders: [],
                 loading: true,
+                searchOrder: null,
                 options: {},
                 itemsTable: [],
                 newOrderRow: [],
@@ -340,6 +345,7 @@
             getDataFromApi () {
                 this.loading = true;
                 this.options['user_id'] = 1;
+                this.options['search_order'] = this.searchOrder;
                 let items = this.getOrders (this.options);
             },
             getOrders (order_data) {
@@ -473,7 +479,7 @@
               }
               this.close()
             },
-            removeRow (index){
+            removeRow (index) {
               this.editedItem.order_total = this.editedItem.order_total - (this.newOrderRow[index].newItem.item_price * this.newOrderRow[index].quantity)
               // this.newOrderRow[index].newItem.item_id = 0;
               // this.mewOrderRow[index].quantity = null;
