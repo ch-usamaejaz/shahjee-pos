@@ -9,7 +9,7 @@
             class="elevation-1"
         >
         <template v-slot:top>
-          <v-form ref="form" action="@prevent-submit" v-model="isFormValid">
+          <v-form  v-model="isFormValid" @submit.prevent ref="form">
           <v-toolbar
             flat
             v-model="rowIndex"
@@ -325,7 +325,6 @@
           getTotal(){
             let total = 0;
             this.newOrderRow.forEach((value,index) => {
-              console.log(value,index, "total")
             })
           }
         },
@@ -339,7 +338,6 @@
         },
         mounted(){
           this.getItemTable();
-          // console.log(this.itemsTable, 'table')
         },
         methods: {
             getDataFromApi () {
@@ -351,24 +349,25 @@
             getOrders (order_data) {
                 this.axios.post('/get_user_orders', order_data)
                     .then(response => {
+                      if(!response.data.error){
                         this.orders = response.data.orders;
                         this.totalOrders = this.orders.length;
                         this.loading = false
-                        console.log(response, "orders")
+                        return
+                        }
+                        this.showErrorAlert(response.data.message);
                     }).catch (error => {
-                        console.log(error.message)
+                        this.showErrorAlert(error.message);
                 })
             },
             getItemTable () {
               this.axios.get('get_all_items/orders').then(response =>{
-                console.log('new',response.data.data)
                 this.itemsTable = response.data.data;
                 // let self = this;
                 // this.itemsTable.forEach(function (item, index) {
                 // self.dropdown_edit.push(item['item_name'])
                 // })
               })
-              console.log(this.itemsTable, 'table')
             },
             calculateOrderTotal () {
               let total = 0;
@@ -385,7 +384,6 @@
               }
             },
             addDiscount () {
-              console.log("working")
               this.editedItem.order_total = (this.totalWithoutDiscount - this.editedItem.order_discount);
             },
             addNewRow () {
@@ -402,7 +400,6 @@
               this.editedItem.order_total = item.order_total
               this.axios.post('/get_order', {order_id: item.id}).then(response=>{
                 this.getEditItems = response.data.data
-                console.log(this.getEditItems, 'edit')
                 this.getEditItems.forEach((value)=>{
                   newItems.push(value.items)
                   newItems.forEach((newValue, index)=>{
@@ -415,7 +412,6 @@
                       this.newOrderRow[i].newItem.id = itemsAtt.item_id
                       this.selectedShift = item.order_shift
                       this.calculateOrderTotal()
-                      console.log(this.selectedShift, 'change')
                       // this.editedItem.order_total = item.order_total
                       // this.totalWithoutDiscount = item.order_total
                       this.editedItem.order_discount = item.order_discount
@@ -423,7 +419,7 @@
                   })
                 })
               }).catch(error=>{
-                console.log(error)
+                this.showErrorAlert(error.message)
               })
               
               this.close();
@@ -434,11 +430,14 @@
               for(var i =0; i <=this.orders.length; i++){
                 if(this.orders[i].id == id){
                   this.orders.splice(i, 1);
-                  console.log(id)
                   this.axios.post('/delete_order', {order_id: id}).then(response=>{
-                    console.log(response)
+                    if(!response.data.error){
+                      this.showSuccessAlert('Order Deleted')
+                      return
+                    }
+                    this.showErrorAlert(response.data.message)
                   }).catch(error=>{
-                    console.log(error)
+                    this.showErrorAlert(error.message)
                   })
                   break;
                 }
@@ -464,19 +463,25 @@
               this.getEditItems= new Array;
               this.currentRowId = 0;
               this.newOrderRow=[]
+              this.selectedShift= 'Breakfaast'
               this.valid = false
+              this.resetValidation ()
           },
+            resetValidation () {
+              this.$refs.form.resetValidation()
+            },          
             closeDialog () {
               this.close();
             },
             save () {
-            console.log(this.formTitle)
               if(this.formTitle == "New Order"){
                 this.postData();
               }
               else{
                 this.postEditedData();
               }
+              this.resetValidation ();
+              
               this.close()
             },
             removeRow (index) {
@@ -490,12 +495,9 @@
               this.newOrderRow.forEach((value,index)=>{
                 items.push({"item_id": value.newItem.id, "quantity": value.quantity})
               })
-              console.log(items)
               return items
             },
           postData(){
-            console.log('hello from save')
-            console.log(this.savedItems, 'post')
             let items = this.getSelectedItems()
             let shift = this.selectedShift.toLowerCase();
             let Data = {
@@ -506,12 +508,15 @@
             "user_id": 1,
             "items": items
           };
-          console.log(Data);
           let url = "/create_new_order"
           this.axios.post(url,Data).then(response =>{
-            console.log(response)
-          }).catch(error =>{
-            console.log(error);
+            if(response.data.error == false){
+              this.showSuccessAlert('Order Added');
+              return
+            }
+            this.showErrorAlert(response.data.message)         
+          }).catch(err =>{
+            this.showErrorAlert(err.message)
           })
           this.getDataFromApi();
         },
@@ -530,9 +535,12 @@
           }
           let url = "/update_order"
             this.axios.post(url,editData).then(response =>{
-              console.log(response)
+              if(!response.data.error){
+                this.showSuccessAlert('Order Updated')
+                return
+              }
             }).catch(error =>{
-              console.log(error);
+            this.showErrorAlert(error.message)              
             })
           this.getDataFromApi();
           this.close();

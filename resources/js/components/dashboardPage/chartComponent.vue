@@ -46,16 +46,16 @@ export default {
     },
 
     methods: {
-        getChartData(){
-            let url = "https://jsonplaceholder.typicode.com/users"
-            this.axios.get(url).then((response)=>{
-                let newAr = response.data.map((item)=>{
-                    this.value.push(item.id);
-                })
-            },(error) =>{
-                console.log(error);
-            })
-        }
+        // getChartData(){
+        //     let url = "https://jsonplaceholder.typicode.com/users"
+        //     this.axios.get(url).then((response)=>{
+        //         let newAr = response.data.map((item)=>{
+        //             this.value.push(item.id);
+        //         })
+        //     },(error) =>{
+        //         console.log(error);
+        //     })
+        // }
     }
 }
 </script>

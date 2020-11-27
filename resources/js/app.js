@@ -17,8 +17,11 @@ import axios from 'axios';
 import Vuetify from "vuetify";
 import 'vuetify/dist/vuetify.min.css'
 
+import global from './mixins/global';
+
 Vue.use(Vuetify);
 
+Vue.mixin(global);
 
 Vue.use(VueAxios, axios.create({
     baseURL: 'http://127.0.0.1:8000'

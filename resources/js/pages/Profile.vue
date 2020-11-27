@@ -98,9 +98,13 @@ export default {
         }
         let url = '/profile';
         this.axios.post(url,newData).then(response =>{
-            console.log(response);
+        if(!response.data.error){
+            this.showSuccessAlert('Profile Updated')
+            return
+        }
+        this.showErrorAlert(response.data.message)
         }, (error) =>{
-            console.log(error);
+            this.showErrorAlert(error.message);
         })
       },
       reset () {

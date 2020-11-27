@@ -39,7 +39,7 @@ export default {
                     this.stats = resp.data.data;
                 })
                 .catch(err => {
-                    console.log(err.message)
+                    this.showErrorAlert(err.message)
                 })
         }
     }

@@ -197,12 +197,15 @@ export default {
             getOrders (order_data) {
                 this.axios.get('/get_store_items/' + this.options.itemsPerPage + '/' + this.options.page)
                     .then(response => {
+                      if(!response.data.error) {
                         this.items = response.data.data;
                         this.totalItems = response.data.data.length;
                         this.loading = false
-                        console.log(response.data, "orders")
+                        return
+                        }
+                        this.showErrorAlert(response.data.message);                        
                     }).catch (error => {
-                        console.log(error.message)
+                      this.showErrorAlert(error.message);
                 })
             },
 
@@ -212,7 +215,6 @@ export default {
                 this.itemName = item.item_name
                 this.itemPrice = item.item_price
                 this.quantity = item.quantity
-                console.log(item,"working")
                 this.dialog = true
             },
             deleteItemConfirm (item) {
@@ -225,9 +227,13 @@ export default {
                 if(this.items[i].id == id){
                   this.items.splice(i, 1);
                   this.axios.post('/delete_store_item', {item_id: id}).then(response=>{
-                    console.log(response)
-                  }).catch(error=>{
-                    console.log(error)
+                    if(!response.data.error){
+                      this.showSuccessAlert('Item Deleted')
+                      return
+                    }
+                    this.showErrorAlert(response.data.message)                                      
+                    }).catch(error=>{
+                    this.showErrorAlert(error.message)
                   })
                   break;
                 }
@@ -247,7 +253,11 @@ export default {
               this.itemName = '';
               this.itemPrice = 0;
               this.quantity =0;
+              this.resetValidation ()
           },
+            resetValidation () {
+              this.$refs.form.resetValidation()
+            },          
             closeDialog () {
               this.close();
             },
@@ -269,10 +279,13 @@ export default {
                 }
                 let url = "/update_store_item"
                 this.axios.post( url, editData ).then(response =>{
-                    console.log(response);
-                    this.getDataFromApi()
+                if(!response.data.error){
+                  this.showSuccessAlert('Item Updated')
+                  this.getDataFromApi()
+                  return
+                }                    
                 }).catch(err=>{
-                    console.log(err)
+                  this.showErrorAlert(error.message)              
                 })
             },
             saveNewItem () {
@@ -283,10 +296,15 @@ export default {
                 };
                 let url = '/create_store_item'
                     this.axios.post(url,Data).then(response =>{
-                        this.getDataFromApi()
+                    if(response.data.error == false){
+                      this.showSuccessAlert('Item Added');
+                       this.getDataFromApi()
+                      return
+                    }
+                    this.showErrorAlert(response.data.message)                              
                     }).catch(error =>{
-                        console.log(error)
-                    })
+                      this.showErrorAlert(err.message)
+                  })
             },
         }
 }

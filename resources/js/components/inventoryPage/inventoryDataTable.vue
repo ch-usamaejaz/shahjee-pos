@@ -175,12 +175,15 @@ export default {
             getOrders (order_data) {
                 this.axios.get('/get_all_items/inventory/' + this.options.itemsPerPage + '/' + this.options.page)
                     .then(response => {
+                      if(!response.data.error) {
                         this.items = response.data.data;
                         this.totalItems = response.data.data.length;
                         this.loading = false
-                        console.log(response.data.data , "orders")
+                        return
+                    }
+                    this.showErrorAlert(response.data.message)
                     }).catch (error => {
-                        console.log(error.message)
+                        this.showErrorAlert(error.message)
                 })
             },
             editItem (item) {
@@ -188,7 +191,6 @@ export default {
                 this.currentRowId = item.id
                 this.itemName = item.item_name
                 this.itemPrice = item.item_price
-                console.log(item,"working")
                 this.dialog = true
             },
             deleteItemConfirm (item) {
@@ -201,9 +203,13 @@ export default {
                 if(this.items[i].id == id){
                   this.items.splice(i, 1);
                   this.axios.post('/delete_item', {item_id: id}).then(response=>{
-                    console.log(response)
+                    if(!response.data.error){
+                      this.showSuccessAlert('Item Deleted')
+                      return
+                    }
+                    this.showErrorAlert(response.data.message)
                   }).catch(error=>{
-                    console.log(error)
+                    this.showErrorAlert(error.message)
                   })
                   break;
                 }
@@ -216,12 +222,16 @@ export default {
             changeFormTitle () {
               this.formTitle = "New Item"
             },
+            resetValidation () {
+              this.$refs.form.resetValidation()
+            },            
             close () {
               this.dialog = false
               this.currentRowId = 0;
               this.formTitle = '';
               this.itemName = '';
               this.itemPrice = 0;
+              this.resetValidation ()
           },
             closeDialog () {
               this.close();
@@ -243,9 +253,12 @@ export default {
                 }
                 let url = "/update_item"
                 this.axios.post( url, editData ).then(response =>{
-                    console.log(response);
+                if(!response.data.error){
+                  this.showSuccessAlert('Item Updated')
+                return
+              }
                 }).catch(err=>{
-                    console.log(err)
+                  this.showErrorAlert(err.message)
                 })
                 this.getDataFromApi()
             },
@@ -254,12 +267,15 @@ export default {
                     "item_name": this.itemName,
                     "item_price": this.itemPrice,
                 };
-                console.log(Data);
                 let url = "/create_new_item"
                     this.axios.post(url,Data).then(response =>{
-                        console.log(response)
-                        }).catch(error =>{
-                        console.log(error)
+                    if(response.data.error == false){
+                      this.showSuccessAlert('Item Added');
+                      return
+                    }
+                    this.showErrorAlert(response.data.message)         
+                      }).catch(error =>{
+                        this.showErrorAlert(error)
                     })
                 this.getDataFromApi()
             },
