@@ -14,10 +14,10 @@ class StoreController extends Controller
         try {
             $query = DB::table('store')->select('id', 'item_price', 'item_name', 'quantity', DB::raw('DATE_FORMAT(store.created_at, "%d-%b-%Y") as created_at'));
             if ($limit != -1) {
-                $query->limit($limit)->offset($offset - 1);
+                $query->limit($limit)->offset(($offset - 1) * $limit);
             }
             $items = $query->get()->toArray();
-            $response = ['error' => false, 'data' => $items];
+            $response = ['error' => false, 'data' => $items, 'total_store_items' => count(Store::get())];
         } catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];
         }

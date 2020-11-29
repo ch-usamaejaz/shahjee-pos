@@ -12,8 +12,8 @@ class ItemsController extends Controller
         $response = [];
         try {
             $query = Items::select('id', 'item_price', 'item_name');
-            $items = $origin == 'orders' ? $query->withTrashed()->get()->toArray() : ($limit != -1 ? $query->limit($limit)->offset($offset - 1)->get()->toArray() : $query->get()->toArray());
-            $response = ['error' => false, 'data' => $items];
+            $items = $origin == 'orders' ? $query->withTrashed()->get()->toArray() : ($limit != -1 ? $query->limit($limit)->offset(($offset - 1) * $limit)->get()->toArray() : $query->get()->toArray());
+            $response = ['error' => false, 'data' => $items, 'total_menu_items' => count(Items::get())];
         } catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];
         }

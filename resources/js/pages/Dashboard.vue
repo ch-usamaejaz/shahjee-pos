@@ -5,9 +5,9 @@
             <div class=" mg-t-5">
                 <stats-component v-if="!stats.error" :stats-data="stats"/>
             </div>
-            <div class="mg-t-5">
-                <chartComponent/>
-            </div>
+<!--            <div class="mg-t-5">-->
+<!--                <chartComponent/>-->
+<!--            </div>-->
         </div>
     </div>
 </template>
@@ -15,7 +15,6 @@
 <script>
 import bottomBar from '../layouts/components/bottomBar';
 import statsComponent from "../components/dashboardPage/statsComponent";
-import chartComponent from "../components/dashboardPage/chartComponent";
 export default {
     name: 'dashboard',
     data () {
@@ -25,8 +24,7 @@ export default {
     },
     components: {
         bottomBar,
-        statsComponent,
-        chartComponent
+        statsComponent
     },
     mounted() {
         this.getStatsData();

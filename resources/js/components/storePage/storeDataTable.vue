@@ -199,11 +199,11 @@ export default {
                     .then(response => {
                       if(!response.data.error) {
                         this.items = response.data.data;
-                        this.totalItems = response.data.data.length;
+                        this.totalItems = response.data.total_store_items;
                         this.loading = false
                         return
                         }
-                        this.showErrorAlert(response.data.message);                        
+                        this.showErrorAlert(response.data.message);
                     }).catch (error => {
                       this.showErrorAlert(error.message);
                 })
@@ -231,7 +231,7 @@ export default {
                       this.showSuccessAlert('Item Deleted')
                       return
                     }
-                    this.showErrorAlert(response.data.message)                                      
+                    this.showErrorAlert(response.data.message)
                     }).catch(error=>{
                     this.showErrorAlert(error.message)
                   })
@@ -257,7 +257,7 @@ export default {
           },
             resetValidation () {
               this.$refs.form.resetValidation()
-            },          
+            },
             closeDialog () {
               this.close();
             },
@@ -283,9 +283,9 @@ export default {
                   this.showSuccessAlert('Item Updated')
                   this.getDataFromApi()
                   return
-                }                    
+                }
                 }).catch(err=>{
-                  this.showErrorAlert(error.message)              
+                  this.showErrorAlert(error.message)
                 })
             },
             saveNewItem () {
@@ -301,7 +301,7 @@ export default {
                        this.getDataFromApi()
                       return
                     }
-                    this.showErrorAlert(response.data.message)                              
+                    this.showErrorAlert(response.data.message)
                     }).catch(error =>{
                       this.showErrorAlert(err.message)
                   })

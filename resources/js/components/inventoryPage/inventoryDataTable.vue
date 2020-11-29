@@ -60,7 +60,7 @@
                       label="Item-Price"
                       type="number"
                       outlined
-                      :rules="[(v)=>!!v || 'Item price is required', (v)=> v>=1 || 'Price must be greater than 0']"                    
+                      :rules="[(v)=>!!v || 'Item price is required', (v)=> v>=1 || 'Price must be greater than 0']"
                       v-model="itemPrice"
                   ></v-text-field>
                   </v-col>
@@ -89,8 +89,8 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog 
-        v-model="dialogDelete"  
+        <v-dialog
+        v-model="dialogDelete"
         max-width="500px"
         @click:outside="closeDialog"
         >
@@ -177,7 +177,8 @@ export default {
                     .then(response => {
                       if(!response.data.error) {
                         this.items = response.data.data;
-                        this.totalItems = response.data.data.length;
+                        // this.totalItems = response.data.data.length;
+                        this.totalItems = response.data.total_menu_items;
                         this.loading = false
                         return
                     }
@@ -224,7 +225,7 @@ export default {
             },
             resetValidation () {
               this.$refs.form.resetValidation()
-            },            
+            },
             close () {
               this.dialog = false
               this.currentRowId = 0;
@@ -273,7 +274,7 @@ export default {
                       this.showSuccessAlert('Item Added');
                       return
                     }
-                    this.showErrorAlert(response.data.message)         
+                    this.showErrorAlert(response.data.message)
                       }).catch(error =>{
                         this.showErrorAlert(error)
                     })

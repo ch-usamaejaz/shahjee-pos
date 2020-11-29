@@ -40,8 +40,8 @@
               cols="12"
               sm="6"
               md="6">
-            <v-text-field  
-              
+            <v-text-field
+
               append-icon="mdi-magnify"
               label="Search"
               single-line
@@ -351,7 +351,8 @@
                     .then(response => {
                       if(!response.data.error){
                         this.orders = response.data.orders;
-                        this.totalOrders = this.orders.length;
+                        // this.totalOrders = this.orders.length;
+                        this.totalOrders = response.data.total_orders;
                         this.loading = false
                         return
                         }
@@ -372,11 +373,11 @@
             calculateOrderTotal () {
               let total = 0;
               this.newOrderRow.forEach((value,index) => {
-                total +=  (value.newItem.item_price * value.quantity)                
+                total +=  (value.newItem.item_price * value.quantity)
             })
               this.editedItem.order_total = total;
               this.editedItem.order_discount = 0;
-              this.totalWithoutDiscount = total            
+              this.totalWithoutDiscount = total
             },
             selectRules(){
               if(this.newOrderRow == null){
@@ -421,7 +422,7 @@
               }).catch(error=>{
                 this.showErrorAlert(error.message)
               })
-              
+
               this.close();
               this.dialog = true
             },
@@ -469,7 +470,7 @@
           },
             resetValidation () {
               this.$refs.form.resetValidation()
-            },          
+            },
             closeDialog () {
               this.close();
             },
@@ -481,7 +482,7 @@
                 this.postEditedData();
               }
               this.resetValidation ();
-              
+
               this.close()
             },
             removeRow (index) {
@@ -514,14 +515,14 @@
               this.showSuccessAlert('Order Added');
               return
             }
-            this.showErrorAlert(response.data.message)         
+            this.showErrorAlert(response.data.message)
           }).catch(err =>{
             this.showErrorAlert(err.message)
           })
           this.getDataFromApi();
         },
         postEditedData(){
-         
+
           let items = this.getSelectedItems()
           let shift = this.selectedShift.toLowerCase();
           let editData = {
@@ -540,7 +541,7 @@
                 return
               }
             }).catch(error =>{
-            this.showErrorAlert(error.message)              
+            this.showErrorAlert(error.message)
             })
           this.getDataFromApi();
           this.close();

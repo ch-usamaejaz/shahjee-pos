@@ -15,15 +15,15 @@ class OrdersController extends Controller
             $query = @Orders::select('id', 'order_status', 'order_total', 'order_discount', 'order_shift')
                 ->where('user_id', $request['user_id']);
             if (@$request['itemsPerPage'] !== -1) {
-                $query->limit(@$request['itemsPerPage'])->offset(@$request['page'] - 1);
+                $query->limit(@$request['itemsPerPage'])->offset((@$request['page'] - 1) * @$request['itemsPerPage']);
             };
             if(!empty(@$request['search_order'])){
                 $query->where('id', @$request['search_order']);
             }
-            $orders = $query->orderBy('created_at', @$request['sortDesc'][0] ? 'DESC' : 'ASC')
+            $orders = $query->orderBy('id', @$request['sortDesc'][0] ? 'DESC' : 'ASC')
                 ->get()->toArray();
 
-            $response = ['error' => false, 'orders' => empty($orders) ? [] : $orders];
+            $response = ['error' => false, 'orders' => empty($orders) ? [] : $orders, 'total_orders' => count(Orders::where('user_id', @$request['user_id'])->get())];
         } catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];
         }

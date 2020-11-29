@@ -15,7 +15,7 @@ class DashboardController extends Controller
             list($yesterday_orders, $yesterday_sales) = self::get_date_sales_and_count(Carbon::yesterday());
             list($today_orders, $today_sales) = self::get_date_sales_and_count(Carbon::today());
             $percentage_diff = self::get_percentage_increase($yesterday_sales, $today_sales);
-            $response['data'] = ['today_orders' => $today_orders, 'today_sales' => $today_sales , 'yesterday_sales' => $yesterday_sales, 'increase_percentage' => is_infinite($percentage_diff) ? '' : $percentage_diff ];
+            $response['data'] = ['today_orders' => $today_orders, 'today_sales' => $today_sales , 'yesterday_sales' => $yesterday_sales, 'increase_percentage' => is_infinite($percentage_diff) || is_nan($percentage_diff) ? '' : $percentage_diff ];
         } catch (\Exception $exception) {
             $response = ['error' => true, 'message' => $exception->getMessage()];
         }
