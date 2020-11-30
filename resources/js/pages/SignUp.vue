@@ -5,7 +5,7 @@
           <div class="login-wrapper wd-300 wd-xs-400 pd-25 pd-xs-40 bg-white rounded shadow-base">
             <div class="signin-logo tx-center">
               <!-- <span class="tx-normal">[</span> ShahJee <span class="tx-normal">]</span> -->
-              <img src="../../images/logo.png" class="wd-150" alt="">
+              <img src="/images/logo.png" class="wd-150" alt="">
             <v-divider></v-divider>
             </div>
 
@@ -44,8 +44,8 @@ export default {
   methods: {
     signUp(){
       let formData = new FormData();
-        let data = {"email" : this.email, "password" : this.password, "companyName" : this.companyName};
-        let url = '/signup';
+        let data = {"email" : this.email, "password" : this.password, "company_name" : this.companyName};
+        let url = '/api/signup';
         this.axios.post(url, data).then( response => {
           console.log(response)
         }).catch(err => {

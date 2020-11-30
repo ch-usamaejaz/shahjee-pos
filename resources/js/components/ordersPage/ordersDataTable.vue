@@ -359,6 +359,14 @@
                         this.showErrorAlert(response.data.message);
                     }).catch (error => {
                         this.showErrorAlert(error.message);
+                    if (error.response) {
+                        this.showErrorAlert(error.response.data.message);
+                        if (error.response.status === 401) {
+                            localStorage.removeItem('isAuthenticated')
+                            localStorage.removeItem('user_data');
+                            this.$router.push('/')
+                        }
+                    }
                 })
             },
             getItemTable () {
@@ -369,6 +377,15 @@
                 // self.dropdown_edit.push(item['item_name'])
                 // })
               })
+                  .catch(error => {
+                      if (error.response) {
+                          if (error.response.status === 401) {
+                              localStorage.removeItem('isAuthenticated')
+                              localStorage.removeItem('user_data');
+                              this.$router.push('/')
+                          }
+                      }
+                  })
             },
             calculateOrderTotal () {
               let total = 0;
@@ -420,7 +437,14 @@
                   })
                 })
               }).catch(error=>{
-                this.showErrorAlert(error.message)
+                  if (error.response) {
+                      this.showErrorAlert(error.response.data.message);
+                      if (error.response.status === 401) {
+                          localStorage.removeItem('isAuthenticated')
+                          localStorage.removeItem('user_data');
+                          this.$router.push('/')
+                      }
+                  }
               })
 
               this.close();
@@ -438,7 +462,14 @@
                     }
                     this.showErrorAlert(response.data.message)
                   }).catch(error=>{
-                    this.showErrorAlert(error.message)
+                      if (error.response) {
+                          this.showErrorAlert(error.response.data.message);
+                          if (error.response.status === 401) {
+                              localStorage.removeItem('isAuthenticated')
+                              localStorage.removeItem('user_data');
+                              this.$router.push('/')
+                          }
+                      }
                   })
                   break;
                 }
@@ -516,8 +547,15 @@
               return
             }
             this.showErrorAlert(response.data.message)
-          }).catch(err =>{
-            this.showErrorAlert(err.message)
+          }).catch(error =>{
+              if (error.response) {
+                  this.showErrorAlert(error.response.data.message);
+                  if (error.response.status === 401) {
+                      localStorage.removeItem('isAuthenticated')
+                      localStorage.removeItem('user_data');
+                      this.$router.push('/')
+                  }
+              }
           })
           this.getDataFromApi();
         },
@@ -541,7 +579,14 @@
                 return
               }
             }).catch(error =>{
-            this.showErrorAlert(error.message)
+                if (error.response) {
+                    this.showErrorAlert(error.response.data.message);
+                    if (error.response.status === 401) {
+                        localStorage.removeItem('isAuthenticated')
+                        localStorage.removeItem('user_data');
+                        this.$router.push('/')
+                    }
+                }
             })
           this.getDataFromApi();
           this.close();

@@ -1921,8 +1921,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('Component mounted.'); // this.axios.post('create_new_item', {item_price : 1000, item_name : 'Kheer'})
+  mounted: function mounted() {// console.log('Component mounted.')
+    // this.axios.get('/check_auth')
     //     .then (resp => {
     //         console.log(resp);
     //     })
@@ -2208,7 +2208,16 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.showErrorAlert(response.data.message);
       })["catch"](function (error) {
-        _this.showErrorAlert(error.message);
+        if (error.response) {
+          _this.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this.$router.push('/');
+          }
+        }
       });
     },
     editItem: function editItem(item) {
@@ -2241,7 +2250,16 @@ __webpack_require__.r(__webpack_exports__);
 
             _this2.showErrorAlert(response.data.message);
           })["catch"](function (error) {
-            _this2.showErrorAlert(error.message);
+            if (error.response) {
+              _this2.showErrorAlert(error.response.data.message);
+
+              if (error.response.status === 401) {
+                localStorage.removeItem('isAuthenticated');
+                localStorage.removeItem('user_data');
+
+                _this2.$router.push('/');
+              }
+            }
           });
           break;
         }
@@ -2294,7 +2312,16 @@ __webpack_require__.r(__webpack_exports__);
           return;
         }
       })["catch"](function (err) {
-        _this3.showErrorAlert(err.message);
+        if (error.response) {
+          _this3.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this3.$router.push('/');
+          }
+        }
       });
       this.getDataFromApi();
     },
@@ -2315,7 +2342,16 @@ __webpack_require__.r(__webpack_exports__);
 
         _this4.showErrorAlert(response.data.message);
       })["catch"](function (error) {
-        _this4.showErrorAlert(error);
+        if (error.response) {
+          _this4.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this4.$router.push('/');
+          }
+        }
       });
       this.getDataFromApi();
     }
@@ -2712,6 +2748,17 @@ __webpack_require__.r(__webpack_exports__);
         _this2.showErrorAlert(response.data.message);
       })["catch"](function (error) {
         _this2.showErrorAlert(error.message);
+
+        if (error.response) {
+          _this2.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this2.$router.push('/');
+          }
+        }
       });
     },
     getItemTable: function getItemTable() {
@@ -2722,6 +2769,15 @@ __webpack_require__.r(__webpack_exports__);
         // this.itemsTable.forEach(function (item, index) {
         // self.dropdown_edit.push(item['item_name'])
         // })
+      })["catch"](function (error) {
+        if (error.response) {
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this3.$router.push('/');
+          }
+        }
       });
     },
     calculateOrderTotal: function calculateOrderTotal() {
@@ -2793,7 +2849,16 @@ __webpack_require__.r(__webpack_exports__);
           });
         });
       })["catch"](function (error) {
-        _this4.showErrorAlert(error.message);
+        if (error.response) {
+          _this4.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this4.$router.push('/');
+          }
+        }
       });
       this.close();
       this.dialog = true;
@@ -2817,7 +2882,16 @@ __webpack_require__.r(__webpack_exports__);
 
             _this5.showErrorAlert(response.data.message);
           })["catch"](function (error) {
-            _this5.showErrorAlert(error.message);
+            if (error.response) {
+              _this5.showErrorAlert(error.response.data.message);
+
+              if (error.response.status === 401) {
+                localStorage.removeItem('isAuthenticated');
+                localStorage.removeItem('user_data');
+
+                _this5.$router.push('/');
+              }
+            }
           });
           break;
         }
@@ -2902,8 +2976,17 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         _this6.showErrorAlert(response.data.message);
-      })["catch"](function (err) {
-        _this6.showErrorAlert(err.message);
+      })["catch"](function (error) {
+        if (error.response) {
+          _this6.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this6.$router.push('/');
+          }
+        }
       });
       this.getDataFromApi();
     },
@@ -2929,7 +3012,16 @@ __webpack_require__.r(__webpack_exports__);
           return;
         }
       })["catch"](function (error) {
-        _this7.showErrorAlert(error.message);
+        if (error.response) {
+          _this7.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this7.$router.push('/');
+          }
+        }
       });
       this.getDataFromApi();
       this.close();
@@ -3034,7 +3126,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           _this.orderData = resp.data.data[0];
         }
       })["catch"](function (err) {
-        _this.showErrorAlert(err.message);
+        if (error.response) {
+          _this.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this.$router.push('/');
+          }
+        }
       });
     },
     updateTotal: function updateTotal() {
@@ -3305,7 +3406,16 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.showErrorAlert(response.data.message);
       })["catch"](function (error) {
-        _this.showErrorAlert(error.message);
+        if (error.response) {
+          _this.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this.$router.push('/');
+          }
+        }
       });
     },
     editItem: function editItem(item) {
@@ -3339,7 +3449,16 @@ __webpack_require__.r(__webpack_exports__);
 
             _this2.showErrorAlert(response.data.message);
           })["catch"](function (error) {
-            _this2.showErrorAlert(error.message);
+            if (error.response) {
+              _this2.showErrorAlert(error.response.data.message);
+
+              if (error.response.status === 401) {
+                localStorage.removeItem('isAuthenticated');
+                localStorage.removeItem('user_data');
+
+                _this2.$router.push('/');
+              }
+            }
           });
           break;
         }
@@ -3395,8 +3514,17 @@ __webpack_require__.r(__webpack_exports__);
 
           return;
         }
-      })["catch"](function (err) {
-        _this3.showErrorAlert(error.message);
+      })["catch"](function (error) {
+        if (error.response) {
+          _this3.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this3.$router.push('/');
+          }
+        }
       });
     },
     saveNewItem: function saveNewItem() {
@@ -3419,7 +3547,16 @@ __webpack_require__.r(__webpack_exports__);
 
         _this4.showErrorAlert(response.data.message);
       })["catch"](function (error) {
-        _this4.showErrorAlert(err.message);
+        if (error.response) {
+          _this4.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this4.$router.push('/');
+          }
+        }
       });
     }
   }
@@ -3598,8 +3735,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "topBar",
   methods: {
-    removeStorage: function removeStorage() {
-      localStorage.removeItem(1); // router.push({path: '/'})
+    logoutUser: function logoutUser() {
+      var _this = this;
+
+      this.axios.post('/api/logout').then(function (resp) {
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('user_data');
+
+        _this.$router.push('/');
+      })["catch"](function (err) {
+        _this.showErrorAlert(err.message);
+      });
     }
   }
 });
@@ -3716,8 +3862,17 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         _this.stats = resp.data.data;
-      })["catch"](function (err) {
-        _this.showErrorAlert(err.message);
+      })["catch"](function (error) {
+        if (error.response) {
+          _this.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this.$router.push('/');
+          }
+        }
       });
     }
   }
@@ -3796,27 +3951,30 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       email: '',
-      password: '',
-      isAuthenticated: false
+      password: ''
     };
   },
   mounted: function mounted() {},
   methods: {
     login: function login() {
+      var _this = this;
+
       var data = {
         "email": this.email,
-        "password": this.password,
-        "companyName": this.companyName
+        "password": this.password
       };
-      var url = '/login'; //     this.axios.post(url, data).then( response => {
-      //         console.log(response)
-      //     }).catch(err => {
-      //         console.log(err.message);
-      //     }
-      // )
+      var url = '/api/login';
+      this.axios.post(url, data).then(function (response) {
+        localStorage.setItem("isAuthenticated", true);
+        localStorage.setItem("user_data", JSON.stringify({
+          company_name: response.data.company_name,
+          email: response.data.email
+        }));
 
-      this.isAuthenticated = true;
-      localStorage.setItem(1, this.isAuthenticated); // router.push({path: '/dashboard'})
+        _this.$router.push('/dashboard');
+      })["catch"](function (err) {
+        _this.showErrorAlert(err.message);
+      });
     }
   }
 });
@@ -3977,7 +4135,16 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.showErrorAlert(response.data.message);
       }, function (error) {
-        _this.showErrorAlert(error.message);
+        if (error.response) {
+          _this.showErrorAlert(error.response.data.message);
+
+          if (error.response.status === 401) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user_data');
+
+            _this.$router.push('/');
+          }
+        }
       });
     },
     reset: function reset() {
@@ -4043,9 +4210,9 @@ __webpack_require__.r(__webpack_exports__);
       var data = {
         "email": this.email,
         "password": this.password,
-        "companyName": this.companyName
+        "company_name": this.companyName
       };
-      var url = '/signup';
+      var url = '/api/signup';
       this.axios.post(url, data).then(function (response) {
         console.log(response);
       })["catch"](function (err) {
@@ -41699,12 +41866,10 @@ var render = function() {
   return _vm.isDataLoaded
     ? _c("div", [
         _c("div", { staticClass: "ticket", attrs: { id: "print" } }, [
-          _c("img", {
-            attrs: { src: __webpack_require__(/*! ../../../images/logo.png */ "./resources/images/logo.png"), alt: "Logo" }
-          }),
+          _c("img", { attrs: { src: "/images/logo.png", alt: "Logo" } }),
           _vm._v(" "),
           _c("p", { staticClass: "centered" }, [
-            _vm._v("Shahjee Restaurants\n            "),
+            _vm._v("Shahjee Restaurant\n            "),
             _c("br"),
             _vm._v("Adda Plot, Main Raiwind Road, Lahore\n            "),
             _c("br"),
@@ -42557,8 +42722,8 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("router-link", { attrs: { to: "/" } }, [
-                      _c("li", { on: { click: _vm.removeStorage } }, [
+                    _c("a", { attrs: { to: "/" } }, [
+                      _c("li", { on: { click: _vm.logoutUser } }, [
                         _c("i", { staticClass: "icon ion-power" }),
                         _vm._v(" Sign Out")
                       ])
@@ -42605,7 +42770,7 @@ var staticRenderFns = [
       },
       [
         _c("span", { staticClass: "logged-name hidden-md-down" }, [
-          _vm._v("Hi, ShahJee Resturents  ")
+          _vm._v("Hi, ShahJee Restaurent  ")
         ])
       ]
     )
@@ -42872,7 +43037,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "signin-logo tx-center" }, [
       _c("img", {
         staticClass: "wd-150",
-        attrs: { src: __webpack_require__(/*! ../../images/logo.png */ "./resources/images/logo.png"), alt: "" }
+        attrs: { src: "/images/logo.png", alt: "" }
       })
     ])
   }
@@ -43093,7 +43258,7 @@ var render = function() {
               [
                 _c("img", {
                   staticClass: "wd-150",
-                  attrs: { src: __webpack_require__(/*! ../../images/logo.png */ "./resources/images/logo.png"), alt: "" }
+                  attrs: { src: "/images/logo.png", alt: "" }
                 }),
                 _vm._v(" "),
                 _c("v-divider")
@@ -102345,17 +102510,6 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/images/logo.png":
-/*!***********************************!*\
-  !*** ./resources/images/logo.png ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "/images/logo.png?fa1a34e3d75a033346d56c655eee1771";
-
-/***/ }),
-
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -102395,7 +102549,10 @@ Vue.use(vuetify__WEBPACK_IMPORTED_MODULE_4___default.a);
 Vue.mixin(_mixins_global__WEBPACK_IMPORTED_MODULE_6__["default"]);
 Vue.use(vue_axios__WEBPACK_IMPORTED_MODULE_2___default.a, axios__WEBPACK_IMPORTED_MODULE_3___default.a.create({
   baseURL: 'http://127.0.0.1:8000'
-}));
+})); // Vue.use(VueAxios, axios.create({
+//     baseURL: 'http://shahjeerestaurants.com'
+// }));
+
 var app = new Vue({
   el: '#app',
   vuetify: new vuetify__WEBPACK_IMPORTED_MODULE_4___default.a(),
@@ -103932,13 +104089,12 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: routes
 });
 router.beforeEach(function (to, from, next) {
-  if (to.name !== 'login' && !localStorage.getItem(1)) next({
+  if (to.name !== 'login' && !localStorage.getItem("isAuthenticated")) next({
     name: 'login'
-  });else if (to.name === 'login' && localStorage.getItem(1)) next({
+  });else if (to.name === 'login' && localStorage.getItem("isAuthenticated")) next({
     name: 'dashboard'
   });else next();
 });
-console.log(localStorage.getItem(1));
 /* harmony default export */ __webpack_exports__["default"] = (router);
 
 /***/ }),

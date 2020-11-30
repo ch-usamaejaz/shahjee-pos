@@ -35,7 +35,7 @@
                         v-model="newPassword"
                         label="New Password"
                         :counter="8"
-                        
+
                         type="password"
                     ></v-text-field>
 
@@ -104,7 +104,14 @@ export default {
         }
         this.showErrorAlert(response.data.message)
         }, (error) =>{
-            this.showErrorAlert(error.message);
+            if (error.response) {
+                this.showErrorAlert(error.response.data.message);
+                if (error.response.status === 401) {
+                    localStorage.removeItem('isAuthenticated')
+                    localStorage.removeItem('user_data');
+                    this.$router.push('/')
+                }
+            }
         })
       },
       reset () {

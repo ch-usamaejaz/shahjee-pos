@@ -14,14 +14,14 @@
         <nav class="nav">
           <div class="dropdown">
             <a href="" class="nav-link nav-link-profile" data-toggle="dropdown">
-              <span class="logged-name hidden-md-down">Hi, ShahJee Resturents &nbsp;</span>
+              <span class="logged-name hidden-md-down">Hi, ShahJee Restaurent &nbsp;</span>
               <!-- <img src="../../../images/logo.png" class="wd-32 rounded-circle" alt=""> -->
               <!-- <span class="square-10 bg-success"></span> -->
             </a>
             <div class="dropdown-menu dropdown-menu-header wd-200">
               <ul class="list-unstyled user-profile-nav">
                 <router-link to="/profile"><li><i class="icon ion-ios-person"></i> Edit Profile</li></router-link>
-                <router-link to="/"><li @click="removeStorage"><i class="icon ion-power"></i> Sign Out</li></router-link>
+                <a to="/"><li @click="logoutUser"><i class="icon ion-power"></i> Sign Out</li></a>
               </ul>
             </div><!-- dropdown-menu -->
           </div><!-- dropdown -->
@@ -36,9 +36,16 @@
 export default {
     name: "topBar",
     methods: {
-      removeStorage(){
-        localStorage.removeItem(1);
-        // router.push({path: '/'})
+        logoutUser(){
+        this.axios.post('/api/logout')
+            .then (resp => {
+                localStorage.removeItem('isAuthenticated');
+                localStorage.removeItem('user_data');
+                this.$router.push('/');
+            })
+            .catch (err => {
+                this.showErrorAlert(err.message)
+            })
       }
     }
 }

@@ -184,7 +184,14 @@ export default {
                     }
                     this.showErrorAlert(response.data.message)
                     }).catch (error => {
-                        this.showErrorAlert(error.message)
+                    if (error.response) {
+                        this.showErrorAlert(error.response.data.message);
+                        if (error.response.status === 401) {
+                            localStorage.removeItem('isAuthenticated')
+                            localStorage.removeItem('user_data');
+                            this.$router.push('/')
+                        }
+                    }
                 })
             },
             editItem (item) {
@@ -210,7 +217,14 @@ export default {
                     }
                     this.showErrorAlert(response.data.message)
                   }).catch(error=>{
-                    this.showErrorAlert(error.message)
+                      if (error.response) {
+                          this.showErrorAlert(error.response.data.message);
+                          if (error.response.status === 401) {
+                              localStorage.removeItem('isAuthenticated')
+                              localStorage.removeItem('user_data');
+                              this.$router.push('/')
+                          }
+                      }
                   })
                   break;
                 }
@@ -259,7 +273,14 @@ export default {
                 return
               }
                 }).catch(err=>{
-                  this.showErrorAlert(err.message)
+                    if (error.response) {
+                        this.showErrorAlert(error.response.data.message);
+                        if (error.response.status === 401) {
+                            localStorage.removeItem('isAuthenticated')
+                            localStorage.removeItem('user_data');
+                            this.$router.push('/')
+                        }
+                    }
                 })
                 this.getDataFromApi()
             },
@@ -276,7 +297,14 @@ export default {
                     }
                     this.showErrorAlert(response.data.message)
                       }).catch(error =>{
-                        this.showErrorAlert(error)
+                        if (error.response) {
+                            this.showErrorAlert(error.response.data.message);
+                            if (error.response.status === 401) {
+                                localStorage.removeItem('isAuthenticated')
+                                localStorage.removeItem('user_data');
+                                this.$router.push('/')
+                            }
+                        }
                     })
                 this.getDataFromApi()
             },

@@ -89,9 +89,8 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.name !== 'login' && !localStorage.getItem(1)) next({ name: 'login' });
-    else if(to.name === 'login' && localStorage.getItem(1)) next({ name: 'dashboard' });
+    if (to.name !== 'login' && !localStorage.getItem("isAuthenticated")) next({ name: 'login' });
+    else if(to.name === 'login' && localStorage.getItem("isAuthenticated")) next({ name: 'dashboard' });
     else next()
 });
-console.log(localStorage.getItem(1))
 export default router;

@@ -13,8 +13,8 @@
 <script>
     export default {
         mounted() {
-            console.log('Component mounted.')
-            // this.axios.post('create_new_item', {item_price : 1000, item_name : 'Kheer'})
+            // console.log('Component mounted.')
+            // this.axios.get('/check_auth')
             //     .then (resp => {
             //         console.log(resp);
             //     })

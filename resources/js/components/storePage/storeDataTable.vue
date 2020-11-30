@@ -205,7 +205,14 @@ export default {
                         }
                         this.showErrorAlert(response.data.message);
                     }).catch (error => {
-                      this.showErrorAlert(error.message);
+                    if (error.response) {
+                        this.showErrorAlert(error.response.data.message);
+                        if (error.response.status === 401) {
+                            localStorage.removeItem('isAuthenticated')
+                            localStorage.removeItem('user_data');
+                            this.$router.push('/')
+                        }
+                    }
                 })
             },
 
@@ -233,7 +240,14 @@ export default {
                     }
                     this.showErrorAlert(response.data.message)
                     }).catch(error=>{
-                    this.showErrorAlert(error.message)
+                      if (error.response) {
+                          this.showErrorAlert(error.response.data.message);
+                          if (error.response.status === 401) {
+                              localStorage.removeItem('isAuthenticated')
+                              localStorage.removeItem('user_data');
+                              this.$router.push('/')
+                          }
+                      }
                   })
                   break;
                 }
@@ -284,8 +298,15 @@ export default {
                   this.getDataFromApi()
                   return
                 }
-                }).catch(err=>{
-                  this.showErrorAlert(error.message)
+                }).catch(error=>{
+                    if (error.response) {
+                        this.showErrorAlert(error.response.data.message);
+                        if (error.response.status === 401) {
+                            localStorage.removeItem('isAuthenticated')
+                            localStorage.removeItem('user_data');
+                            this.$router.push('/')
+                        }
+                    }
                 })
             },
             saveNewItem () {
@@ -303,7 +324,14 @@ export default {
                     }
                     this.showErrorAlert(response.data.message)
                     }).catch(error =>{
-                      this.showErrorAlert(err.message)
+                        if (error.response) {
+                            this.showErrorAlert(error.response.data.message);
+                            if (error.response.status === 401) {
+                                localStorage.removeItem('isAuthenticated')
+                                localStorage.removeItem('user_data');
+                                this.$router.push('/')
+                            }
+                        }
                   })
             },
         }

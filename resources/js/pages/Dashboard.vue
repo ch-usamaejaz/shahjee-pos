@@ -36,8 +36,15 @@ export default {
                     if(resp.error) {return}
                     this.stats = resp.data.data;
                 })
-                .catch(err => {
-                    this.showErrorAlert(err.message)
+                .catch(error => {
+                    if (error.response) {
+                        this.showErrorAlert(error.response.data.message);
+                        if (error.response.status === 401) {
+                            localStorage.removeItem('isAuthenticated')
+                            localStorage.removeItem('user_data');
+                            this.$router.push('/')
+                        }
+                    }
                 })
         }
     }

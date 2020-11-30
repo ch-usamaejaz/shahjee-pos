@@ -1,8 +1,8 @@
 <template>
     <div v-if="isDataLoaded">
         <div class="ticket" id="print">
-            <img  src="../../../images/logo.png" alt="Logo">
-            <p class="centered">Shahjee Restaurants
+            <img src="/images/logo.png" alt="Logo">
+            <p class="centered">Shahjee Restaurant
                 <br>Adda Plot, Main Raiwind Road, Lahore
                 <br>Order# {{orderData.id}}</p>
             <table>
@@ -70,20 +70,27 @@ export default {
                     }
                 })
                 .catch (err => {
-                    this.showErrorAlert(err.message)
+                    if (error.response) {
+                        this.showErrorAlert(error.response.data.message);
+                        if (error.response.status === 401) {
+                            localStorage.removeItem('isAuthenticated')
+                            localStorage.removeItem('user_data');
+                            this.$router.push('/')
+                        }
+                    }
                 })
         },
         updateTotal(){
             let total = 0;
             this.orderData.forEach((value,index) => {
-            total +=  (value.newItem.item_price * value.quantity)                
+            total +=  (value.newItem.item_price * value.quantity)
         })
             this.orderTotalWithDiscount = total
-            this.totalWithoutDiscount = total            
+            this.totalWithoutDiscount = total
         },
         addDiscount () {
             this.orderTotalWithDiscount = (this.orderTotalWithoutDiscount - this.orderData.order_discount);
-            },                  
+            },
         printTicket(){
             const prtHtml = document.getElementById('print').innerHTML;
             // Get all stylesheets HTML

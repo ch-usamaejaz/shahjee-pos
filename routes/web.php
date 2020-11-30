@@ -28,5 +28,6 @@ Route::post('/create_store_item','StoreController@create_item');
 Route::post('/update_store_item','StoreController@update_item');
 Route::get('/get_dashboard_data', 'DashboardController@get_dashboard_data');
 
+
 Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');
 
