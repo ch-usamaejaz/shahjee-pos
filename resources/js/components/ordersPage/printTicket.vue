@@ -1,7 +1,7 @@
 <template>
     <div v-if="isDataLoaded">
         <div class="ticket" id="print">
-            <img src="/images/logo.png" alt="Logo">
+            <img :src=" baseUrl + '/images/logo.png'" alt="Logo">
             <p class="centered">Shahjee Restaurant
                 <br>Adda Plot, Main Raiwind Road, Lahore
                 <br>Order# {{orderData.id}}</p>
@@ -55,10 +55,12 @@ export default {
             isDataLoaded : false,
             orderTotalWithDiscount : 0,
             orderTotalWithoutDiscount: 0,
+            baseUrl : ''
         }
     },
     mounted(){
         this.getOrderData();
+        this.baseUrl = this.getBaseUrl();
     },
     methods: {
         getOrderData(){

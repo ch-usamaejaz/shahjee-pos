@@ -3107,11 +3107,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       orderData: {},
       isDataLoaded: false,
       orderTotalWithDiscount: 0,
-      orderTotalWithoutDiscount: 0
+      orderTotalWithoutDiscount: 0,
+      baseUrl: ''
     };
   },
   mounted: function mounted() {
     this.getOrderData();
+    this.baseUrl = this.getBaseUrl();
   },
   methods: {
     getOrderData: function getOrderData() {
@@ -3951,10 +3953,13 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      baseUrl: ''
     };
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    this.baseUrl = this.getBaseUrl();
+  },
   methods: {
     login: function login() {
       var _this = this;
@@ -41866,7 +41871,9 @@ var render = function() {
   return _vm.isDataLoaded
     ? _c("div", [
         _c("div", { staticClass: "ticket", attrs: { id: "print" } }, [
-          _c("img", { attrs: { src: "/images/logo.png", alt: "Logo" } }),
+          _c("img", {
+            attrs: { src: _vm.baseUrl + "/images/logo.png", alt: "Logo" }
+          }),
           _vm._v(" "),
           _c("p", { staticClass: "centered" }, [
             _vm._v("Shahjee Restaurant\n            "),
@@ -42941,7 +42948,12 @@ var render = function() {
                 "login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white rounded shadow-base"
             },
             [
-              _vm._m(0),
+              _c("div", { staticClass: "signin-logo tx-center" }, [
+                _c("img", {
+                  staticClass: "wd-150",
+                  attrs: { src: _vm.baseUrl + "/images/logo.png", alt: "" }
+                })
+              ]),
               _vm._v(" "),
               _c("v-divider"),
               _vm._v(" "),
@@ -43029,19 +43041,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "signin-logo tx-center" }, [
-      _c("img", {
-        staticClass: "wd-150",
-        attrs: { src: "/images/logo.png", alt: "" }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -103427,6 +103427,9 @@ var global = {
         buttons: false,
         timer: 2000
       });
+    },
+    getBaseUrl: function getBaseUrl() {
+      return window.location.origin;
     } // checkSessionExpiredError (message) {
     //     if (message === 'Session Expired') {
     //         store.commit('resetStates'); //local storage

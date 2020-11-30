@@ -28,6 +28,9 @@ const global = {
                 buttons: false,
                 timer: 2000
             });
+        },
+        getBaseUrl(){
+            return window.location.origin
         }
         // checkSessionExpiredError (message) {
         //     if (message === 'Session Expired') {
