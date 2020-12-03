@@ -41872,7 +41872,13 @@ var render = function() {
     ? _c("div", [
         _c("div", { staticClass: "ticket", attrs: { id: "print" } }, [
           _c("img", {
-            attrs: { src: _vm.baseUrl + "/images/logo.png", alt: "Logo" }
+            attrs: {
+              src:
+                _vm.baseUrl == "http://shahjeerestaurants.com"
+                  ? _vm.baseUrl + "/public/images/logo.png"
+                  : "images/logo.png",
+              alt: "Logo"
+            }
           }),
           _vm._v(" "),
           _c("p", { staticClass: "centered" }, [
@@ -42951,7 +42957,13 @@ var render = function() {
               _c("div", { staticClass: "signin-logo tx-center" }, [
                 _c("img", {
                   staticClass: "wd-150",
-                  attrs: { src: _vm.baseUrl + "/images/logo.png", alt: "" }
+                  attrs: {
+                    src:
+                      _vm.baseUrl == "http://shahjeerestaurants.com"
+                        ? _vm.baseUrl + "/public/images/logo.png"
+                        : "images/logo.png",
+                    alt: ""
+                  }
                 })
               ]),
               _vm._v(" "),

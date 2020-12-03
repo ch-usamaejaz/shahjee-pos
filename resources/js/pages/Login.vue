@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center justify-content-center bg-br-primary ht-100v">
             <div class="login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white rounded shadow-base">
                 <div class="signin-logo tx-center">
-                     <img :src=" baseUrl + '/images/logo.png'" class="wd-150" alt="">
+                     <img :src=" baseUrl == 'http://shahjeerestaurants.com' ? baseUrl + '/public/images/logo.png' : 'images/logo.png'" class="wd-150" alt="">
                 </div>
                 <v-divider></v-divider>
                 <div class="form-group">

@@ -1,7 +1,7 @@
 <template>
     <div v-if="isDataLoaded">
         <div class="ticket" id="print">
-            <img :src=" baseUrl + '/images/logo.png'" alt="Logo">
+            <img :src=" baseUrl == 'http://shahjeerestaurants.com' ? baseUrl + '/public/images/logo.png' : 'images/logo.png' " alt="Logo">
             <p class="centered">Shahjee Restaurant
                 <br>Adda Plot, Main Raiwind Road, Lahore
                 <br>Order# {{orderData.id}}</p>
