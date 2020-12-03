@@ -169,6 +169,8 @@ th.price {
 .ticket {
     width: 155px;
     max-width: 155px;
+    color: black;
+    font-weight:400;
 }
 
 img {

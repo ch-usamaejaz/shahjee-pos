@@ -2635,6 +2635,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _this = this;
@@ -8719,7 +8722,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n*[data-v-7a80bea9] {\n    font-size: 12px;\n    font-family: 'Times New Roman';\n    font-weight: bolder;\n}\ntd[data-v-7a80bea9],\nth[data-v-7a80bea9],\ntr[data-v-7a80bea9],\ntable[data-v-7a80bea9] {\n    border-top: 1px solid black;\n    border-collapse: collapse;\n    align-items: center !important;\n    margin-left: auto;\n    margin-right: auto;\n}\ntd.description[data-v-7a80bea9],\nth.description[data-v-7a80bea9] {\n    width: 75px;\n    max-width: 75px;\n}\ntd.quantity[data-v-7a80bea9],\nth.quantity[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    /* word-break: break-all; */\n}\ntd.price[data-v-7a80bea9],\nth.price[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    /* word-break: break-all; */\n}\n.centered[data-v-7a80bea9] {\n    text-align: center;\n    align-content: center;\n}\n.ticket[data-v-7a80bea9] {\n    width: 155px;\n    max-width: 155px;\n}\nimg[data-v-7a80bea9] {\n    max-width: 100px;\n    width: inherit;\n    display: block;\n    margin-left: auto;\n    margin-right: auto;\n}\n@media print {\n.hidden-print[data-v-7a80bea9],\n    .hidden-print *[data-v-7a80bea9] {\n        display: none !important;\n}\n}\n", ""]);
+exports.push([module.i, "\n*[data-v-7a80bea9] {\n    font-size: 12px;\n    font-family: 'Times New Roman';\n    font-weight: bolder;\n}\ntd[data-v-7a80bea9],\nth[data-v-7a80bea9],\ntr[data-v-7a80bea9],\ntable[data-v-7a80bea9] {\n    border-top: 1px solid black;\n    border-collapse: collapse;\n    align-items: center !important;\n    margin-left: auto;\n    margin-right: auto;\n}\ntd.description[data-v-7a80bea9],\nth.description[data-v-7a80bea9] {\n    width: 75px;\n    max-width: 75px;\n}\ntd.quantity[data-v-7a80bea9],\nth.quantity[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    /* word-break: break-all; */\n}\ntd.price[data-v-7a80bea9],\nth.price[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    /* word-break: break-all; */\n}\n.centered[data-v-7a80bea9] {\n    text-align: center;\n    align-content: center;\n}\n.ticket[data-v-7a80bea9] {\n    width: 155px;\n    max-width: 155px;\n    color: black;\n    font-weight:400;\n}\nimg[data-v-7a80bea9] {\n    max-width: 100px;\n    width: inherit;\n    display: block;\n    margin-left: auto;\n    margin-right: auto;\n}\n@media print {\n.hidden-print[data-v-7a80bea9],\n    .hidden-print *[data-v-7a80bea9] {\n        display: none !important;\n}\n}\n", ""]);
 
 // exports
 
@@ -41097,6 +41100,48 @@ var render = function() {
   return _c(
     "div",
     [
+      _c(
+        "v-row",
+        [
+          _c(
+            "v-col",
+            { attrs: { cols: "12", sm: "6", md: "4" } },
+            [
+              _c("v-text-field", {
+                attrs: {
+                  "append-icon": "mdi-magnify",
+                  label: "Search",
+                  "single-line": "",
+                  type: "number",
+                  hint: "Enter Order Number",
+                  "persistent-hint": ""
+                },
+                on: {
+                  keydown: function($event) {
+                    if (
+                      !$event.type.indexOf("key") &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return _vm.getDataFromApi($event)
+                  }
+                },
+                model: {
+                  value: _vm.searchOrder,
+                  callback: function($$v) {
+                    _vm.searchOrder = $$v
+                  },
+                  expression: "searchOrder"
+                }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
       _c("v-data-table", {
         staticClass: "elevation-1",
         attrs: {
@@ -41200,58 +41245,6 @@ var render = function() {
                                                 )
                                               ]
                                             )
-                                          ],
-                                          1
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "v-col",
-                                          {
-                                            attrs: {
-                                              cols: "12",
-                                              sm: "6",
-                                              md: "6"
-                                            }
-                                          },
-                                          [
-                                            _c("v-text-field", {
-                                              attrs: {
-                                                "append-icon": "mdi-magnify",
-                                                label: "Search",
-                                                "single-line": "",
-                                                type: "number",
-                                                hint: "Enter Order Number",
-                                                "persistent-hint": ""
-                                              },
-                                              on: {
-                                                keydown: function($event) {
-                                                  if (
-                                                    !$event.type.indexOf(
-                                                      "key"
-                                                    ) &&
-                                                    _vm._k(
-                                                      $event.keyCode,
-                                                      "enter",
-                                                      13,
-                                                      $event.key,
-                                                      "Enter"
-                                                    )
-                                                  ) {
-                                                    return null
-                                                  }
-                                                  return _vm.getDataFromApi(
-                                                    $event
-                                                  )
-                                                }
-                                              },
-                                              model: {
-                                                value: _vm.searchOrder,
-                                                callback: function($$v) {
-                                                  _vm.searchOrder = $$v
-                                                },
-                                                expression: "searchOrder"
-                                              }
-                                            })
                                           ],
                                           1
                                         )
@@ -102558,13 +102551,13 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
 Vue.use(vuetify__WEBPACK_IMPORTED_MODULE_4___default.a);
-Vue.mixin(_mixins_global__WEBPACK_IMPORTED_MODULE_6__["default"]);
-Vue.use(vue_axios__WEBPACK_IMPORTED_MODULE_2___default.a, axios__WEBPACK_IMPORTED_MODULE_3___default.a.create({
-  baseURL: 'http://127.0.0.1:8000'
-})); // Vue.use(VueAxios, axios.create({
-//     baseURL: 'http://shahjeerestaurants.com'
+Vue.mixin(_mixins_global__WEBPACK_IMPORTED_MODULE_6__["default"]); // Vue.use(VueAxios, axios.create({
+//     baseURL: 'http://127.0.0.1:8000'
 // }));
 
+Vue.use(vue_axios__WEBPACK_IMPORTED_MODULE_2___default.a, axios__WEBPACK_IMPORTED_MODULE_3___default.a.create({
+  baseURL: 'http://shahjeerestaurants.com'
+}));
 var app = new Vue({
   el: '#app',
   vuetify: new vuetify__WEBPACK_IMPORTED_MODULE_4___default.a(),

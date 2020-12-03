@@ -1,5 +1,24 @@
 <template>
     <div>
+        <v-row>
+            <v-col
+                cols="12"
+                sm="6"
+                md="4"
+                >
+                <v-text-field
+                    append-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    v-model="searchOrder"
+                    @keydown.enter="getDataFromApi"
+                    type="number"
+                    hint="Enter Order Number"
+                    persistent-hint
+                ></v-text-field>
+            </v-col>
+        </v-row>
+
         <v-data-table
             :headers="headers"
             :items="orders"
@@ -35,22 +54,6 @@
             >
               New Order
             </v-btn>
-              </v-col>
-            <v-col
-              cols="12"
-              sm="6"
-              md="6">
-            <v-text-field
-
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              v-model="searchOrder"
-              @keydown.enter="getDataFromApi"
-              type="number"
-              hint="Enter Order Number"
-              persistent-hint
-            ></v-text-field>
               </v-col>
             </v-row>
           </template>
