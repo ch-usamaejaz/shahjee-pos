@@ -3108,6 +3108,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'printTicket',
   data: function data() {
@@ -41967,6 +41977,30 @@ var render = function() {
                     _vm._v(" "),
                     _c("td", { staticClass: "price" }, [
                       _vm._v("Rs " + _vm._s(_vm.orderData.order_total))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("td", { staticClass: "quantity" }),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "description" }, [
+                      _vm._v("Received: ")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "price" }, [
+                      _vm._v("Rs " + _vm._s(_vm.orderData.cash_received))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("td", { staticClass: "quantity" }),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "description" }, [
+                      _vm._v("Returned: ")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "price" }, [
+                      _vm._v("Rs " + _vm._s(_vm.orderData.change_returned))
                     ])
                   ])
                 ],
