@@ -3103,6 +3103,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'printTicket',
   data: function data() {
@@ -3111,7 +3116,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       isDataLoaded: false,
       orderTotalWithDiscount: 0,
       orderTotalWithoutDiscount: 0,
-      baseUrl: ''
+      baseUrl: '',
+      orderDate: ''
     };
   },
   mounted: function mounted() {
@@ -3129,6 +3135,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
         if (!resp.data.error) {
           _this.orderData = resp.data.data[0];
+          var timestamp = new Date(resp.data.data[0].created_at);
+          _this.orderDate = timestamp.getDate() + '/' + timestamp.getMonth() + '/' + timestamp.getFullYear();
         }
       })["catch"](function (err) {
         if (error.response) {
@@ -8722,7 +8730,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n*[data-v-7a80bea9] {\n    font-size: 12px;\n    font-family: 'Times New Roman';\n    font-weight: bolder;\n}\ntd[data-v-7a80bea9],\nth[data-v-7a80bea9],\ntr[data-v-7a80bea9],\ntable[data-v-7a80bea9] {\n    border-top: 1px solid black;\n    border-collapse: collapse;\n    align-items: center !important;\n    margin-left: auto;\n    margin-right: auto;\n}\ntd.description[data-v-7a80bea9],\nth.description[data-v-7a80bea9] {\n    width: 75px;\n    max-width: 75px;\n}\ntd.quantity[data-v-7a80bea9],\nth.quantity[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    /* word-break: break-all; */\n}\ntd.price[data-v-7a80bea9],\nth.price[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    /* word-break: break-all; */\n}\n.centered[data-v-7a80bea9] {\n    text-align: center;\n    align-content: center;\n}\n.ticket[data-v-7a80bea9] {\n    width: 155px;\n    max-width: 155px;\n    color: black;\n    font-weight:400;\n}\nimg[data-v-7a80bea9] {\n    max-width: 100px;\n    width: inherit;\n    display: block;\n    margin-left: auto;\n    margin-right: auto;\n}\n@media print {\n.hidden-print[data-v-7a80bea9],\n    .hidden-print *[data-v-7a80bea9] {\n        display: none !important;\n}\n}\n", ""]);
+exports.push([module.i, "\n*[data-v-7a80bea9] {\n    font-size: 12px;\n    font-family: 'Times New Roman';\n    font-weight: bolder;\n    color: black;\n}\ntd[data-v-7a80bea9],\nth[data-v-7a80bea9],\ntr[data-v-7a80bea9],\ntable[data-v-7a80bea9] {\n    border-top: 1px solid black;\n    border-collapse: collapse;\n    align-items: start !important;\n    margin-left: auto;\n    margin-right: auto;\n}\ntd.description[data-v-7a80bea9],\nth.description[data-v-7a80bea9] {\n    width: 75px;\n    max-width: 75px;\n}\ntd.quantity[data-v-7a80bea9],\nth.quantity[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    /* word-break: break-all; */\n}\ntd.price[data-v-7a80bea9],\nth.price[data-v-7a80bea9] {\n    width: 40px;\n    max-width: 40px;\n    /* word-break: break-all; */\n}\n.centered[data-v-7a80bea9] {\n    text-align: center !important;\n    align-content: center !important;\n}\n.ticket[data-v-7a80bea9] {\n    width: 155px;\n    max-width: 155px;\n    color: black;\n    font-weight:400;\n    background-color: white;\n}\nimg[data-v-7a80bea9] {\n    max-width: 100px;\n    width: inherit;\n    display: block;\n    margin-left: auto;\n    margin-right: auto;\n}\n.order_date[data-v-7a80bea9] {\n    margin-left : 2px;\n    margin-right : 2px;\n}\n@media print {\n.hidden-print[data-v-7a80bea9],\n    .hidden-print *[data-v-7a80bea9] {\n        display: none !important;\n}\n}\n", ""]);
 
 // exports
 
@@ -41863,99 +41871,119 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _vm.isDataLoaded
     ? _c("div", [
-        _c("div", { staticClass: "ticket", attrs: { id: "print" } }, [
-          _c("img", {
-            attrs: {
-              src:
-                _vm.baseUrl == "http://shahjeerestaurants.com"
-                  ? _vm.baseUrl + "/public/images/logo.png"
-                  : "images/logo.png",
-              alt: "Logo"
-            }
-          }),
-          _vm._v(" "),
-          _c("p", { staticClass: "centered" }, [
-            _vm._v("Shahjee Restaurant\n            "),
-            _c("br"),
-            _vm._v("Adda Plot, Main Raiwind Road, Lahore\n            "),
-            _c("br"),
-            _vm._v("Order# " + _vm._s(_vm.orderData.id))
-          ]),
-          _vm._v(" "),
-          _c("table", [
+        _c(
+          "div",
+          { staticClass: "ticket", attrs: { id: "print" } },
+          [
+            _c("img", {
+              attrs: {
+                src:
+                  _vm.baseUrl == "http://shahjeerestaurants.com"
+                    ? _vm.baseUrl + "/public/images/logo.png"
+                    : "images/logo.png",
+                alt: "Logo"
+              }
+            }),
+            _vm._v(" "),
             _vm._m(0),
             _vm._v(" "),
             _c(
-              "tbody",
+              "v-row",
+              { staticClass: "centered order_date" },
               [
-                _vm._l(_vm.orderData.items, function(item, index) {
-                  return _c("tr", { key: index }, [
-                    _c("td", { staticClass: "quantity" }, [
-                      _vm._v(_vm._s(item.quantity))
-                    ]),
+                _c("v-col", { staticClass: "pull-left", attrs: { md: "6" } }, [
+                  _vm._v("Order# " + _vm._s(_vm.orderData.id))
+                ]),
+                _vm._v(" "),
+                _c("v-col", { staticClass: "pull-right", attrs: { md: "6" } }, [
+                  _vm._v(_vm._s(_vm.orderDate))
+                ])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("table", [
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                [
+                  _vm._l(_vm.orderData.items, function(item, index) {
+                    return _c("tr", { key: index }, [
+                      _c("td", { staticClass: "quantity" }, [
+                        _vm._v(_vm._s(item.quantity))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "name" }, [
+                        _vm._v(_vm._s(item.item_name))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "price" }, [
+                        _vm._v("Rs " + _vm._s(item.item_price * item.quantity))
+                      ])
+                    ])
+                  }),
+                  _vm._v(" "),
+                  _vm.orderData.order_discount > 0
+                    ? _c("tr", [
+                        _c("td", { staticClass: "quantity" }),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "description" }, [
+                          _vm._v("Gross Bill ")
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "price" }, [
+                          _vm._v(
+                            "Rs " +
+                              _vm._s(
+                                parseFloat(_vm.orderData.order_total) +
+                                  parseFloat(_vm.orderData.order_discount)
+                              )
+                          )
+                        ])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.orderData.order_discount > 0
+                    ? _c("tr", [
+                        _c("td", { staticClass: "quantity" }),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "description" }, [
+                          _vm._v("Discount ")
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "price" }, [
+                          _vm._v("Rs " + _vm._s(_vm.orderData.order_discount))
+                        ])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("td", { staticClass: "quantity" }),
                     _vm._v(" "),
-                    _c("td", { staticClass: "name" }, [
-                      _vm._v(_vm._s(item.item_name))
+                    _c("td", { staticClass: "description" }, [
+                      _vm._v("TOTAL: ")
                     ]),
                     _vm._v(" "),
                     _c("td", { staticClass: "price" }, [
-                      _vm._v("Rs " + _vm._s(item.item_price * item.quantity))
+                      _vm._v("Rs " + _vm._s(_vm.orderData.order_total))
                     ])
                   ])
-                }),
-                _vm._v(" "),
-                _vm.orderData.order_discount > 0
-                  ? _c("tr", [
-                      _c("td", { staticClass: "quantity" }),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "description" }, [
-                        _vm._v("Gross Bill ")
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "price" }, [
-                        _vm._v(
-                          "Rs " +
-                            _vm._s(
-                              _vm.orderData.order_total +
-                                _vm.orderData.order_discount
-                            )
-                        )
-                      ])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.orderData.order_discount > 0
-                  ? _c("tr", [
-                      _c("td", { staticClass: "quantity" }),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "description" }, [
-                        _vm._v("Discount ")
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "price" }, [
-                        _vm._v("Rs " + _vm._s(_vm.orderData.order_discount))
-                      ])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("td", { staticClass: "quantity" }),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "description" }, [_vm._v("TOTAL: ")]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "price" }, [
-                    _vm._v("Rs " + _vm._s(_vm.orderData.order_total))
-                  ])
-                ])
-              ],
-              2
-            )
-          ]),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _vm._m(1)
-        ]),
+                ],
+                2
+              )
+            ]),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _vm._m(2),
+            _vm._v(" "),
+            _c("p", { staticClass: "centered" }, [
+              _vm._v("0320-4647275 / 0311-4170475")
+            ])
+          ],
+          1
+        ),
         _vm._v(" "),
         _c(
           "button",
@@ -41974,6 +42002,16 @@ var render = function() {
     : _c("div", [_c("h1", [_vm._v("No Data Found!")])])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", { staticClass: "centered" }, [
+      _vm._v("Shahjee Restaurant\n            "),
+      _c("br"),
+      _vm._v("Adda Plot, Main Raiwind Road, Lahore\n        ")
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -42717,26 +42755,14 @@ var render = function() {
               "div",
               { staticClass: "dropdown-menu dropdown-menu-header wd-200" },
               [
-                _c(
-                  "ul",
-                  { staticClass: "list-unstyled user-profile-nav" },
-                  [
-                    _c("router-link", { attrs: { to: "/profile" } }, [
-                      _c("li", [
-                        _c("i", { staticClass: "icon ion-ios-person" }),
-                        _vm._v(" Edit Profile")
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("a", { attrs: { to: "/" } }, [
-                      _c("li", { on: { click: _vm.logoutUser } }, [
-                        _c("i", { staticClass: "icon ion-power" }),
-                        _vm._v(" Sign Out")
-                      ])
+                _c("ul", { staticClass: "list-unstyled user-profile-nav" }, [
+                  _c("a", { attrs: { to: "/" } }, [
+                    _c("li", { on: { click: _vm.logoutUser } }, [
+                      _c("i", { staticClass: "icon ion-power" }),
+                      _vm._v(" Sign Out")
                     ])
-                  ],
-                  1
-                )
+                  ])
+                ])
               ]
             )
           ])
@@ -42954,7 +42980,7 @@ var render = function() {
                     src:
                       _vm.baseUrl == "http://shahjeerestaurants.com"
                         ? _vm.baseUrl + "/public/images/logo.png"
-                        : "images/logo.png",
+                        : "/images/logo.png",
                     alt: ""
                   }
                 })
@@ -102551,13 +102577,13 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
 Vue.use(vuetify__WEBPACK_IMPORTED_MODULE_4___default.a);
-Vue.mixin(_mixins_global__WEBPACK_IMPORTED_MODULE_6__["default"]); // Vue.use(VueAxios, axios.create({
-//     baseURL: 'http://127.0.0.1:8000'
+Vue.mixin(_mixins_global__WEBPACK_IMPORTED_MODULE_6__["default"]);
+Vue.use(vue_axios__WEBPACK_IMPORTED_MODULE_2___default.a, axios__WEBPACK_IMPORTED_MODULE_3___default.a.create({
+  baseURL: 'http://127.0.0.1:8000'
+})); // Vue.use(VueAxios, axios.create({
+//     baseURL: 'http://shahjeerestaurants.com'
 // }));
 
-Vue.use(vue_axios__WEBPACK_IMPORTED_MODULE_2___default.a, axios__WEBPACK_IMPORTED_MODULE_3___default.a.create({
-  baseURL: 'http://shahjeerestaurants.com'
-}));
 var app = new Vue({
   el: '#app',
   vuetify: new vuetify__WEBPACK_IMPORTED_MODULE_4___default.a(),
@@ -103435,13 +103461,7 @@ var global = {
     },
     getBaseUrl: function getBaseUrl() {
       return window.location.origin;
-    } // checkSessionExpiredError (message) {
-    //     if (message === 'Session Expired') {
-    //         store.commit('resetStates'); //local storage
-    //         this.$router.push('/');
-    //     }
-    // }
-
+    }
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (global);

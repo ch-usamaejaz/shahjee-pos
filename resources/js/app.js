@@ -23,13 +23,13 @@ Vue.use(Vuetify);
 
 Vue.mixin(global);
 
-// Vue.use(VueAxios, axios.create({
-//     baseURL: 'http://127.0.0.1:8000'
-// }));
-
 Vue.use(VueAxios, axios.create({
-    baseURL: 'http://shahjeerestaurants.com'
+    baseURL: 'http://127.0.0.1:8000'
 }));
+
+// Vue.use(VueAxios, axios.create({
+//     baseURL: 'http://shahjeerestaurants.com'
+// }));
 
 
 const app = new Vue({

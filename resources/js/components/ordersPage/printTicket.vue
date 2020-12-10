@@ -4,7 +4,11 @@
             <img :src=" baseUrl == 'http://shahjeerestaurants.com' ? baseUrl + '/public/images/logo.png' : 'images/logo.png' " alt="Logo">
             <p class="centered">Shahjee Restaurant
                 <br>Adda Plot, Main Raiwind Road, Lahore
-                <br>Order# {{orderData.id}}</p>
+            </p>
+            <v-row class="centered order_date">
+                <v-col md="6" class="pull-left">Order# {{orderData.id}}</v-col>
+                <v-col md="6" class="pull-right">{{orderDate}}</v-col>
+            </v-row>
             <table>
                 <thead>
                     <tr>
@@ -22,7 +26,7 @@
                     <tr v-if="orderData.order_discount > 0">
                         <td class="quantity"></td>
                         <td class="description">Gross Bill </td>
-                        <td class="price">Rs {{orderData.order_total + orderData.order_discount}}</td>
+                        <td class="price">Rs {{parseFloat(orderData.order_total) + parseFloat(orderData.order_discount)}}</td>
                     </tr>
                     <tr v-if="orderData.order_discount > 0">
                         <td class="quantity"></td>
@@ -38,6 +42,7 @@
             </table>
             <br>
             <p class="centered">Thank You for your visit!<br>ShahJee Restaurant</p>
+            <p class="centered">0320-4647275 / 0311-4170475</p>
         </div>
         <button id="btnPrint" class="hidden-print btn btn-info" @click="printTicket()">Print</button>
     </div>
@@ -55,7 +60,8 @@ export default {
             isDataLoaded : false,
             orderTotalWithDiscount : 0,
             orderTotalWithoutDiscount: 0,
-            baseUrl : ''
+            baseUrl : '',
+            orderDate : ''
         }
     },
     mounted(){
@@ -69,6 +75,8 @@ export default {
                     this.isDataLoaded = true;
                     if (!resp.data.error) {
                         this.orderData = resp.data.data[0];
+                        let timestamp  = new Date(resp.data.data[0].created_at);
+                        this.orderDate = timestamp.getDate() + '/'  + timestamp.getMonth() + '/' + timestamp.getFullYear();
                     }
                 })
                 .catch (err => {
@@ -128,6 +136,7 @@ export default {
     font-size: 12px;
     font-family: 'Times New Roman';
     font-weight: bolder;
+    color: black;
 }
 
 td,
@@ -136,7 +145,7 @@ tr,
 table {
     border-top: 1px solid black;
     border-collapse: collapse;
-    align-items: center !important;
+    align-items: start !important;
     margin-left: auto;
     margin-right: auto;
 }
@@ -162,8 +171,8 @@ th.price {
 }
 
 .centered {
-    text-align: center;
-    align-content: center;
+    text-align: center !important;
+    align-content: center !important;
 }
 
 .ticket {
@@ -171,6 +180,7 @@ th.price {
     max-width: 155px;
     color: black;
     font-weight:400;
+    background-color: white;
 }
 
 img {
@@ -179,6 +189,11 @@ img {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+.order_date {
+    margin-left : 2px;
+    margin-right : 2px;
 }
 
 @media print {

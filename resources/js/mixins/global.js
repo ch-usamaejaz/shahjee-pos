@@ -32,12 +32,6 @@ const global = {
         getBaseUrl(){
             return window.location.origin
         }
-        // checkSessionExpiredError (message) {
-        //     if (message === 'Session Expired') {
-        //         store.commit('resetStates'); //local storage
-        //         this.$router.push('/');
-        //     }
-        // }
     }
 };
 
