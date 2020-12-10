@@ -38,6 +38,16 @@
                         <td class="description">TOTAL: </td>
                         <td class="price">Rs {{orderData.order_total}}</td>
                     </tr>
+                    <tr>
+                        <td class="quantity"></td>
+                        <td class="description">Received: </td>
+                        <td class="price">Rs {{orderData.cash_received}}</td>
+                    </tr>
+                    <tr>
+                        <td class="quantity"></td>
+                        <td class="description">Returned: </td>
+                        <td class="price">Rs {{orderData.change_returned}}</td>
+                    </tr>
                 </tbody>
             </table>
             <br>
