@@ -2638,6 +2638,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _this = this;
@@ -2664,7 +2697,7 @@ __webpack_require__.r(__webpack_exports__);
       getEditItems: {},
       dropdown_edit: [],
       dropdown_edit_status: ['Paid', 'Unpaid'],
-      dropdown_edit_shift: ['BreakFast', 'Dinner'],
+      dropdown_edit_shift: ['breakfast', 'dinner'],
       headers: [{
         text: 'Order#',
         align: 'start',
@@ -2697,7 +2730,9 @@ __webpack_require__.r(__webpack_exports__);
         price: 0,
         order_status: '',
         order_discount: 0,
-        order_total: 0
+        order_total: 0,
+        cash_recieved: 0,
+        cash_return: 0
       },
       quantityRules: [function (v) {
         return !!v || 'Quantity is required';
@@ -2800,6 +2835,9 @@ __webpack_require__.r(__webpack_exports__);
     addDiscount: function addDiscount() {
       this.editedItem.order_total = this.totalWithoutDiscount - this.editedItem.order_discount;
     },
+    returnCash: function returnCash() {
+      this.editedItem.cash_return = this.editedItem.cash_recieved - this.editedItem.order_total;
+    },
     addNewRow: function addNewRow() {
       this.valid = true;
       this.newOrderRow.push({
@@ -2826,6 +2864,8 @@ __webpack_require__.r(__webpack_exports__);
         _this4.getEditItems = response.data.data;
 
         _this4.getEditItems.forEach(function (value) {
+          _this4.editedItem.cash_recieved = value.cash_received;
+          _this4.editedItem.cash_return = value.change_returned;
           newItems.push(value.items);
           newItems.forEach(function (newValue, index) {
             for (var i = 0; i <= response.data.data[0].items.length - 1; i++) {
@@ -2916,6 +2956,8 @@ __webpack_require__.r(__webpack_exports__);
     close: function close() {
       this.dialog = false;
       this.order_total = null;
+      this.editedItem.cash_return = 0;
+      this.editedItem.cash_recieved = 0;
       this.editedItem.order_total = 0;
       this.editedItem.order_discount = 0;
       this.getEditItems = new Array();
@@ -2968,6 +3010,8 @@ __webpack_require__.r(__webpack_exports__);
         "order_discount": this.editedItem.order_discount,
         "order_shift": shift,
         "user_id": 1,
+        "cash_received": this.editedItem.cash_recieved,
+        "change_returned": this.editedItem.cash_return,
         "items": items
       };
       var url = "/create_new_order";
@@ -3005,6 +3049,8 @@ __webpack_require__.r(__webpack_exports__);
         "order_discount": this.editedItem.order_discount,
         "order_shift": shift,
         "user_id": 1,
+        "cash_received": this.editedItem.cash_recieved,
+        "change_returned": this.editedItem.cash_return,
         "items": items
       };
       var url = "/update_order";
@@ -41472,7 +41518,7 @@ var render = function() {
                                                 attrs: {
                                                   cols: "12",
                                                   sm: "6",
-                                                  md: "2"
+                                                  md: "3"
                                                 }
                                               },
                                               [
@@ -41627,6 +41673,73 @@ var render = function() {
                                                 })
                                               ],
                                               1
+                                            )
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "v-row",
+                                          [
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "3"
+                                                }
+                                              },
+                                              [
+                                                _c("v-text-field", {
+                                                  attrs: {
+                                                    label: "Cash Recieved",
+                                                    type: "number",
+                                                    min: "0",
+                                                    outlined: "",
+                                                    hint:
+                                                      "Press ENTER after adding Cash",
+                                                    "persistent-hint": "",
+                                                    color: "blue"
+                                                  },
+                                                  on: {
+                                                    keydown: function($event) {
+                                                      if (
+                                                        !$event.type.indexOf(
+                                                          "key"
+                                                        ) &&
+                                                        _vm._k(
+                                                          $event.keyCode,
+                                                          "enter",
+                                                          13,
+                                                          $event.key,
+                                                          "Enter"
+                                                        )
+                                                      ) {
+                                                        return null
+                                                      }
+                                                      return _vm.returnCash(
+                                                        $event
+                                                      )
+                                                    }
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.editedItem
+                                                        .cash_recieved,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.editedItem,
+                                                        "cash_recieved",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "editedItem.cash_recieved"
+                                                  }
+                                                })
+                                              ],
+                                              1
                                             ),
                                             _vm._v(" "),
                                             _c(
@@ -41635,7 +41748,51 @@ var render = function() {
                                                 attrs: {
                                                   cols: "12",
                                                   sm: "6",
-                                                  md: "1"
+                                                  md: "3"
+                                                }
+                                              },
+                                              [
+                                                _c("v-text-field", {
+                                                  attrs: {
+                                                    label: "Cash Return",
+                                                    rules: [
+                                                      function(v) {
+                                                        return (
+                                                          v >= 0 ||
+                                                          "Cash Return should not be negative"
+                                                        )
+                                                      }
+                                                    ],
+                                                    type: "number",
+                                                    outlined: "",
+                                                    readonly: ""
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.editedItem
+                                                        .cash_return,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.editedItem,
+                                                        "cash_return",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "editedItem.cash_return"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "2"
                                                 }
                                               },
                                               [
@@ -104179,8 +104336,8 @@ router.beforeEach(function (to, from, next) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

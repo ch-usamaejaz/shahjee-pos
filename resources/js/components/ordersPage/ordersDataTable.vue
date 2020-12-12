@@ -128,7 +128,7 @@
                   <v-col
                     cols="12"
                     sm="6"
-                    md="2"
+                    md="3"
                   >
                     <v-text-field
                       label="Discount"
@@ -142,6 +142,7 @@
                       v-model="editedItem.order_discount"
                   ></v-text-field>
                   </v-col>
+                  
                   <v-col
                     cols="12"
                     sm="6"
@@ -156,6 +157,7 @@
                       v-model="editedItem.order_total"
                   ></v-text-field>
                   </v-col>
+                 
                   <v-col
                     cols="12"
                     sm="6"
@@ -180,10 +182,43 @@
                     outlined
                   ></v-select>
                   </v-col>
+                </v-row>
+                <v-row>
                   <v-col
                     cols="12"
                     sm="6"
-                    md="1"
+                    md="3"
+                  >
+                    <v-text-field
+                      label="Cash Recieved"
+                      type="number"
+                      min="0"
+                      outlined
+                      hint="Press ENTER after adding Cash"
+                      persistent-hint
+                      color="blue"
+                      @keydown.enter="returnCash"
+                      v-model="editedItem.cash_recieved"
+                  ></v-text-field>
+                  </v-col>
+                   <v-col
+                    cols="12"
+                    sm="6"
+                    md="3"
+                  >
+                    <v-text-field
+                      label="Cash Return"
+                      :rules="[v=>v>=0 || 'Cash Return should not be negative']"
+                      type="number"
+                      outlined
+                      readonly
+                      v-model="editedItem.cash_return"
+                  ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="2"
                   >
                     <v-btn
                       class="mx-2"
@@ -198,8 +233,6 @@
                     </v-btn>
                   </v-col>
                 </v-row>
-
-
               </v-container>
             </v-card-text>
 
@@ -293,7 +326,7 @@
 
                 dropdown_edit: [],
                 dropdown_edit_status: ['Paid', 'Unpaid'],
-                dropdown_edit_shift: ['BreakFast', 'Dinner'],
+                dropdown_edit_shift: ['breakfast', 'dinner'],
                 headers: [
                     { text: 'Order#', align: 'start', value: 'id'},
                     { text: 'Order Status', value: 'order_status', sortable: false},
@@ -310,6 +343,8 @@
                   order_status: '',
                   order_discount: 0,
                   order_total: 0,
+                  cash_recieved: 0,
+                  cash_return: 0,
                 },
                 quantityRules: [
                    (v) => !!v || 'Quantity is required',
@@ -407,6 +442,9 @@
             addDiscount () {
               this.editedItem.order_total = (this.totalWithoutDiscount - this.editedItem.order_discount);
             },
+            returnCash () {
+              this.editedItem.cash_return = (this.editedItem.cash_recieved - this.editedItem.order_total);
+            },
             addNewRow () {
               this.valid = true;
               this.newOrderRow.push({price: 0, quantity: 0, newItem:{},orderItem_id:0, items: []});
@@ -422,6 +460,8 @@
               this.axios.post('/get_order', {order_id: item.id}).then(response=>{
                 this.getEditItems = response.data.data
                 this.getEditItems.forEach((value)=>{
+                  this.editedItem.cash_recieved = value.cash_received
+                  this.editedItem.cash_return = value.change_returned
                   newItems.push(value.items)
                   newItems.forEach((newValue, index)=>{
                     for(var i=0; i <= response.data.data[0].items.length-1; i++){
@@ -435,7 +475,7 @@
                       this.calculateOrderTotal()
                       // this.editedItem.order_total = item.order_total
                       // this.totalWithoutDiscount = item.order_total
-                      this.editedItem.order_discount = item.order_discount
+                      this.editedItem.order_discount = item.order_discount                      
                     }
                   })
                 })
@@ -493,6 +533,8 @@
             close () {
               this.dialog = false
               this.order_total = null;
+              this.editedItem.cash_return = 0;
+              this.editedItem.cash_recieved = 0
               this.editedItem.order_total = 0;
               this.editedItem.order_discount = 0;
               this.getEditItems= new Array;
@@ -541,6 +583,8 @@
             "order_discount": this.editedItem.order_discount,
             "order_shift": shift,
             "user_id": 1,
+            "cash_received" : this.editedItem.cash_recieved,
+            "change_returned" : this.editedItem.cash_return,
             "items": items
           };
           let url = "/create_new_order"
@@ -573,6 +617,8 @@
             "order_discount": this.editedItem.order_discount,
             "order_shift": shift,
             "user_id": 1,
+            "cash_received" : this.editedItem.cash_recieved,
+            "change_returned" : this.editedItem.cash_return,
             "items": items
           }
           let url = "/update_order"
