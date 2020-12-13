@@ -3164,6 +3164,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'printTicket',
   data: function data() {
@@ -3173,7 +3176,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       orderTotalWithDiscount: 0,
       orderTotalWithoutDiscount: 0,
       baseUrl: '',
-      orderDate: ''
+      orderDate: '',
+      orderTime: ''
     };
   },
   mounted: function mounted() {
@@ -3190,9 +3194,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         _this.isDataLoaded = true;
 
         if (!resp.data.error) {
-          _this.orderData = resp.data.data[0];
-          _this.orderDate = new Date(resp.data.data[0].created_at).toLocaleString(); // let timestamp  = new Date(resp.data.data[0].created_at);
-          // this.orderDate = timestamp.getDate() + '/'  + timestamp.getMonth() + '/' + timestamp.getFullYear() + ' ' + timestamp.getHours() + ':' + timestamp.getMinutes() + ':' + timestamp.getSeconds();
+          _this.orderData = resp.data.data[0]; // this.orderDate = new Date(resp.data.data[0].created_at).toLocaleString();
+
+          var timestamp = new Date(resp.data.data[0].created_at);
+          _this.orderDate = timestamp.getDate() + '/' + timestamp.getMonth() + '/' + timestamp.getFullYear();
+          var hours = timestamp.getHours();
+          var minutes = timestamp.getMinutes();
+          var ampm = hours >= 12 ? 'PM' : 'AM';
+          hours = hours % 12;
+          hours = hours ? hours : 12; // the hour '0' should be '12'
+
+          minutes = minutes < 10 ? '0' + minutes : minutes;
+          _this.orderTime = hours + ':' + minutes + ':' + timestamp.getSeconds() + ' ' + ampm; // this.orderTime = timestamp.getHours() + ':' + timestamp.getMinutes() + ':' + timestamp.getSeconds() + ' ' + (timestamp.getHours() > 12 ? 'PM' : 'AM');
         }
       })["catch"](function (err) {
         if (error.response) {
@@ -42052,10 +42065,6 @@ var render = function() {
             _vm._v(" "),
             _vm._m(0),
             _vm._v(" "),
-            _c("p", { staticClass: "centered" }, [
-              _vm._v(_vm._s(_vm.orderDate))
-            ]),
-            _vm._v(" "),
             _c(
               "v-row",
               { staticClass: "centered order_date" },
@@ -42065,7 +42074,25 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("v-col", { staticClass: "pull-right", attrs: { md: "6" } }, [
+                  _vm._v(_vm._s(_vm.orderDate))
+                ])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "v-row",
+              {
+                staticClass: "centered order_date",
+                staticStyle: { "margin-top": "-20px" }
+              },
+              [
+                _c("v-col", { staticClass: "pull-left", attrs: { md: "6" } }, [
                   _vm._v("Table# " + _vm._s(_vm.orderData.table_name))
+                ]),
+                _vm._v(" "),
+                _c("v-col", { staticClass: "pull-right", attrs: { md: "6" } }, [
+                  _vm._v(_vm._s(_vm.orderTime))
                 ])
               ],
               1
