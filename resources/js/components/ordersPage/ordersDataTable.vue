@@ -142,7 +142,7 @@
                       v-model="editedItem.order_discount"
                   ></v-text-field>
                   </v-col>
-                  
+
                   <v-col
                     cols="12"
                     sm="6"
@@ -157,7 +157,7 @@
                       v-model="editedItem.order_total"
                   ></v-text-field>
                   </v-col>
-                 
+
                   <v-col
                     cols="12"
                     sm="6"
@@ -194,7 +194,6 @@
                       type="number"
                       min="0"
                       outlined
-                      hint="Press ENTER after adding Cash"
                       persistent-hint
                       color="blue"
                       @keydown.enter="returnCash"
@@ -475,7 +474,7 @@
                       this.calculateOrderTotal()
                       // this.editedItem.order_total = item.order_total
                       // this.totalWithoutDiscount = item.order_total
-                      this.editedItem.order_discount = item.order_discount                      
+                      this.editedItem.order_discount = item.order_discount
                     }
                   })
                 })

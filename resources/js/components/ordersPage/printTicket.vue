@@ -5,9 +5,10 @@
             <p class="centered">Shahjee Restaurant
                 <br>Adda Plot, Main Raiwind Road, Lahore
             </p>
+            <p class="centered">{{orderDate}}</p>
             <v-row class="centered order_date">
                 <v-col md="6" class="pull-left">Order# {{orderData.id}}</v-col>
-                <v-col md="6" class="pull-right">{{orderDate}}</v-col>
+                <v-col md="6" class="pull-right">Table# {{orderData.table_name}}</v-col>
             </v-row>
             <table>
                 <thead>
@@ -85,8 +86,9 @@ export default {
                     this.isDataLoaded = true;
                     if (!resp.data.error) {
                         this.orderData = resp.data.data[0];
-                        let timestamp  = new Date(resp.data.data[0].created_at);
-                        this.orderDate = timestamp.getDate() + '/'  + timestamp.getMonth() + '/' + timestamp.getFullYear();
+                        this.orderDate = new Date(resp.data.data[0].created_at).toLocaleString();
+                        // let timestamp  = new Date(resp.data.data[0].created_at);
+                        // this.orderDate = timestamp.getDate() + '/'  + timestamp.getMonth() + '/' + timestamp.getFullYear() + ' ' + timestamp.getHours() + ':' + timestamp.getMinutes() + ':' + timestamp.getSeconds();
                     }
                 })
                 .catch (err => {

@@ -2670,7 +2670,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _this = this;
@@ -3164,6 +3163,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'printTicket',
   data: function data() {
@@ -3191,8 +3191,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
         if (!resp.data.error) {
           _this.orderData = resp.data.data[0];
-          var timestamp = new Date(resp.data.data[0].created_at);
-          _this.orderDate = timestamp.getDate() + '/' + timestamp.getMonth() + '/' + timestamp.getFullYear();
+          _this.orderDate = new Date(resp.data.data[0].created_at).toLocaleString(); // let timestamp  = new Date(resp.data.data[0].created_at);
+          // this.orderDate = timestamp.getDate() + '/'  + timestamp.getMonth() + '/' + timestamp.getFullYear() + ' ' + timestamp.getHours() + ':' + timestamp.getMinutes() + ':' + timestamp.getSeconds();
         }
       })["catch"](function (err) {
         if (error.response) {
@@ -41697,8 +41697,6 @@ var render = function() {
                                                     type: "number",
                                                     min: "0",
                                                     outlined: "",
-                                                    hint:
-                                                      "Press ENTER after adding Cash",
                                                     "persistent-hint": "",
                                                     color: "blue"
                                                   },
@@ -42054,6 +42052,10 @@ var render = function() {
             _vm._v(" "),
             _vm._m(0),
             _vm._v(" "),
+            _c("p", { staticClass: "centered" }, [
+              _vm._v(_vm._s(_vm.orderDate))
+            ]),
+            _vm._v(" "),
             _c(
               "v-row",
               { staticClass: "centered order_date" },
@@ -42063,7 +42065,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("v-col", { staticClass: "pull-right", attrs: { md: "6" } }, [
-                  _vm._v(_vm._s(_vm.orderDate))
+                  _vm._v("Table# " + _vm._s(_vm.orderData.table_name))
                 ])
               ],
               1
@@ -104336,8 +104338,8 @@ router.beforeEach(function (to, from, next) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
