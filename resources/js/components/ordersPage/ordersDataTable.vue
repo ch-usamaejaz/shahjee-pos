@@ -135,10 +135,9 @@
                       type="number"
                       min="0"
                       outlined
-                      hint="Press ENTER after adding Discount"
                       persistent-hint
                       color="green"
-                      @keydown.enter="addDiscount"
+                      @input="addDiscount"
                       v-model="editedItem.order_discount"
                   ></v-text-field>
                   </v-col>
@@ -194,10 +193,9 @@
                       type="number"
                       min="0"
                       outlined
-                      hint="Press ENTER after adding Cash"
                       persistent-hint
                       color="blue"
-                      @keydown.enter="returnCash"
+                      @input="returnCash"
                       v-model="editedItem.cash_recieved"
                   ></v-text-field>
                   </v-col>
@@ -213,6 +211,18 @@
                       outlined
                       readonly
                       v-model="editedItem.cash_return"
+                  ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="3"
+                  >
+                    <v-text-field
+                      label="Table Name"
+                      type="text"
+                      outlined
+                      v-model="editedItem.table_name"
                   ></v-text-field>
                   </v-col>
                   <v-col
@@ -345,6 +355,7 @@
                   order_total: 0,
                   cash_recieved: 0,
                   cash_return: 0,
+                  table_name: ''
                 },
                 quantityRules: [
                    (v) => !!v || 'Quantity is required',
@@ -462,6 +473,7 @@
                 this.getEditItems.forEach((value)=>{
                   this.editedItem.cash_recieved = value.cash_received
                   this.editedItem.cash_return = value.change_returned
+                  this.editedItem.table_name = value.table_name
                   newItems.push(value.items)
                   newItems.forEach((newValue, index)=>{
                     for(var i=0; i <= response.data.data[0].items.length-1; i++){
@@ -539,8 +551,9 @@
               this.editedItem.order_discount = 0;
               this.getEditItems= new Array;
               this.currentRowId = 0;
+              this.editedItem.table_name = ''
               this.newOrderRow=[]
-              this.selectedShift= 'Breakfaast'
+              this.selectedShift= 'breakfast'
               this.valid = false
               this.resetValidation ()
           },
@@ -585,6 +598,7 @@
             "user_id": 1,
             "cash_received" : this.editedItem.cash_recieved,
             "change_returned" : this.editedItem.cash_return,
+            "table_name": this.editedItem.table_name,
             "items": items
           };
           let url = "/create_new_order"

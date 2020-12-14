@@ -2671,6 +2671,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _this = this;
@@ -2732,7 +2742,8 @@ __webpack_require__.r(__webpack_exports__);
         order_discount: 0,
         order_total: 0,
         cash_recieved: 0,
-        cash_return: 0
+        cash_return: 0,
+        table_name: ''
       },
       quantityRules: [function (v) {
         return !!v || 'Quantity is required';
@@ -2866,6 +2877,7 @@ __webpack_require__.r(__webpack_exports__);
         _this4.getEditItems.forEach(function (value) {
           _this4.editedItem.cash_recieved = value.cash_received;
           _this4.editedItem.cash_return = value.change_returned;
+          _this4.editedItem.table_name = value.table_name;
           newItems.push(value.items);
           newItems.forEach(function (newValue, index) {
             for (var i = 0; i <= response.data.data[0].items.length - 1; i++) {
@@ -2962,8 +2974,9 @@ __webpack_require__.r(__webpack_exports__);
       this.editedItem.order_discount = 0;
       this.getEditItems = new Array();
       this.currentRowId = 0;
+      this.editedItem.table_name = '';
       this.newOrderRow = [];
-      this.selectedShift = 'Breakfaast';
+      this.selectedShift = 'breakfast';
       this.valid = false;
       this.resetValidation();
     },
@@ -3012,6 +3025,7 @@ __webpack_require__.r(__webpack_exports__);
         "user_id": 1,
         "cash_received": this.editedItem.cash_recieved,
         "change_returned": this.editedItem.cash_return,
+        "table_name": this.editedItem.table_name,
         "items": items
       };
       var url = "/create_new_order";
@@ -41528,31 +41542,11 @@ var render = function() {
                                                     type: "number",
                                                     min: "0",
                                                     outlined: "",
-                                                    hint:
-                                                      "Press ENTER after adding Discount",
                                                     "persistent-hint": "",
                                                     color: "green"
                                                   },
                                                   on: {
-                                                    keydown: function($event) {
-                                                      if (
-                                                        !$event.type.indexOf(
-                                                          "key"
-                                                        ) &&
-                                                        _vm._k(
-                                                          $event.keyCode,
-                                                          "enter",
-                                                          13,
-                                                          $event.key,
-                                                          "Enter"
-                                                        )
-                                                      ) {
-                                                        return null
-                                                      }
-                                                      return _vm.addDiscount(
-                                                        $event
-                                                      )
-                                                    }
+                                                    input: _vm.addDiscount
                                                   },
                                                   model: {
                                                     value:
@@ -41697,32 +41691,10 @@ var render = function() {
                                                     type: "number",
                                                     min: "0",
                                                     outlined: "",
-                                                    hint:
-                                                      "Press ENTER after adding Cash",
                                                     "persistent-hint": "",
                                                     color: "blue"
                                                   },
-                                                  on: {
-                                                    keydown: function($event) {
-                                                      if (
-                                                        !$event.type.indexOf(
-                                                          "key"
-                                                        ) &&
-                                                        _vm._k(
-                                                          $event.keyCode,
-                                                          "enter",
-                                                          13,
-                                                          $event.key,
-                                                          "Enter"
-                                                        )
-                                                      ) {
-                                                        return null
-                                                      }
-                                                      return _vm.returnCash(
-                                                        $event
-                                                      )
-                                                    }
-                                                  },
+                                                  on: { input: _vm.returnCash },
                                                   model: {
                                                     value:
                                                       _vm.editedItem
@@ -41780,6 +41752,40 @@ var render = function() {
                                                     },
                                                     expression:
                                                       "editedItem.cash_return"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "3"
+                                                }
+                                              },
+                                              [
+                                                _c("v-text-field", {
+                                                  attrs: {
+                                                    label: "Table Name",
+                                                    type: "text",
+                                                    outlined: ""
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.editedItem.table_name,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.editedItem,
+                                                        "table_name",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "editedItem.table_name"
                                                   }
                                                 })
                                               ],
