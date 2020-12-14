@@ -141,7 +141,7 @@
                       v-model="editedItem.order_discount"
                   ></v-text-field>
                   </v-col>
-                  
+
                   <v-col
                     cols="12"
                     sm="6"
@@ -156,7 +156,7 @@
                       v-model="editedItem.order_total"
                   ></v-text-field>
                   </v-col>
-                 
+
                   <v-col
                     cols="12"
                     sm="6"
@@ -221,6 +221,7 @@
                     <v-text-field
                       label="Table Name"
                       type="text"
+                      :rules="[(v) => !!v || 'Table name is required']"
                       outlined
                       v-model="editedItem.table_name"
                   ></v-text-field>
@@ -441,8 +442,12 @@
               this.newOrderRow.forEach((value,index) => {
                 total +=  (value.newItem.item_price * value.quantity)
             })
-              this.editedItem.order_total = total;
-              this.editedItem.order_discount = 0;
+              this.editedItem.order_total = total - this.editedItem.order_discount;
+              // this.editedItem.order_discount = 0;
+              console.log(this.editedItem.cash_recieved)
+              if(this.editedItem.cash_recieved > 0){
+                this.returnCash();
+              }
               this.totalWithoutDiscount = total
             },
             selectRules(){
@@ -452,6 +457,7 @@
             },
             addDiscount () {
               this.editedItem.order_total = (this.totalWithoutDiscount - this.editedItem.order_discount);
+              this.returnCash();
             },
             returnCash () {
               this.editedItem.cash_return = (this.editedItem.cash_recieved - this.editedItem.order_total);
@@ -487,7 +493,7 @@
                       this.calculateOrderTotal()
                       // this.editedItem.order_total = item.order_total
                       // this.totalWithoutDiscount = item.order_total
-                      this.editedItem.order_discount = item.order_discount                      
+                      this.editedItem.order_discount = item.order_discount
                     }
                   })
                 })
@@ -633,6 +639,7 @@
             "user_id": 1,
             "cash_received" : this.editedItem.cash_recieved,
             "change_returned" : this.editedItem.cash_return,
+            "table_name": this.editedItem.table_name,
             "items": items
           }
           let url = "/update_order"

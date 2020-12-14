@@ -9,6 +9,10 @@
                 <v-col md="6" class="pull-left">Order# {{orderData.id}}</v-col>
                 <v-col md="6" class="pull-right">{{orderDate}}</v-col>
             </v-row>
+            <v-row class="centered order_date" style="margin-top: -20px">
+                <v-col md="6" class="pull-left">Table# {{orderData.table_name}}</v-col>
+                <v-col md="6" class="pull-right">{{orderTime}}</v-col>
+            </v-row>
             <table>
                 <thead>
                     <tr>
@@ -71,7 +75,8 @@ export default {
             orderTotalWithDiscount : 0,
             orderTotalWithoutDiscount: 0,
             baseUrl : '',
-            orderDate : ''
+            orderDate : '',
+            orderTime : ''
         }
     },
     mounted(){
@@ -85,8 +90,17 @@ export default {
                     this.isDataLoaded = true;
                     if (!resp.data.error) {
                         this.orderData = resp.data.data[0];
+                        // this.orderDate = new Date(resp.data.data[0].created_at).toLocaleString();
                         let timestamp  = new Date(resp.data.data[0].created_at);
                         this.orderDate = timestamp.getDate() + '/'  + timestamp.getMonth() + '/' + timestamp.getFullYear();
+                        let hours = timestamp.getHours();
+                        let minutes = timestamp.getMinutes();
+                        let ampm = hours >= 12 ? 'PM' : 'AM';
+                        hours = hours % 12;
+                        hours = hours ? hours : 12; // the hour '0' should be '12'
+                        minutes = minutes < 10 ? '0'+minutes : minutes;
+                        this.orderTime = hours + ':' + minutes + ':' + timestamp.getSeconds() + ' ' + ampm;
+                        // this.orderTime = timestamp.getHours() + ':' + timestamp.getMinutes() + ':' + timestamp.getSeconds() + ' ' + (timestamp.getHours() > 12 ? 'PM' : 'AM');
                     }
                 })
                 .catch (err => {

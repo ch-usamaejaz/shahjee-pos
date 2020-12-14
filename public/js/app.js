@@ -2681,6 +2681,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _this = this;
@@ -2834,8 +2835,14 @@ __webpack_require__.r(__webpack_exports__);
       this.newOrderRow.forEach(function (value, index) {
         total += value.newItem.item_price * value.quantity;
       });
-      this.editedItem.order_total = total;
-      this.editedItem.order_discount = 0;
+      this.editedItem.order_total = total - this.editedItem.order_discount; // this.editedItem.order_discount = 0;
+
+      console.log(this.editedItem.cash_recieved);
+
+      if (this.editedItem.cash_recieved > 0) {
+        this.returnCash();
+      }
+
       this.totalWithoutDiscount = total;
     },
     selectRules: function selectRules() {
@@ -2845,6 +2852,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     addDiscount: function addDiscount() {
       this.editedItem.order_total = this.totalWithoutDiscount - this.editedItem.order_discount;
+      this.returnCash();
     },
     returnCash: function returnCash() {
       this.editedItem.cash_return = this.editedItem.cash_recieved - this.editedItem.order_total;
@@ -3065,6 +3073,7 @@ __webpack_require__.r(__webpack_exports__);
         "user_id": 1,
         "cash_received": this.editedItem.cash_recieved,
         "change_returned": this.editedItem.cash_return,
+        "table_name": this.editedItem.table_name,
         "items": items
       };
       var url = "/update_order";
@@ -3178,6 +3187,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'printTicket',
   data: function data() {
@@ -3187,7 +3200,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       orderTotalWithDiscount: 0,
       orderTotalWithoutDiscount: 0,
       baseUrl: '',
-      orderDate: ''
+      orderDate: '',
+      orderTime: ''
     };
   },
   mounted: function mounted() {
@@ -3204,9 +3218,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         _this.isDataLoaded = true;
 
         if (!resp.data.error) {
-          _this.orderData = resp.data.data[0];
+          _this.orderData = resp.data.data[0]; // this.orderDate = new Date(resp.data.data[0].created_at).toLocaleString();
+
           var timestamp = new Date(resp.data.data[0].created_at);
           _this.orderDate = timestamp.getDate() + '/' + timestamp.getMonth() + '/' + timestamp.getFullYear();
+          var hours = timestamp.getHours();
+          var minutes = timestamp.getMinutes();
+          var ampm = hours >= 12 ? 'PM' : 'AM';
+          hours = hours % 12;
+          hours = hours ? hours : 12; // the hour '0' should be '12'
+
+          minutes = minutes < 10 ? '0' + minutes : minutes;
+          _this.orderTime = hours + ':' + minutes + ':' + timestamp.getSeconds() + ' ' + ampm; // this.orderTime = timestamp.getHours() + ':' + timestamp.getMinutes() + ':' + timestamp.getSeconds() + ' ' + (timestamp.getHours() > 12 ? 'PM' : 'AM');
         }
       })["catch"](function (err) {
         if (error.response) {
@@ -41772,6 +41795,14 @@ var render = function() {
                                                   attrs: {
                                                     label: "Table Name",
                                                     type: "text",
+                                                    rules: [
+                                                      function(v) {
+                                                        return (
+                                                          !!v ||
+                                                          "Table name is required"
+                                                        )
+                                                      }
+                                                    ],
                                                     outlined: ""
                                                   },
                                                   model: {
@@ -42070,6 +42101,24 @@ var render = function() {
                 _vm._v(" "),
                 _c("v-col", { staticClass: "pull-right", attrs: { md: "6" } }, [
                   _vm._v(_vm._s(_vm.orderDate))
+                ])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "v-row",
+              {
+                staticClass: "centered order_date",
+                staticStyle: { "margin-top": "-20px" }
+              },
+              [
+                _c("v-col", { staticClass: "pull-left", attrs: { md: "6" } }, [
+                  _vm._v("Table# " + _vm._s(_vm.orderData.table_name))
+                ]),
+                _vm._v(" "),
+                _c("v-col", { staticClass: "pull-right", attrs: { md: "6" } }, [
+                  _vm._v(_vm._s(_vm.orderTime))
                 ])
               ],
               1
