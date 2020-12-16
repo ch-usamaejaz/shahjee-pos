@@ -206,7 +206,6 @@
                   >
                     <v-text-field
                       label="Cash Return"
-                      :rules="[v=>v>=0 || 'Cash Return should not be negative']"
                       type="number"
                       outlined
                       readonly

@@ -2681,7 +2681,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _this = this;
@@ -41750,14 +41749,6 @@ var render = function() {
                                                 _c("v-text-field", {
                                                   attrs: {
                                                     label: "Cash Return",
-                                                    rules: [
-                                                      function(v) {
-                                                        return (
-                                                          v >= 0 ||
-                                                          "Cash Return should not be negative"
-                                                        )
-                                                      }
-                                                    ],
                                                     type: "number",
                                                     outlined: "",
                                                     readonly: ""
@@ -104391,8 +104382,8 @@ router.beforeEach(function (to, from, next) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Vue\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Vue\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\chusa\Desktop\Projects\shahjee-pos\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
